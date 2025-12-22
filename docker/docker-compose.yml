@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: tasksmanager-postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: taskapp
       POSTGRES_PASSWORD: taskapp
@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
 
 volumes:
   postgres_data:
