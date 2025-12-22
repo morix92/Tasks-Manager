@@ -1,0 +1,21 @@
+# 1. Base image ufficiale Node.js LTS
+FROM node:20
+
+# 2. Imposta la cartella di lavoro dentro il container
+WORKDIR /app
+
+# 3. Copia i file package.json e package-lock.json
+#    serve per installare le dipendenze prima di copiare tutto il codice
+COPY package*.json ./
+
+# 4. Installa le dipendenze Node
+RUN npm install
+
+# 5. Copia tutto il codice del backend dentro il container
+COPY . .
+
+# 6. Espone la porta che useremo
+EXPOSE 3000
+
+# 7. Comando di avvio del backend
+CMD ["node", "index.js"]
