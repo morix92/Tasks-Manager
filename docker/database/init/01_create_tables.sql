@@ -1,13 +1,12 @@
--- 1. Tabella Profili Utente
+-- 1. Utenti
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    avatar_url TEXT, -- Percorso a un'immagine o nome di una icona
-    profile_color VARCHAR(7) DEFAULT '#3f51b5',
+    avatar_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Tabella Categorie (ogni utente ha le sue)
+-- 2. Categorie
 CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -16,7 +15,7 @@ CREATE TABLE IF NOT EXISTS categories (
     UNIQUE(user_id, name) -- Impedisce doppioni dello stesso nome per lo stesso utente
 );
 
--- 3. Tabella Task
+-- 3. Task
 CREATE TABLE IF NOT EXISTS tasks (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -24,12 +23,12 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     priority INTEGER CHECK (priority BETWEEN 1 AND 3), -- 1:Bassa, 2:Media, 3:Alta
-    status VARCHAR(20) DEFAULT 'todo' CHECK (status IN ('todo', 'doing', 'done')),
+    status VARCHAR(20) DEFAULT 'da eseguire' CHECK (status IN ('da eseguire', 'in corso', 'eseguita')),
     due_date TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Tabella Promemoria
+-- 4. Promemoria
 CREATE TABLE IF NOT EXISTS reminders (
     id SERIAL PRIMARY KEY,
     task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
