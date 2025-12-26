@@ -92,7 +92,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     throw new appError('User not found', 404);
   }
 
-  res.status(204).send("Utente cancellato");
+  res.status(204).send();
 }));
 
 
