@@ -23,10 +23,26 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     priority INTEGER CHECK (priority BETWEEN 1 AND 3), -- 1:Bassa, 2:Media, 3:Alta
-    status VARCHAR(20) DEFAULT 'da eseguire' CHECK (status IN ('da eseguire', 'in corso', 'eseguita')),
+    status VARCHAR(20) DEFAULT 'da_eseguire' CHECK (status IN ('da_eseguire', 'in_corso', 'eseguita')),
     due_date TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    recurrence_rule VARCHAR(20) CHECK (recurrence_rule IN ('daily', 'weekly', 'monthly', 'yearly')),
+	is_featured BOOLEAN DEFAULT false,
+	featured_order INTEGER,
+	
+	CONSTRAINT check_featured_consistency
+    CHECK (
+        (is_featured = false AND featured_order IS NULL)
+        OR
+        (is_featured = true AND featured_order BETWEEN 1 AND 3)
+    )
 );
+
+-- Indice per task in evidenza
+CREATE UNIQUE INDEX IF NOT EXISTS unique_featured_order_per_user
+ON tasks (user_id, featured_order)
+WHERE is_featured = true;
 
 -- 4. Promemoria
 CREATE TABLE IF NOT EXISTS reminders (
