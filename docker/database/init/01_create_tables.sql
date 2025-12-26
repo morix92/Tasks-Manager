@@ -9,10 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
 -- 2. Categorie
 CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     name VARCHAR(50) NOT NULL,
-    color VARCHAR(7) NOT NULL,
-    UNIQUE(user_id, name) -- Impedisce doppioni dello stesso nome per lo stesso utente
+    color VARCHAR(10) NOT NULL,
+    UNIQUE(name)
 );
 
 -- 3. Task
@@ -43,6 +42,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 CREATE UNIQUE INDEX IF NOT EXISTS unique_featured_order_per_user
 ON tasks (user_id, featured_order)
 WHERE is_featured = true;
+
 
 -- 4. Promemoria
 CREATE TABLE IF NOT EXISTS reminders (

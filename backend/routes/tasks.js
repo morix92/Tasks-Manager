@@ -6,11 +6,35 @@ const appError = require('../utils/appError');
 
 // GET All + Filtri
 router.get('/', asyncHandler(async (req, res) => {
-  const { title, priority, due_date_order, featured_order, order } = req.query;
+  const { title, priority, due_date_order, featured_order, order, username } = req.query;
 
-  let query = 'SELECT * FROM tasks';
+  let query = `
+  SELECT 
+    t.id, 
+    t.title, 
+    t.description, 
+    t.priority, 
+    t.status, 
+    t.due_date, 
+    t.completed_at, 
+    t.created_at, 
+    t.recurrence_rule, 
+    t.is_featured, 
+    t.featured_order,
+    u.username AS user_username, 
+    c.name AS category_name
+  FROM tasks t
+  LEFT JOIN users u ON t.user_id = u.id
+  LEFT JOIN categories c ON t.category_id = c.id
+  `;
   let params = [];
   let conditions = [];
+
+  // filter by title
+  if (username) {
+    conditions.push(`u.username ILIKE $${params.length + 1}`);
+    params.push(`%${username}%`);
+  }
 
   // filter by title
   if (title) {
@@ -49,8 +73,26 @@ router.get('/', asyncHandler(async (req, res) => {
 router.get('/:id', asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { rows } = await pool.query(
-    'SELECT * FROM tasks WHERE id = $1',
-    [id]
+   `
+  SELECT 
+    t.id, 
+    t.title, 
+    t.description, 
+    t.priority, 
+    t.status, 
+    t.due_date, 
+    t.completed_at, 
+    t.created_at, 
+    t.recurrence_rule, 
+    t.is_featured, 
+    t.featured_order,
+    u.username AS user_username, 
+    c.name AS category_name
+  FROM tasks t
+  LEFT JOIN users u ON t.user_id = u.id
+  LEFT JOIN categories c ON t.category_id = c.id
+  WHERE t.id = $1`,
+  [id]
   );
 
   if (rows.length === 0) {
@@ -70,6 +112,11 @@ router.post('/', asyncHandler(async (req, res) => {
   // check campi obbligatori
   if (!user_id) {
     throw new appError('user_id is required', 400);
+  } else {
+    const { rowCount } = await pool.query('SELECT 1 FROM users WHERE id = $1', [user_id]);
+    if (rowCount === 0) {
+      throw new appError(`user_id ${user_id} does not exist in users table`, 400);
+    }
   }
 
   if (!title || typeof title !== 'string') {
@@ -81,6 +128,13 @@ router.post('/', asyncHandler(async (req, res) => {
   }
 
   // check campi opzionali
+  if (category_id) {
+    const { rowCount } = await pool.query('SELECT 1 FROM categories WHERE id = $1', [category_id]);
+    if (rowCount === 0) {
+      throw new appError(`category_id ${category_id} does not exist in categories table`, 400);
+    }
+  }
+
   if (priority !== undefined && (priority < 1 || priority > 3)) {
     throw new appError('priority must be between 1 and 3', 400);
   }

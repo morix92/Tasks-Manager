@@ -51,7 +51,6 @@ router.post('/', asyncHandler(async (req, res) => {
   if (rows.length === 0) {
     throw new appError('User limit reached (max 4)', 403);
   }
-
   res.status(201).json(rows[0]);
 }));
 
