@@ -2,6 +2,7 @@ const express = require('express');
 const usersRoutes = require('./routes/users');
 const tasksRoutes = require('./routes/tasks');
 const categoriesRoutes = require('./routes/categories');
+const RemindersRoutes = require('./routes/reminders');
 
 const app = express();
 const PORT = 3000;
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use('/users', usersRoutes)
 app.use('/tasks', tasksRoutes)
 app.use('/categories', categoriesRoutes)
+app.use('/reminders', RemindersRoutes)
 
 //Middleware errori
 app.use((err, req, res, next) => {
