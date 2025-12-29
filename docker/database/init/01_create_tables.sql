@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     due_date TIMESTAMP,
 	completed_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    recurrence_rule VARCHAR(20) CHECK (recurrence_rule IN ('daily', 'weekly', 'monthly', 'yearly')),
+	exact_remind_at TIMESTAMP NULL,
+    recurrence_rule VARCHAR(20) CHECK (recurrence_rule IN ('hourly', 'daily', 'weekly', 'monthly', 'yearly')),
+	recurrence_interval INTEGER DEFAULT 1 CHECK (recurrence_interval > 0),
 	is_featured BOOLEAN DEFAULT false,
 	featured_order INTEGER,
 	
@@ -48,6 +50,7 @@ WHERE is_featured = true;
 CREATE TABLE IF NOT EXISTS reminders (
     id SERIAL PRIMARY KEY,
     task_id INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
+	due_date_task TIMESTAMP NOT NULL,
     remind_at TIMESTAMP NOT NULL,
     is_sent BOOLEAN DEFAULT FALSE
 );

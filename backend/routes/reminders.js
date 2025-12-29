@@ -43,27 +43,38 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/', asyncHandler(async (req, res) => {
   const { task_id, remind_at } = req.body;
 
-  // check campi obbligatori
   if (!task_id) {
     throw new appError('Id Task is required', 400);
-  } else {
-    const { rowCount } = await pool.query('SELECT 1 FROM tasks WHERE id = $1', [task_id]);
-    if (rowCount === 0) {
-      throw new appError(`task_id ${task_id} does not exist in tasks table`, 400);
-    }
   }
 
   if (!remind_at) {
     throw new appError('Reminder date is required', 400);
   }
 
-  const { rows } = await pool.query(
-    `INSERT INTO reminders (task_id, remind_at) VALUES ($1, $2) RETURNING *`,
-    [task_id, remind_at]
-  );
+  // Check taskId e recupero due_date
+  const taskResult = await pool.query('SELECT due_date FROM tasks WHERE id = $1', [task_id]);
+
+  if (taskResult.rowCount === 0) {
+    throw new appError(`task_id ${task_id} does not exist in tasks table`, 400);
+  }
+
+  const due_date_task = new Date(taskResult.rows[0].due_date);
+  const remindAtDate = new Date(remind_at);
+  const now = new Date();
+
+  if (remindAtDate < now) {
+    throw new appError('remind_at cannot be in the past', 400);
+  }
+
+  if (remindAtDate > due_date_task) {
+    throw new appError('remind_at cannot be after the task due_date', 400);
+  }
+
+  const { rows } = await pool.query(`INSERT INTO reminders (task_id, due_date_task, remind_at) VALUES ($1, $2, $3) RETURNING *`, [task_id, due_date_task, remind_at]);
 
   res.status(201).json(rows[0]);
 }));
+
 
 
 // PUT - Update reminders
@@ -71,22 +82,39 @@ router.put('/:id', asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { remind_at } = req.body;
 
+  if (!remind_at) {
+    throw new appError('remind_at is required', 400);
+  }
+
+  // Recupera due_date_task del reminder
+  const reminderResult = await pool.query('SELECT due_date_task FROM reminders WHERE id = $1', [id]);
+  if (reminderResult.rowCount === 0) {
+    throw new appError('Reminder not found', 404);
+  }
+
+  const { due_date_task } = reminderResult.rows[0];
+  const dueDate = new Date(due_date_task);
+  const remindAtDate = new Date(remind_at);
+  const now = new Date();
+
+  if (remindAtDate < now) {
+    throw new appError('remind_at cannot be in the past', 400);
+  }
+
+  if (remindAtDate > dueDate) {
+    throw new appError('remind_at cannot be after the task due_date', 400);
+  }
+
   const { rows } = await pool.query(
-    `UPDATE reminders
-     SET
-       remind_at = COALESCE($1, remind_at)
+    `UPDATE reminders SET 
+       remind_at = $1
      WHERE id = $2
      RETURNING *`,
-    [remind_at, id]
+    [remindAtDate, id]
   );
-
-  if (rows.length === 0) {
-    throw new appError('Reminders not found', 404);
-  }
 
   res.status(202).json(rows[0]);
 }));
-
 
 // DELETE - Remove reminders
 router.delete('/:id', asyncHandler(async (req, res) => {
