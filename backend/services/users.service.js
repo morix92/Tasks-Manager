@@ -1,19 +1,16 @@
-const express = require('express');
-const router = express.Router();
 const pool = require('../pool');
-const asyncHandler = require('../utils/asyncHandler');
 const appError = require('../utils/appError');
 
-// GET ALL
-router.get('/', asyncHandler(async (req, res) => {
-    const { rows } = await pool.query('SELECT * FROM users ORDER BY Id ASC;');
-    res.status(200).json(rows);
-  })
-);
+/* ===================== GET ALL ===================== */
+exports.getAllUsers = async () => {
+  const { rows } = await pool.query(
+    'SELECT * FROM users ORDER BY id ASC;'
+  );
+  return rows;
+};
 
-// GET by Id
-router.get('/:id', asyncHandler(async (req, res) => {
-  const { id } = req.params;
+/* ===================== GET by Id ===================== */
+exports.getUserById = async (id) => {
   const { rows } = await pool.query(
     'SELECT * FROM users WHERE id = $1',
     [id]
@@ -23,17 +20,11 @@ router.get('/:id', asyncHandler(async (req, res) => {
     throw new appError('User not found', 404);
   }
 
-  res.status(200).json(rows[0]);
-}));
+  return rows[0];
+};
 
-// POST - Create user
-router.post('/', asyncHandler(async (req, res) => {
-  const { username, avatar_url } = req.body;
-
-  if (!username) {
-    throw new appError('Username is required', 400);
-  }
-
+/* ===================== CREATE ===================== */
+exports.createUser = async ({ username, avatar_url }) => {
   const { rows } = await pool.query(
     `WITH user_count AS (
        SELECT COUNT(*) AS count FROM users
@@ -42,6 +33,7 @@ router.post('/', asyncHandler(async (req, res) => {
        SELECT $1, $2
        FROM user_count
        WHERE count < 4
+       ON CONFLICT (username) DO NOTHING
        RETURNING *
      )
      SELECT * FROM inserted`,
@@ -49,17 +41,14 @@ router.post('/', asyncHandler(async (req, res) => {
   );
 
   if (rows.length === 0) {
-    throw new appError('User limit reached (max 4)', 403);
+    throw new appError('Username already exists or user limit reached (max 4)', 403);
   }
-  res.status(201).json(rows[0]);
-}));
 
+  return rows[0];
+};
 
-// PUT - Update user
-router.put('/:id', asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { username, avatar_url } = req.body;
-
+/* ===================== UPDATE ===================== */
+exports.updateUser = async (id, { username, avatar_url }) => {
   const { rows } = await pool.query(
     `UPDATE users
      SET
@@ -74,14 +63,11 @@ router.put('/:id', asyncHandler(async (req, res) => {
     throw new appError('User not found', 404);
   }
 
-  res.status(202).json(rows[0]);
-}));
+  return rows[0];
+};
 
-
-// DELETE - Remove user
-router.delete('/:id', asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
+/* ===================== DELETE ===================== */
+exports.deleteUser = async (id) => {
   const { rowCount } = await pool.query(
     'DELETE FROM users WHERE id = $1',
     [id]
@@ -90,9 +76,4 @@ router.delete('/:id', asyncHandler(async (req, res) => {
   if (rowCount === 0) {
     throw new appError('User not found', 404);
   }
-
-  res.status(204).send();
-}));
-
-
-module.exports = router;
+};

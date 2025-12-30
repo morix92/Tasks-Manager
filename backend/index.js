@@ -1,8 +1,8 @@
 const express = require('express');
-const usersRoutes = require('./routes/users');
-const tasksRoutes = require('./routes/tasks');
-const categoriesRoutes = require('./routes/categories');
-const RemindersRoutes = require('./routes/reminders');
+const usersRoutes = require('./routes/users.routes');
+const tasksRoutes = require('./routes/tasks.routes');
+const categoriesRoutes = require('./routes/categories.routes');
+const RemindersRoutes = require('./routes/reminders.routes');
 
 const app = express();
 const PORT = 3000;
