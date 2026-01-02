@@ -28,11 +28,16 @@ services:
       - postgres
       
   frontend:
-    build: ../frontend
+    build:
+      context: ../frontend
+      dockerfile: dockerfile.dev
     container_name: tasksmanager-frontend
     restart: unless-stopped
     ports:
-      - "80:80"  # Nginx esporrà il frontend sulla porta 80
+      - "4200:4200"  # Nginx esporrà il frontend sulla porta 80
+    volumes:
+    - ../frontend:/app
+    - /app/node_modules
     depends_on:
       - backend
 

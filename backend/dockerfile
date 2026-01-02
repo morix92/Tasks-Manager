@@ -1,5 +1,5 @@
 # 1. Base image ufficiale Node.js LTS
-FROM node:20
+FROM node:24
 
 # 2. Imposta la cartella di lavoro dentro il container
 WORKDIR /app

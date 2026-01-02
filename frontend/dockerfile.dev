@@ -1,0 +1,9 @@
+FROM node:24 AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+# Angular dev server
+CMD ["npm", "start"]
