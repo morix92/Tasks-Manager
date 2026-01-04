@@ -1,79 +1,107 @@
-const pool = require('../pool');
+const db = require('../SQLiteDB/db');
 const appError = require('../utils/appError');
 
 /* ===================== GET ALL ===================== */
-exports.getAllUsers = async () => {
-  const { rows } = await pool.query(
-    'SELECT * FROM users ORDER BY id ASC;'
-  );
-  return rows;
+exports.getAllUsers = () => {
+  return db
+    .prepare('SELECT * FROM users ORDER BY id ASC')
+    .all();
 };
 
-/* ===================== GET by Id ===================== */
-exports.getUserById = async (id) => {
-  const { rows } = await pool.query(
-    'SELECT * FROM users WHERE id = $1',
-    [id]
-  );
+/* ===================== GET BY ID ===================== */
+exports.getUserById = (id) => {
+  const user = db
+    .prepare('SELECT * FROM users WHERE id = ?')
+    .get(id);
 
-  if (rows.length === 0) {
+  if (!user) {
     throw new appError('User not found', 404);
   }
 
-  return rows[0];
+  return user;
 };
 
 /* ===================== CREATE ===================== */
-exports.createUser = async ({ username, avatar_url }) => {
-  const { rows } = await pool.query(
-    `WITH user_count AS (
-       SELECT COUNT(*) AS count FROM users
-     ), inserted AS (
-       INSERT INTO users (username, avatar_url)
-       SELECT $1, $2
-       FROM user_count
-       WHERE count < 4
-       ON CONFLICT (username) DO NOTHING
-       RETURNING *
-     )
-     SELECT * FROM inserted`,
-    [username, avatar_url || '/public/profile.png']
-  );
+exports.createUser = ({ username, avatar_url }) => {
+  // 1️⃣ limite massimo utenti
+  const { count } = db
+    .prepare('SELECT COUNT(*) AS count FROM users')
+    .get();
 
-  if (rows.length === 0) {
-    throw new appError('Username already exists or user limit reached (max 4)', 403);
+  if (count >= 4) {
+    throw new appError(
+      'User limit reached (max 4 users)',
+      403
+    );
   }
 
-  return rows[0];
+  // 2️⃣ inserimento
+  try {
+    const result = db
+      .prepare(`
+        INSERT INTO users (username, avatar_url)
+        VALUES (?, ?)
+      `)
+      .run(
+        username,
+        avatar_url || '/public/profile.png'
+      );
+
+    return db
+      .prepare('SELECT * FROM users WHERE id = ?')
+      .get(result.lastInsertRowid);
+
+  } catch (err) {
+    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      throw new appError('Username already exists', 409);
+    }
+    throw err;
+  }
 };
 
 /* ===================== UPDATE ===================== */
-exports.updateUser = async (id, { username, avatar_url }) => {
-  const { rows } = await pool.query(
-    `UPDATE users
-     SET
-       username = COALESCE($1, username),
-       avatar_url = COALESCE($2, avatar_url)
-     WHERE id = $3
-     RETURNING *`,
-    [username, avatar_url, id]
-  );
+exports.updateUser = (id, { username, avatar_url }) => {
+  const user = db
+    .prepare('SELECT * FROM users WHERE id = ?')
+    .get(id);
 
-  if (rows.length === 0) {
+  if (!user) {
     throw new appError('User not found', 404);
   }
 
-  return rows[0];
+  // controllo username duplicato
+  if (username) {
+    const existing = db
+      .prepare(
+        'SELECT 1 FROM users WHERE username = ? AND id <> ?'
+      )
+      .get(username, id);
+
+    if (existing) {
+      throw new appError('Username already exists', 409);
+    }
+  }
+
+  db.prepare(`
+    UPDATE users
+    SET
+      username = COALESCE(?, username),
+      avatar_url = COALESCE(?, avatar_url)
+    WHERE id = ?
+  `).run(username, avatar_url, id);
+
+  return db
+    .prepare('SELECT * FROM users WHERE id = ?')
+    .get(id);
 };
 
 /* ===================== DELETE ===================== */
-exports.deleteUser = async (id) => {
-  const { rowCount } = await pool.query(
-    'DELETE FROM users WHERE id = $1',
-    [id]
-  );
+exports.deleteUser = (id) => {
+  const result = db
+    .prepare('DELETE FROM users WHERE id = ?')
+    .run(id);
 
-  if (rowCount === 0) {
+  if (result.changes === 0) {
     throw new appError('User not found', 404);
   }
 };

@@ -1,28 +1,30 @@
 const cron = require('node-cron');
-const pool = require('../pool');
+const db = require('../SQLiteDB/db');
 const { sendNotification } = require('../services/notification.service');
 
 function startReminderJob() {
-  cron.schedule('* * * * *', async () => {
-    // ogni minuto
+  cron.schedule('* * * * *', () => {
     try {
-      const { rows } = await pool.query(`
-        SELECT r.id, r.task_id, r.remind_at, t.title
+      const reminders = db.prepare(`
+        SELECT 
+          r.id,
+          r.task_id,
+          r.remind_at,
+          t.title
         FROM reminders r
         JOIN tasks t ON t.id = r.task_id
-        WHERE r.is_sent = false
-          AND r.remind_at < NOW()
-      `);
+        WHERE r.is_sent = 0
+          AND r.remind_at <= strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')
+      `).all();
 
-      for (const reminder of rows) {
-        // 1. INVIO NOTIFICA
-        await sendNotification(reminder);
+      for (const reminder of reminders) {
+        sendNotification(reminder);
 
-        // 2. SEGNA COME INVIATO
-        await pool.query(
-          `UPDATE reminders SET is_sent = true WHERE id = $1`,
-          [reminder.id]
-        );
+        db.prepare(`
+          UPDATE reminders
+          SET is_sent = 1
+          WHERE id = ?
+        `).run(reminder.id);
       }
 
     } catch (err) {

@@ -4,14 +4,9 @@ dist/
 build/
 .env
 
-# Docker
-*.env
-*.log
-docker/*.env
-
 # Angular
 frontend/node_modules/
 frontend/dist/
 
-# Electron
-electron/node_modules/
+#DB
+backend/data/*.db

@@ -1,3 +1,4 @@
+require('./SQLiteDB/init-db')
 const express = require('express');
 const usersRoutes = require('./routes/users.routes');
 const tasksRoutes = require('./routes/tasks.routes');

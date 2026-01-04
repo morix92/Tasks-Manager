@@ -1,9 +1,9 @@
-const pool = require('../pool');
+const db = require('../SQLiteDB/db');
 const appError = require('../utils/appError');
-const { generateReminders } = require('../services/reminders.service')
+const { generateReminders } = require('../services/reminders.service');
 
 /* ===================== GET ALL ===================== */
-exports.getAllTasks = async (filters) => {
+exports.getAllTasks = (filters = {}) => {
   const {
     username,
     title,
@@ -28,31 +28,31 @@ exports.getAllTasks = async (filters) => {
     LEFT JOIN categories c ON t.category_id = c.id
   `;
 
-  const params = [];
   const conditions = [];
+  const params = [];
 
   if (username) {
-    conditions.push(`u.username ILIKE $${params.length + 1}`);
+    conditions.push('u.username LIKE ?');
     params.push(`%${username}%`);
   }
 
   if (title) {
-    conditions.push(`t.title ILIKE $${params.length + 1}`);
+    conditions.push('t.title LIKE ?');
     params.push(`%${title}%`);
   }
 
   if (priority) {
-    conditions.push(`t.priority = $${params.length + 1}`);
+    conditions.push('t.priority = ?');
     params.push(priority);
   }
 
   if (status) {
-    conditions.push(`t.status = $${params.length + 1}`);
+    conditions.push('t.status = ?');
     params.push(status);
   }
 
   if (categoryName) {
-    conditions.push(`c.name = $${params.length + 1}`);
+    conditions.push('c.name = ?');
     params.push(categoryName);
   }
 
@@ -60,167 +60,204 @@ exports.getAllTasks = async (filters) => {
     query += ' WHERE ' + conditions.join(' AND ');
   }
 
-  const idOrder = order === 'desc' ? 'DESC' : 'ASC';
-
   if (['asc', 'desc'].includes(due_date_order)) {
     query += ` ORDER BY t.due_date ${due_date_order.toUpperCase()}`;
   } else if (['asc', 'desc'].includes(featured_order)) {
     query += ` ORDER BY t.featured_order ${featured_order.toUpperCase()}`;
   } else {
-    query += ` ORDER BY t.id ${idOrder}`;
+    query += ` ORDER BY t.id ${order === 'desc' ? 'DESC' : 'ASC'}`;
   }
 
-  const { rows } = await pool.query(query, params);
-  return rows;
+  return db.prepare(query).all(...params);
 };
 
 /* ===================== GET BY ID ===================== */
-exports.getTaskById = async (id) => {
-  const { rows } = await pool.query(
-    `
+exports.getTaskById = (id) => {
+  const task = db.prepare(`
     SELECT 
-      t.*, 
+      t.*,
       u.username AS user_username,
       c.name AS category_name
     FROM tasks t
     LEFT JOIN users u ON t.user_id = u.id
     LEFT JOIN categories c ON t.category_id = c.id
-    WHERE t.id = $1
-    `,
-    [id]
-  );
+    WHERE t.id = ?
+  `).get(id);
 
-  if (!rows.length) {
+  if (!task) {
     throw new appError('Task not found', 404);
   }
 
-  return rows[0];
+  return task;
 };
 
 /* ===================== CREATE ===================== */
-exports.createTask = async (data) => {
-  const {user_id, category_id ,title ,description ,priority ,status = 'da_eseguire', due_date, exact_remind_at, recurrence_rule, recurrence_interval, is_featured, featured_order} = data;
+exports.createTask = (data) => {
+  const {
+    user_id,
+    category_id,
+    title,
+    description,
+    priority,
+    status = 'da_eseguire',
+    due_date,
+    exact_remind_at,
+    recurrence_rule,
+    recurrence_interval,
+    is_featured,
+    featured_order
+  } = data;
 
   if (category_id) {
-    const { rowCount } = await pool.query('SELECT 1 FROM categories WHERE id = $1', [category_id]);
-    if (rowCount === 0) {
-      throw new appError(`category_id ${category_id} does not exist in categories table`, 400);
+    const exists = db
+      .prepare('SELECT 1 FROM categories WHERE id = ?')
+      .get(category_id);
+
+    if (!exists) {
+      throw new appError(
+        `category_id ${category_id} does not exist`,
+        400
+      );
     }
   }
 
   if (is_featured === true) {
-    const { rowCount } = await pool.query(`SELECT 1 FROM tasks WHERE is_featured = true AND featured_order = $1`, [featured_order]);
-    if (rowCount > 0) {
-        throw new appError(`featured_order ${featured_order} is already used`, 400);
+    const used = db.prepare(`
+      SELECT 1 FROM tasks
+      WHERE is_featured = 1 AND featured_order = ?
+    `).get(featured_order);
+
+    if (used) {
+      throw new appError(
+        `featured_order ${featured_order} is already used`,
+        400
+      );
     }
   }
 
-  const { rows } = await pool.query(
-    `
-    INSERT INTO tasks
-    (user_id, category_id, title, description, priority, status,
-     due_date, exact_remind_at, recurrence_rule, recurrence_interval,
-     is_featured, featured_order)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-    RETURNING *
-    `,
-    [user_id,category_id,title,description,priority,status,due_date,exact_remind_at,recurrence_rule,recurrence_interval,is_featured,featured_order]
+  const result = db.prepare(`
+    INSERT INTO tasks (
+      user_id, category_id, title, description, priority, status,
+      due_date, exact_remind_at, recurrence_rule, recurrence_interval,
+      is_featured, featured_order
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+  `).run(
+    user_id,
+    category_id,
+    title,
+    description,
+    priority,
+    status,
+    due_date,
+    exact_remind_at,
+    recurrence_rule,
+    recurrence_interval,
+    is_featured ? 1 : 0,
+    featured_order
   );
 
-  const task = rows[0];
+  const task = db
+    .prepare('SELECT * FROM tasks WHERE id = ?')
+    .get(result.lastInsertRowid);
 
-  await createReminders(task);
+  createReminders(task);
   return task;
 };
 
 /* ===================== UPDATE ===================== */
-exports.updateTask = async (id, data) => {
-  const task = await pool.query(
-    'SELECT due_date, exact_remind_at, recurrence_rule, recurrence_interval FROM tasks WHERE id = $1',
-    [id]
-  );
+exports.updateTask = (id, data) => {
+  const task = db.prepare(`
+    SELECT * FROM tasks WHERE id = ?
+  `).get(id);
 
-  if (!task.rows.length) {
+  if (!task) {
     throw new appError('Task not found', 404);
   }
 
-  isReminderEdit = true;
-
-  let recurrence_rule_new;
-  let recurrence_interval_new;
-
-  if (data.recurrence_rule && data.recurrence_interval) {
-    if (data.recurrence_rule && !data.recurrence_interval) {
-      recurrence_rule_new = data.recurrence_rule;
-      recurrence_interval_new = task.rows[0].recurrence_interval;
-    } else if (!data.recurrence_rule && data.recurrence_interval) {
-      recurrence_rule_new = task.rows[0].recurrence_rule;
-      recurrence_interval_new = data.recurrence_interval;
-    } else {
-      recurrence_rule_new = data.recurrence_rule;
-      recurrence_interval_new = data.recurrence_interval;
-    }
-  }
-
-  const updated = await pool.query(
-    `
+  db.prepare(`
     UPDATE tasks SET
-      title = COALESCE($1, title),
-      description = COALESCE($2, description),
-      priority = COALESCE($3, priority),
-      status = COALESCE($4, status),
-      due_date = COALESCE($5, due_date),
-      exact_remind_at = COALESCE($6, exact_remind_at),
-      recurrence_rule = COALESCE($7, recurrence_rule),
-      recurrence_interval = COALESCE($8, recurrence_interval),
-      is_featured = COALESCE($9, is_featured),
-      featured_order = COALESCE($10, featured_order)
-    WHERE id = $11
-    RETURNING *
-    `,
-    [data.title, data.description, data.priority, data.status, data.due_date, data.exact_remind_at, data.recurrence_rule, data.recurrence_interval, data.is_featured, data.featured_order, id]
+      title = COALESCE(?, title),
+      description = COALESCE(?, description),
+      priority = COALESCE(?, priority),
+      status = COALESCE(?, status),
+      due_date = COALESCE(?, due_date),
+      exact_remind_at = COALESCE(?, exact_remind_at),
+      recurrence_rule = COALESCE(?, recurrence_rule),
+      recurrence_interval = COALESCE(?, recurrence_interval),
+      is_featured = COALESCE(?, is_featured),
+      featured_order = COALESCE(?, featured_order)
+    WHERE id = ?
+  `).run(
+    data.title,
+    data.description,
+    data.priority,
+    data.status,
+    data.due_date,
+    data.exact_remind_at,
+    data.recurrence_rule,
+    data.recurrence_interval,
+    data.is_featured,
+    data.featured_order,
+    id
   );
 
-  if (isReminderEdit) {
-    await recreateReminders(updated.rows[0]);
-  }
-  
-  return updated.rows[0];
+  const updatedTask = db
+    .prepare('SELECT * FROM tasks WHERE id = ?')
+    .get(id);
+
+  recreateReminders(updatedTask);
+  return updatedTask;
 };
 
 /* ===================== DELETE ===================== */
-exports.deleteTask = async (id) => {
-  const { rowCount } = await pool.query(
-    'DELETE FROM tasks WHERE id = $1',
-    [id]
-  );
+exports.deleteTask = (id) => {
+  const result = db
+    .prepare('DELETE FROM tasks WHERE id = ?')
+    .run(id);
 
-  if (!rowCount) {
+  if (result.changes === 0) {
     throw new appError('Task not found', 404);
   }
 };
 
-/* ===================== FUNZIONE INTERNA ===================== */
-async function createReminders(task) {
+/* ===================== FUNZIONI INTERNE ===================== */
+
+function formatDateForSQLite(date) {
+  return new Date(date).toISOString().replace('T', ' ').slice(0, 19);
+}
+
+function createReminders(task) {
   if (task.exact_remind_at) {
-    await pool.query(
-      'INSERT INTO reminders (task_id, due_date_task, remind_at) VALUES ($1,$2,$3)',
-      [task.id, task.due_date, task.exact_remind_at]
+    db.prepare(`
+      INSERT INTO reminders (task_id, due_date_task, remind_at)
+      VALUES (?,?,?)
+    `).run(
+      task.id,
+      formatDateForSQLite(task.due_date),
+      formatDateForSQLite(task.exact_remind_at)
     );
   } else if (task.recurrence_rule) {
-    const reminderDates = generateReminders(task.due_date, task.recurrence_rule, task.recurrence_interval);
-    for (const remindAt of reminderDates) {
-      await pool.query(
-        'INSERT INTO reminders (task_id, due_date_task, remind_at) VALUES ($1,$2,$3)',
-        [task.id, task.due_date, remindAt]
+    const dates = generateReminders(
+      formatDateForSQLite(task.due_date),
+      task.recurrence_rule,
+      task.recurrence_interval
+    );
+
+    for (const remindAt of dates) {
+      db.prepare(`
+        INSERT INTO reminders (task_id, due_date_task, remind_at)
+        VALUES (?,?,?)
+      `).run(
+        task.id,
+        formatDateForSQLite(task.due_date),
+        formatDateForSQLite(remindAt)
       );
     }
-  } else {
-     console.log("Reminder non creati. Il task non prevede notidica")
   }
 }
 
-async function recreateReminders(task) {
-  await pool.query('DELETE FROM reminders WHERE task_id = $1', [task.id]);
-  await createReminders(task);
+function recreateReminders(task) {
+  db.prepare('DELETE FROM reminders WHERE task_id = ?')
+    .run(task.id);
+  createReminders(task);
 }

@@ -1,51 +1,48 @@
 # Tasks-Manager 
-Applicazione desktop per la gestione e la calendarizzazione delle proprie attività.
+Applicazione desktop offline-first per la gestione e la calendarizzazione delle attività personali.
 
-L'obiettivo è realizzare un sistema completo full-stack utilizzabile come:
-- Desktop App (Electron)
-- Web App (Browser)
+Il progetto nasce come full-stack showcase per dimostrare competenze su:
+- architettura applicativa
+- sviluppo backend
+- frontend moderno
+- applicazioni desktop cross-platform
+
+L’applicazione è pensata per girare completamente in locale, senza dipendenze esterne o servizi cloud.
 
 ## Stato del progetto 
 In sviluppo...
 
 ## Tech Stack
-- Frontend: Angular
-- Desktop: Electron
+- Database: SQLite (file-based, locale)
 - Backend: Node.js (Express)
-- Database: PostgreSQL
-- Orchestrazione: Docker Compose
-
+- Frontend: Angular
+- Desktop: Tauri
 
 ## Architettura 
 ```
-____________________________________________________
+________________________________________________________________
 |                                                          		|
-|   +----------+          +----------+          +------------+  |
+|   +----------+   HTTP   +----------+          +------------+  |
 |   | Frontend | <------> | Backend  | <------> |            |  |
-|   | Angular  |          | Node.js  |          | PostgreSQL |  |
+|   | Angular  |          | Node.js  |          |   SQLite   |  |
 |   +----------+          | Express  |          |            |	|
-|        ^                +----------+          +------------+	|
-|        |                                                 		|
-|   +----------+                                           		|
-|   | Electron |                                           		|
-|   | Desktop  |                                           		|
-|   +----------+                                           		|
+|                         +----------+          +------------+	|
+|                                    	                     	|
 |                                                          		|
-|_________________ Docker Compose orchestration ________________|
+|______________ Tauri - Desktop Container ______________________|
 
 ```
 
 ## Roadmap
 - Setup progetto e documentazione iniziale
-- Database PostgreSQL con schema iniziale
+- Database SQLite con schema iniziale
 - Backend API  (CRUD)
 - Frontend Angular
 - Integrazione FE <-> BE
-- Desktop App con Electron
-- Web App servita dal Backend
-- Docker Compose per avvio completo
-- Funzionalità aggiuntive
+- Integrazione Desktop con Tauri
+- Build applicazione desktop (.exe)
+- Rifinitura UX
 
 
 ## Avvio
-Istruzioni disponibili a progetto completato
+Istruzioni disponibili a progetto completato, ma l'obiettivo finale è quello di fornire un file eseguibile con avvio immediato dell'applicazione e senza alcuna configurazione manuale

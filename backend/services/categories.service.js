@@ -1,99 +1,103 @@
-const pool = require('../pool');
+const db = require('../SQLiteDB/db');
 const appError = require('../utils/appError');
 
-exports.getAllCategories = async () => {
-  const { rows } = await pool.query(
-    'SELECT * FROM categories ORDER BY id ASC;'
-  );
-  return rows;
+// GET All
+exports.getAllCategories = () => {
+  return db
+    .prepare('SELECT * FROM categories ORDER BY id ASC')
+    .all();
 };
 
-exports.getCategoryById = async (id) => {
-  const { rows } = await pool.query(
-    'SELECT * FROM categories WHERE id = $1',
-    [id]
-  );
+// GET by Id
+exports.getCategoryById = (id) => {
+  const category = db
+    .prepare('SELECT * FROM categories WHERE id = ?')
+    .get(id);
 
-  if (rows.length === 0) {
+  if (!category) {
     throw new appError('Category not found', 404);
   }
 
-  return rows[0];
+  return category;
 };
 
-exports.getCategoryByName = async (name) => {
-  const { rows } = await pool.query(
-    'SELECT * FROM categories WHERE name = $1',
-    [name]
-  );
+// GET by Name
+exports.getCategoryByName = (name) => {
+  const category = db
+    .prepare('SELECT * FROM categories WHERE name = ?')
+    .get(name);
 
-  if (rows.length === 0) {
+  if (!category) {
     throw new appError('Category not found', 404);
   }
 
-  return rows[0];
+  return category;
 };
 
-exports.createCategory = async ({ name, color = '#4b33ffff'}) => {
-
-  const { rows } = await pool.query(
-    `
+// POST
+exports.createCategory = ({ name, color = '#4b33ffff' }) => {
+  const stmt = db.prepare(`
     INSERT INTO categories (name, color)
-    VALUES ($1, $2)
-    ON CONFLICT (name) DO NOTHING
-    RETURNING *
-    `,
-    [name, color]
-  );
+    VALUES (?, ?)
+  `);
 
-  if (rows.length === 0) {
-    throw new appError('CategoryName already exists.', 409);
+  try {
+    const result = stmt.run(name, color);
+
+    return db
+      .prepare('SELECT * FROM categories WHERE id = ?')
+      .get(result.lastInsertRowid);
+  } catch (err) {
+    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      throw new appError('CategoryName already exists.', 409);
+    }
+    throw err;
   }
-
-  return rows[0];
 };
 
+// PUT
+exports.updateCategory = (id, { name, color }) => {
+  const category = db
+    .prepare('SELECT * FROM categories WHERE id = ?')
+    .get(id);
 
-exports.updateCategory = async (id, { name, color }) => {
-  const categoryExists = await pool.query('SELECT 1 FROM categories WHERE id = $1', [id]);
-
-  if (categoryExists.rowCount === 0) {
+  if (!category) {
     throw new appError('Category not found', 404);
   }
 
-  const { rows } = await pool.query(
-    `
-    UPDATE categories c
-    SET
-      name  = COALESCE($1, c.name),
-      color = COALESCE($2, c.color)
-    WHERE c.id = $3
-      AND NOT EXISTS (
-        SELECT 1
-        FROM categories c2
-        WHERE c2.name = $1
-          AND c2.id <> $3
-      )
-    RETURNING *
-    `,
-    [name, color, id]
-  );
+  if (name) {
+    const existing = db
+      .prepare('SELECT 1 FROM categories WHERE name = ? AND id <> ?')
+      .get(name, id);
 
-  if (rows.length === 0) {
-    throw new appError('Nome categoria già esistente. Scegli un nome diverso.', 409);
+    if (existing) {
+      throw new appError(
+        'Nome categoria già esistente. Scegli un nome diverso.',
+        409
+      );
+    }
   }
 
-  return rows[0];
+  db.prepare(`
+    UPDATE categories
+    SET
+      name  = COALESCE(?, name),
+      color = COALESCE(?, color)
+    WHERE id = ?
+  `).run(name, color, id);
+
+  return db
+    .prepare('SELECT * FROM categories WHERE id = ?')
+    .get(id);
 };
 
+// DELETE
+exports.deleteCategory = (id) => {
+  const result = db
+    .prepare('DELETE FROM categories WHERE id = ?')
+    .run(id);
 
-exports.deleteCategory = async (id) => {
-  const { rowCount } = await pool.query(
-    'DELETE FROM categories WHERE id = $1',
-    [id]
-  );
-
-  if (rowCount === 0) {
+  if (result.changes === 0) {
     throw new appError('Category not found', 404);
   }
 };
