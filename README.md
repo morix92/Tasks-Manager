@@ -1,5 +1,5 @@
 # Tasks-Manager 
-Applicazione desktop offline-first per la gestione e la calendarizzazione delle attività personali.
+Applicazione desktop offline-only per la gestione e la calendarizzazione delle attività personali.
 
 Il progetto nasce come full-stack showcase per dimostrare competenze su:
 - architettura applicativa
@@ -32,6 +32,17 @@ ________________________________________________________________
 |______________ Tauri - Desktop Container ______________________|
 
 ```
+
+## Scelte Architetturali
+
+### Obiettivo
+L'applicazione è progettata per essere completamente offline e autonoma.
+L'obiettivo finale è ottenere un unico eseguibile che riunisca frontend, backend e database.
+### Perché SQLite?
+SQLite consente all'app di funzionare senza servizi esterni, semplifica la distribuzione e la rende adatta ad un contesto desktop offline.
+### Perché niente Docker?
+Docker è stato inizialmente utilizzato durante lo sviluppo, ma successivamente rimosso per evitare inutili complessità non coerenti con l'obiettivo finale.
+
 
 ## Roadmap
 - Setup progetto e documentazione iniziale
