@@ -1,5 +1,7 @@
 require('./SQLiteDB/init-db')
 const express = require('express');
+const cors = require('cors');
+
 const usersRoutes = require('./routes/users.routes');
 const tasksRoutes = require('./routes/tasks.routes');
 const categoriesRoutes = require('./routes/categories.routes');
@@ -9,6 +11,12 @@ const { startReminderJob } = require('./jobs/reminder.job');
 const app = express();
 const PORT = 3000;
 
+app.use(cors({
+  origin: [
+    'http://localhost:4200', // Angular dev
+  ]
+}));
+
 app.use(express.json())
 
 //Rotte
@@ -16,6 +24,10 @@ app.use('/users', usersRoutes)
 app.use('/tasks', tasksRoutes)
 app.use('/categories', categoriesRoutes)
 app.use('/reminders', RemindersRoutes)
+
+app.use('/avatar', express.static('public/avatar'));
+app.use('/avatars', require('./routes/avatars.routes'));
+
 
 //Middleware errori
 app.use((err, req, res, next) => {

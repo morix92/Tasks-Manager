@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="calendar">
+    <div class="calendar-header">
+        <button (click)="prevMonth()">&lt;</button>
+        <span>{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+        <button (click)="nextMonth()">&gt;</button>
+    </div>
+
+    <div class="calendar-weekdays">
+        <div *ngFor="let day of weekDays">{{ day }}</div>
+    </div>
+
+    <div class="calendar-grid">
+        <div *ngFor="let week of weeks" class="calendar-row">
+        <div *ngFor="let day of week" class="calendar-cell" 
+            [class.outside]="!day.inMonth">
+            <div class="cell-content">
+            {{ day.date.getDate() }}
+            <div *ngFor="let task of day.tasks" class="task">
+                {{ task.title }}
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+</div>

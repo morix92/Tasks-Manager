@@ -1,0 +1,30 @@
+<h1>I Tuoi Profili</h1>
+<div class="profiles">
+  <div *ngFor="let user of allUsers()" class="user-card">
+    <p class="user-name">{{ user.username }}</p>
+    <img class="user-avatar" [src]="user.avatar_url" alt="Avatar di {{ user.username }}"/>
+    <div class="card-actions">
+      <button (click)="editUser(user.id)"><mat-icon>edit</mat-icon></button>
+      <button (click)="deleteUser(user.id)"><mat-icon>delete</mat-icon></button>
+    </div>
+    <button class="login" (click)="login(user)">ACCEDI<mat-icon>login</mat-icon></button>
+  </div>
+
+  <div *ngIf="allUsers().length < 4" class="addUser">
+    <button class="icon-btn edit" (click)="addUser()"><mat-icon>add</mat-icon></button>
+    <p class="user-name">Aggiungi Profilo</p>
+  </div>
+
+  <div class="overlay" *ngIf="showDialogAddUser()" (click)="closeDialog($event)">
+       <div class="dialog" (click)="$event.stopPropagation()">
+         <app-add-profile (userCreated)="onUserCreated($event)" (closeDialog)="showDialogAddUser.set(false)"></app-add-profile>
+      </div>
+   </div>
+
+   <div class="overlay" *ngIf="showDialogEditUser()" (click)="closeDialog($event)">
+       <div class="dialog" (click)="$event.stopPropagation()">
+         <app-edit-profile [userSignal]="selectedUser" (userUpdated)="onUserUpdated($event)" (closeDialog)="showDialogAddUser.set(false)"></app-edit-profile>
+      </div>
+   </div>
+
+</div>

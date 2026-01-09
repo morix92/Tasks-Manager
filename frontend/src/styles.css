@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* Override Calendario Angular Material */
+.mat-calendar-body-label {
+    visibility: hidden;
+}
+
+.mat-calendar-body-cell {
+  border: 1px solid rgba(0, 0, 0, 0.15)!important;
+}
+
+.mat-calendar-body-cell .mat-calendar-body-cell-content { 
+    border-radius: 0; 
+    display: flex; 
+    align-items: start; 
+    justify-content: start;
+    padding: 0;
+}
+

@@ -1,6 +1,6 @@
 const appError = require('../utils/appError');
 
-exports.validateCreateUser = ({ username }) => {
+exports.validateCreateUser = ({ username , avatar_url }) => {
   if (!username) {
     throw new appError('Username is required', 400);
   }

@@ -58,11 +58,8 @@ db.exec(`
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
   );
 
-  INSERT INTO users (username, avatar_url)
-  SELECT 'Default_User', '/public/profile.png'
-  WHERE NOT EXISTS (
-    SELECT 1 FROM users WHERE username = 'Default_User'
-  );
+  INSERT OR IGNORE INTO users (id, username, avatar_url)
+  VALUES (1, 'Default_User', '/avatar/profile.png');
 
   INSERT INTO categories (name, color)
   SELECT 'Lavoro', '#FF5733'

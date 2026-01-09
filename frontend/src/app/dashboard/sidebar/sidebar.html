@@ -1,0 +1,11 @@
+<div class="sidebar">
+  <a routerLink="/home" routerLinkActive="active">Calendario</a>
+  <a routerLink="/tasks" routerLinkActive="active">Lista Attività</a>
+  <a routerLink="/reminder" routerLinkActive="active">Notifiche</a>
+  <a routerLink="/categories" routerLinkActive="active">Categorie</a>
+
+  <div *ngIf="showFilters">
+    <hr>
+    <p>Filtri</p>
+  </div>
+</div>

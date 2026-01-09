@@ -1,0 +1,14 @@
+<div class="navbar">
+    <div class="navbar-left">
+        <img class="app-logo" src="/assets/AMlogo.png">
+        <span class="app-name">Tasks Manager</span>
+    </div>
+
+    <div class="navbar-right" *ngIf="currentUser() as user">
+        <span class="username">{{ user.username }}</span>    
+        <img class="user-avatar" [src]="user.avatar_url" >
+        <button class="buttonLogout" (click)="logout()"><mat-icon>power_settings_new</mat-icon></button>
+    </div>
+</div>
+<hr class="separatore">
+<hr class="separatore2">

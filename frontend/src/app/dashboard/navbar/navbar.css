@@ -1,0 +1,70 @@
+.navbar{
+    display: flex;
+    background-color: #1e1e1e;
+    justify-content: space-between;
+}
+
+.navbar-left {
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.buttonLogout{
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-right: 100px;
+}
+
+.app-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin: 20px;
+}
+.app-name {
+  font-size: 30px;
+  margin-left: 30px;
+  color: white;
+
+}
+.username {
+  font-size: 25px;
+  color: white;
+  margin-right: 30px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 20%;
+  object-fit: cover;
+  margin-right: 30px;
+}
+
+.buttonLogout mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px; /* font-size deve corrispondere */
+}
+
+.separatore{
+    margin: 0px;
+    border: none;
+    height: 5px;
+    background-color: rgba(196, 176, 68, 0.815); /* colore oro */
+}
+.separatore2{
+    margin: 0px;
+    border: none;
+    height: 20px;      
+    background-color: #1e1e1e;
+}

@@ -1,0 +1,21 @@
+.separatore{
+    margin: 0px;
+    border: none;
+    height: 5px;
+    background-color: rgba(196, 176, 68, 0.815); /* colore oro */
+}
+
+.separatore2{
+    margin: 0px;
+    border: none;
+    height: 20px;      
+    background-color: #1e1e1e;
+}
+
+.footer{
+    display: flex;
+    height: 80px;
+    background-color: #1e1e1e;
+    justify-content: space-between;
+    color: white;
+}
