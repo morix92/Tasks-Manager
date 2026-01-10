@@ -58,22 +58,41 @@ db.exec(`
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
   );
 
-  INSERT OR IGNORE INTO users (id, username, avatar_url)
-  VALUES (1, 'Default_User', '/avatar/profile.png');
+  -- Tabella di configurazione per primo inserimento dati
+  CREATE TABLE IF NOT EXISTS app_config (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT NOT NULL UNIQUE,
+    value TEXT NOT NULL
+  );
+
+  INSERT OR IGNORE INTO app_config (key, value) 
+  VALUES ('initialized', '0');
+
+  INSERT INTO users (id, username, avatar_url)
+  SELECT 1, 'Default_User', '/avatar/profile.png'
+  WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'Default_User') 
+  AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
   INSERT INTO categories (name, color)
-  SELECT 'Lavoro', '#FF5733'
-  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Lavoro');
+  SELECT 'Lavoro', '#e85b2e'
+  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Lavoro') 
+  AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
   INSERT INTO categories (name, color)
-  SELECT 'Studio', '#33C1FF'
-  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Studio');
+  SELECT 'Studio', '#ab9cff'
+  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Studio') 
+  AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
   INSERT INTO categories (name, color)
-  SELECT 'Personale', '#98FF33'
-  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Personale');
+  SELECT 'Personale', '#6cadf9'
+  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Personale') 
+  AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
   INSERT INTO categories (name, color)
-  SELECT 'Pagamenti', '#4C6A92'
-  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Pagamenti');
+  SELECT 'Pagamenti', '#6ea47b'
+  WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Pagamenti') 
+  AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
+
+  -- Imposta il flag "initialized" a 1 dopo che i dati di default sono stati inseriti
+  UPDATE app_config SET value = '1' WHERE key = 'initialized';
 `);
