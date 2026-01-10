@@ -229,10 +229,11 @@ function formatDateForSQLite(date) {
 function createReminders(task) {
   if (task.exact_remind_at) {
     db.prepare(`
-      INSERT INTO reminders (task_id, due_date_task, remind_at)
-      VALUES (?,?,?)
+      INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
+      VALUES (?,?,?,?)
     `).run(
       task.id,
+      task.title,
       formatDateForSQLite(task.due_date),
       formatDateForSQLite(task.exact_remind_at)
     );
@@ -245,10 +246,11 @@ function createReminders(task) {
 
     for (const remindAt of dates) {
       db.prepare(`
-        INSERT INTO reminders (task_id, due_date_task, remind_at)
-        VALUES (?,?,?)
+        INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
+        VALUES (?,?,?,?)
       `).run(
         task.id,
+        task.title,
         formatDateForSQLite(task.due_date),
         formatDateForSQLite(remindAt)
       );

@@ -62,9 +62,9 @@ exports.getReminderById = (id) => {
 
 /* ===================== CREATE ===================== */
 exports.createReminder = ({ task_id, remind_at }) => {
-  // recupero due_date del task
+  // recupero due_date e title del task
   const task = db
-    .prepare('SELECT due_date FROM tasks WHERE id = ?')
+    .prepare('SELECT title, due_date FROM tasks WHERE id = ?')
     .get(task_id);
 
   if (!task) {
@@ -86,11 +86,12 @@ exports.createReminder = ({ task_id, remind_at }) => {
 
   const result = db
     .prepare(`
-      INSERT INTO reminders (task_id, due_date_task, remind_at)
-      VALUES (?, ?, ?)
+      INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
+      VALUES (?, ?, ?, ?)
     `)
     .run(
       task_id,
+      task_title,
       formatDateForSQLite(dueDate),
       formatDateForSQLite(remindAtDate)
     );
@@ -103,7 +104,7 @@ exports.createReminder = ({ task_id, remind_at }) => {
 /* ===================== UPDATE ===================== */
 exports.updateReminder = (id, { remind_at }) => {
   const reminder = db
-    .prepare('SELECT due_date_task FROM reminders WHERE id = ?')
+    .prepare('SELECT task_due_date FROM reminders WHERE id = ?')
     .get(id);
 
   if (!reminder) {

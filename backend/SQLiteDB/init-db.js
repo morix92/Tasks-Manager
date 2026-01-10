@@ -52,7 +52,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS reminders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     task_id INTEGER NOT NULL,
-    due_date_task TEXT NOT NULL,
+    task_title TEXT NOT NULL,
+    task_due_date TEXT NOT NULL,
     remind_at TEXT NOT NULL,
     is_sent INTEGER DEFAULT 0,
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
