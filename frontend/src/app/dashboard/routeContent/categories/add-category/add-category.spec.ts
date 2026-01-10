@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Reminder } from './reminder';
+import { AddCategory } from './add-category';
 
-describe('Reminder', () => {
-  let component: Reminder;
-  let fixture: ComponentFixture<Reminder>;
+describe('AddCategory', () => {
+  let component: AddCategory;
+  let fixture: ComponentFixture<AddCategory>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Reminder]
+      imports: [AddCategory]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Reminder);
+    fixture = TestBed.createComponent(AddCategory);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

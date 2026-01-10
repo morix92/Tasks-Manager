@@ -11,7 +11,7 @@
   </div>
 
   <div *ngIf="allUsers().length < 4" class="addUser">
-    <button class="icon-btn edit" (click)="addUser()"><mat-icon>add</mat-icon></button>
+    <button class="icon-btn" (click)="addUser()"><mat-icon>add</mat-icon></button>
     <p class="user-name">Aggiungi Profilo</p>
   </div>
 
@@ -23,7 +23,7 @@
 
    <div class="overlay" *ngIf="showDialogEditUser()" (click)="closeDialog($event)">
        <div class="dialog" (click)="$event.stopPropagation()">
-         <app-edit-profile [userSignal]="selectedUser" (userUpdated)="onUserUpdated($event)" (closeDialog)="showDialogAddUser.set(false)"></app-edit-profile>
+         <app-edit-profile [userSignal]="selectedUser" (userUpdated)="onUserUpdated($event)" (closeDialog)="showDialogEditUser.set(false)"></app-edit-profile>
       </div>
    </div>
 

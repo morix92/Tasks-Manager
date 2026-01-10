@@ -1,0 +1,26 @@
+<h1>Categorie</h1>
+<div class="categories">
+  <div *ngFor="let category of allCategories()" class="category-card" [ngStyle]="{ 'background-color' : category.color }">
+    <p class="category-name">{{ category.name }}</p>
+    <div class="card-actions">
+      <button (click)="editCategory(category.id)"><mat-icon>edit</mat-icon></button>
+      <button (click)="deleteCategory(category.id)"><mat-icon>delete</mat-icon></button>
+    </div>
+  </div>
+</div>
+<div class="addCategory">
+    <button class="icon-btn" (click)="addCategory()">Aggiungi Categoria <mat-icon>add</mat-icon></button>
+</div>
+
+
+<div class="overlay" *ngIf="showDialogAddCategory()" (click)="closeDialog($event)">
+    <div class="dialog" (click)="$event.stopPropagation()">
+        <app-add-category (categoryCreated)="onCategoryCreated($event)" (closeDialog)="showDialogAddCategory.set(false)"></app-add-category>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="showDialogEditCategory()" (click)="closeDialog($event)">
+    <div class="dialog" (click)="$event.stopPropagation()">
+        <app-edit-category [categorySignal]="selectedCategory" (categoryUpdated)="onCategoryUpdated($event)" (closeDialog)="showDialogEditCategory.set(false)"></app-edit-category>
+    </div>
+</div>

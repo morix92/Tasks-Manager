@@ -16,9 +16,17 @@ hr{
   padding: 12px;
   text-decoration: none;
   color: white;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar a.active {
-  background-color: #000;
-  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid rgba(211, 190, 70, 0.863);
+  color: rgba(211, 190, 70, 0.863);
 }

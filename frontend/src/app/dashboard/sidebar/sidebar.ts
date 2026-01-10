@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterModule } from '@angular/router';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })

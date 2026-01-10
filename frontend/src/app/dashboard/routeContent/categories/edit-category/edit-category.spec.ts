@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Users } from './users';
+import { EditCategory } from './edit-category';
 
-describe('Users', () => {
-  let component: Users;
-  let fixture: ComponentFixture<Users>;
+describe('EditCategory', () => {
+  let component: EditCategory;
+  let fixture: ComponentFixture<EditCategory>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Users]
+      imports: [EditCategory]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Users);
+    fixture = TestBed.createComponent(EditCategory);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

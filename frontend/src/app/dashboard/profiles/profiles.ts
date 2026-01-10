@@ -58,10 +58,9 @@ export class Profiles {
 
   deleteUser(id: number) {
     this.usersApi.deleteUser(id).subscribe(()=>{
-    
-    const filteredUsers = this.allUsers().filter(u => u.id !== id);
-    this.allUsers.set(filteredUsers);
-    console.log("Utente eliminato")  
+      const filteredUsers = this.allUsers().filter(u => u.id !== id);
+      this.allUsers.set(filteredUsers);
+      console.log("Utente eliminato")  
     })
   }
 
