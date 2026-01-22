@@ -1,0 +1,26 @@
+<h1>Notifiche del Task</h1>
+<div class="reminders">
+    <div *ngIf="allReminders().length === 0">
+        <h3>Nessuna Notifica Presente</h3>
+    </div>
+
+    <div *ngFor="let reminder of allReminders()" class="reminder-card" [class.removing]="animatedReminderId === reminder.id && animationType === 'remove'">
+        <button class="btn" (click)="deleteReminder(reminder.id)"><mat-icon>delete</mat-icon></button>
+        <div class="reminder-data">
+            <div class="data-field">
+                <span class="data-label">Attività</span>
+                <p>{{ reminder.task_title }}</p>
+            </div>
+
+            <div class="data-field secondary">
+                <span class="data-label">Scadenza</span>
+                <p>{{ reminder.task_due_date | date:'dd/MM/yyyy - HH:mm' }}</p>
+            </div>
+
+            <div class="data-field secondary">
+                <span class="data-label">Promemoria</span>
+                <p>{{ reminder.remind_at | date:'dd/MM/yyyy - HH:mm' }}</p>
+            </div>
+        </div>  
+    </div>
+</div>

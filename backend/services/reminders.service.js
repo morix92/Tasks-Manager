@@ -1,36 +1,38 @@
 const db = require('../SQLiteDB/db');
 const appError = require('../utils/appError');
+const formatLocalDate = require('../utils/formatLocalDate');
 
-/* ===================== FUNZIONE ESTERNA ===================== */
+/* ===================== GENERA REMINDERS ===================== */
 function generateReminders(dueDate, rule, interval = 1) {
   const reminders = [];
-  let date = new Date(dueDate);
-  const now = new Date();
+  let current = new Date(dueDate.replace(' ', 'T'));
+  const now = Date.now();
 
-  while (date > now) {
-    reminders.push(new Date(date));
+  while (current.getTime() > now) {
+    reminders.push(formatLocalDate(current));
+
     switch (rule) {
       case 'hourly':
-        date.setHours(date.getHours() - interval);
+        current.setHours(current.getHours() - interval);
         break;
       case 'daily':
-        date.setDate(date.getDate() - interval);
+        current.setDate(current.getDate() - interval);
         break;
       case 'weekly':
-        date.setDate(date.getDate() - interval * 7);
+        current.setDate(current.getDate() - interval * 7);
         break;
       case 'monthly':
-        date.setMonth(date.getMonth() - interval);
+        current.setMonth(current.getMonth() - interval);
         break;
       case 'yearly':
-        date.setFullYear(date.getFullYear() - interval);
+        current.setFullYear(current.getFullYear() - interval);
         break;
       default:
         throw new Error(`Unsupported rule: ${rule}`);
     }
   }
 
-  return reminders.filter(d => d > now);
+  return reminders
 }
 exports.generateReminders = generateReminders;
 
@@ -60,40 +62,56 @@ exports.getReminderById = (id) => {
   return reminder;
 };
 
+/* ===================== GET BY USER ===================== */
+exports.getReminderByUserId = (user_id, is_sent = null) => {
+  let query = 'SELECT * FROM reminders WHERE user_id = ?';
+  const params = [user_id];
+
+  if (is_sent !== null) {
+    if (![0, 1].includes(is_sent)) {
+      throw new appError('Inserire valori accettati (0 - 1)', 400);
+    }
+    query += ' AND is_sent = ?';
+    params.push(is_sent);
+  }
+
+  return db.prepare(query).all(...params);
+};
+
+/* ===================== GET REMINDER BY TASK ===================== */
+exports.getReminderByTask = (task_id, limit = true) => {
+  let query = 'SELECT * FROM reminders WHERE is_sent = 0 AND task_id = ? ORDER BY remind_at ASC';
+  const params = [task_id];
+
+  if (limit) query += ' LIMIT 1';
+
+  const reminder = db.prepare(query).all(...params);
+  return reminder;
+};
+
 /* ===================== CREATE ===================== */
 exports.createReminder = ({ task_id, remind_at }) => {
-  // recupero due_date e title del task
   const task = db
-    .prepare('SELECT title, due_date FROM tasks WHERE id = ?')
+    .prepare('SELECT user_id, title, due_date FROM tasks WHERE id = ?')
     .get(task_id);
 
-  if (!task) {
-    throw new appError(
-      `task_id ${task_id} does not exist in tasks table`,
-      400
-    );
-  }
+  if (!task) throw new appError(`task_id ${task_id} does not exist`, 400);
 
-  const dueDate = new Date(task.due_date);
+  const dueDate  = new Date(task.due_date);
   const remindAtDate = new Date(remind_at);
-
-  if (remindAtDate > dueDate) {
-    throw new appError(
-      'remind_at cannot be after the task due_date',
-      400
-    );
-  }
+  if (remindAtDate.getTime() > dueDate.getTime()) throw new appError('remind_at cannot be after the task due_date', 400);
 
   const result = db
     .prepare(`
-      INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO reminders (user_id, task_id, task_title, task_due_date, remind_at)
+      VALUES (?, ?, ?, ?, ?)
     `)
     .run(
+      task.user_id,
       task_id,
-      task_title,
-      formatDateForSQLite(dueDate),
-      formatDateForSQLite(remindAtDate)
+      task.title,
+      task.due_date,
+      remind_at
     );
 
   return db
@@ -107,45 +125,23 @@ exports.updateReminder = (id, { remind_at }) => {
     .prepare('SELECT task_due_date FROM reminders WHERE id = ?')
     .get(id);
 
-  if (!reminder) {
-    throw new appError('Reminder not found', 404);
-  }
+  if (!reminder) throw new appError('Reminder not found', 404);
 
-  const dueDate = new Date(reminder.due_date_task);
+  const dueDate  = new Date(reminder.task_due_date);
   const remindAtDate = new Date(remind_at);
+  if (remindAtDate.getTime() > dueDate.getTime()) throw new appError('remind_at cannot be after the task due_date', 400);
 
-  if (remindAtDate > dueDate) {
-    throw new appError(
-      'remind_at cannot be after the task due_date',
-      400
-    );
-  }
+  db.prepare('UPDATE reminders SET remind_at = ? WHERE id = ?')
+    .run(remind_at, id);
 
-  db.prepare(`
-    UPDATE reminders
-    SET remind_at = ?
-    WHERE id = ?
-  `).run(
-    formatDateForSQLite(remindAtDate),
-    id
-  );
-
-  return db
-    .prepare('SELECT * FROM reminders WHERE id = ?')
-    .get(id);
+  return db.prepare('SELECT * FROM reminders WHERE id = ?').get(id);
 };
 
 /* ===================== DELETE ===================== */
 exports.deleteReminder = (id) => {
-  const result = db
-    .prepare('DELETE FROM reminders WHERE id = ?')
-    .run(id);
+  const result = db.prepare('DELETE FROM reminders WHERE id = ?').run(id);
 
   if (result.changes === 0) {
     throw new appError('Reminder not found', 404);
   }
 };
-
-function formatDateForSQLite(date) {
-  return new Date(date).toISOString().replace('T', ' ').slice(0, 19);
-}

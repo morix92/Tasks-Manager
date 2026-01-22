@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, ElementRef, signal, effect } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, ElementRef, signal, effect, computed } from '@angular/core';
 import { User } from '../../../models/user.model';
 import { CreateUserDto } from '../../../models/createUser.model';
 import { UsersApi } from '../../../services/crud/users/users-api';
@@ -25,6 +25,7 @@ export class EditProfile {
   @ViewChild('avatarContainer') avatarContainer!: ElementRef<HTMLDivElement>;
 
   avatars = signal<string[]>([]);
+  isSubmitted = signal(false);
 
   constructor(private usersApi: UsersApi, private avatarsApi: Avatars){
     effect(() => {
@@ -41,6 +42,21 @@ export class EditProfile {
     });
   }
 
+  formErrors = computed(() => {
+    const f = this.formModel();
+    const errors: Record<string, string> = {};
+
+    if (!f.username) {
+      errors['username'] = 'Il campo Nome è obbligatorio';
+    } else if (f.username.trim().length < 3) {
+      errors['username'] = 'Il campo Nome deve contenere almeno 3 caratteri';
+    }
+    if (!f.avatar_url) errors['avatar_url'] = 'Selezionare un Avatar';
+    return errors;
+  });
+
+  isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
+  
   updateUsername(value: string) {
     this.formModel.set({ ...this.formModel(), username: value });
   }
@@ -51,6 +67,8 @@ export class EditProfile {
 
   submit(event: Event) {
     event.preventDefault();
+    this.isSubmitted.set(true);
+    if (!this.isValidForm()) return;
     this.updateUser(this.formModel())
   }
 

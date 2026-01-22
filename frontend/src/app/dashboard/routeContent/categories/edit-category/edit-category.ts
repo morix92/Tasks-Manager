@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, Input, Output, signal } from '@angular/core';
 import { Category } from '../../../../models/category.model';
 import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CreateCategoryDto } from '../../../../models/createCategory.model';
@@ -20,6 +20,8 @@ export class EditCategory {
   @Input() categorySignal = signal<Category | null>(null);
   @Output() categoryUpdated = new EventEmitter<Category>();
   @Output() closeDialog = new EventEmitter<void>();
+
+  isSubmitted = signal(false);
   
   constructor(private categoryApi: CategoriesApi){
     effect(() => {
@@ -37,7 +39,22 @@ export class EditCategory {
     name: '',
     color: ''
   });
+  
+  formErrors = computed(() => {
+    const f = this.formModel();
+    const errors: Record<string, string> = {};
 
+    if (!f.name) {
+      errors['name'] = 'Il campo Nome è obbligatorio';
+    } else if (f.name.trim().length < 3) {
+      errors['name'] = 'Il campo Nome deve contenere almeno 3 caratteri';
+    }
+    if (!f.color) errors['color'] = 'Selezionare un colore';
+    return errors;
+  });
+
+  isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
+  
   updateName(value: string) {
     this.formModel.set({ ...this.formModel(), name: value });
   }
@@ -48,6 +65,8 @@ export class EditCategory {
 
   submit(event: Event) {
     event.preventDefault();
+    this.isSubmitted.set(true);
+    if (!this.isValidForm()) return;
     this.updateCategory(this.formModel());
   }
 

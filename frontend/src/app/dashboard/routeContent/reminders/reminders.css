@@ -1,0 +1,116 @@
+h1{
+    color: white;
+    text-align: center;
+}
+
+.reminders {
+  display: flex;
+  flex-direction: column;  /* schede una sotto l’altra */
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem;
+}
+
+.reminder-card {
+  width: 90%;
+  max-width: 800px;
+  border-radius: 20px;
+  padding: 1rem 2rem;
+  box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  background: #fff;
+}
+
+.reminder-card.removing {
+  animation: implodeFade 0.6s ease forwards;
+}
+
+@keyframes implodeFade {
+  0% { opacity: 1; transform: scale(1); filter: blur(0);}
+  10% { opacity: 0.95; transform: scale(0.9); filter: blur(0.8px);}
+  20% { opacity: 0.9; transform: scale(0.8); filter: blur(1.6px);}
+  30% { opacity: 0.85; transform: scale(0.7); filter: blur(2.4px);}
+  40% { opacity: 0.75; transform: scale(0.60); filter: blur(3.2px);}
+  50% { opacity: 0.65; transform: scale(0.5); filter: blur(4px);}
+  60% { opacity: 0.55; transform: scale(0.4); filter: blur(4.8px);}
+  70% { opacity: 0.4; transform: scale(0.30); filter: blur(5.6px);}
+  80% { opacity: 0.25; transform: scale(0.2); filter: blur(6.4px);}
+  90% { opacity: 0.15; transform: scale(0.1); filter: blur(7.2px);}
+  100% { opacity: 0; transform: scale(0); filter: blur(8px);}
+}
+
+.reminder-data {
+  display: flex;
+  gap: 3rem;
+  width: 75%;
+  font-size: 20px;
+}
+
+.data-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.data-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.data-field p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.card-actions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-actions button {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.card-actions button:hover {
+  background-color: rgba(196, 176, 68, 0.9);
+  transform: scale(1.2);
+}
+
+.overlay {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+ 
+.dialog {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 20%;
+    min-width: 200px;
+    height: auto;
+}
+
+.zIndex0{
+    z-index: 0;
+}

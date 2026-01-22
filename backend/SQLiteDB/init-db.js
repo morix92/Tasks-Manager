@@ -18,28 +18,27 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
+    user_id INTEGER NOT NULL,
     category_id INTEGER,
     title TEXT NOT NULL,
     description TEXT,
     priority INTEGER CHECK (priority BETWEEN 1 AND 3),
-    status TEXT DEFAULT 'da_eseguire'
-      CHECK (status IN ('da_eseguire', 'in_corso', 'eseguita')),
-    due_date TEXT,
+    status INTEGER DEFAULT 0 CHECK (status BETWEEN 0 AND 2),
     completed_at TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    due_date TEXT,
+    created_at TEXT NOT NULL,
     exact_remind_at TEXT,
     recurrence_rule TEXT
       CHECK (recurrence_rule IN ('hourly', 'daily', 'weekly', 'monthly', 'yearly')),
     recurrence_interval INTEGER DEFAULT 1 CHECK (recurrence_interval > 0),
     is_featured INTEGER DEFAULT 0,
-    featured_order INTEGER,
+    featured_order INTEGER DEFAULT 0,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
 
     CHECK (
-      (is_featured = 0 AND featured_order IS NULL)
+      (is_featured = 0 AND featured_order = 0)
       OR
       (is_featured = 1 AND featured_order BETWEEN 1 AND 3)
     )
@@ -51,6 +50,7 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS reminders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
     task_id INTEGER NOT NULL,
     task_title TEXT NOT NULL,
     task_due_date TEXT NOT NULL,

@@ -1,0 +1,16 @@
+<div>
+  <h1>Aggiungi Promemoria al Task</h1>
+    <form (submit)="submit($event)" class="add-reminder-form">
+        <div class="form-group">
+            <label>Data Promemoria</label>
+            <input type="date" [value]="datePart()" (input)="datePart.set($event.target.value)">
+            <small class="error" *ngIf="isSubmitted() && formErrors()['datePart']">{{ formErrors()['datePart'] }}</small>
+            <label>Ora Promemoria</label>
+            <input type="time" [value]="timePart()" (input)="timePart.set($event.target.value)">
+            <small class="error" *ngIf="isSubmitted() && formErrors()['timePart']">{{ formErrors()['timePart'] }}</small>
+            
+        </div>
+        
+        <button type="submit" class="btn-submit">Salva</button>
+    </form>
+</div>

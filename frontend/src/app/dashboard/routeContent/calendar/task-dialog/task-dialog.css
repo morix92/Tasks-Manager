@@ -1,0 +1,75 @@
+.card {
+  position: relative;
+  width: auto; 
+  max-width: 500px;
+  margin: 0;
+  padding: 10px;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+
+/* Tag categoria */
+.category-tag {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  padding: 6px 12px;
+  border-radius: 14px 4px 14px 14px;
+  color: #000000;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.task-title {
+  margin: 2px 0 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.task-description {
+  margin: 2px 0 10px;
+  font-size: 1rem;
+  color: #222222;
+}
+
+/* Corpo */
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+/* Label e valori */
+.data-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #686868;
+  margin-bottom: 2px;
+}
+
+.data-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card-body {
+    grid-template-columns: 1fr;
+  }
+}

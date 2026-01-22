@@ -14,3 +14,19 @@
     justify-content: start;
     padding: 0;
 }
+/* Track quando spento */
+.mat-slide-toggle {
+  --mat-slide-toggle-track-color: #666666;    /* Track OFF */
+  --mat-slide-toggle-thumb-color: #cccccc;    /* Thumb OFF */
+}
+
+/* Track e thumb quando ON */
+.mat-slide-toggle.mat-checked {
+  --mat-slide-toggle-track-color: #1e1e1e;    /* Track ON */
+  --mat-slide-toggle-thumb-color: #ffffff;    /* Thumb ON */
+}
+
+/* Transizioni */
+.mat-slide-toggle, .mat-slide-toggle .mat-slide-toggle-thumb {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}

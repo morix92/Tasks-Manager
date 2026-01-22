@@ -19,7 +19,7 @@ h1{
   padding: 2rem;
   text-align: center;
   font-size: 25px;
-  box-shadow: 10px 10px 10px rgba(238, 237, 237, 0.788);
+  box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
 }
 
 .addUser{
@@ -32,7 +32,7 @@ h1{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 10px 10px 10px rgba(238, 237, 237, 0.788);
+  box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
 }
 
 .user-avatar {
@@ -96,7 +96,8 @@ h1{
     padding: 20px;
     border-radius: 8px;
     width: 30%;
-    height: 370px;
+    min-width: 320px;
+    height: auto;
 }
 
 .zIndex0{

@@ -1,21 +1,116 @@
+.home{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+
+/* =========================   TOGGLE MODALITA' VISUALIZZAZIONE   ========================= */
+
+.calendar-toolbar {
+  display: flex;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.toggleText {
+  color: white;
+  margin-right: 20px;
+  margin-left: 60px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.custom-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Nasconde il checkbox reale */
+.custom-toggle input {
+  display: none;
+}
+
+/* Track */
+.slider {
+  position: relative;
+  width: 64px;
+  height: 30px;
+  background-color: #aaa;
+  border-radius: 10px;
+  transition: background-color 0.40s ease;
+}
+
+/* Thumb */
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 26px;
+  left: 2px;
+  top: 2px;
+  background-color: #1e1e1eed;
+  border-radius: 10px;
+  transition: transform 0.50s ease;
+}
+
+/* Stato ON */
+.custom-toggle input:checked + .slider {
+  background-color: rgba(196, 176, 68, 0.9);
+}
+
+.custom-toggle input:checked + .slider::before {
+  transform: translateX(30px);
+}
+
+/* =========================   CALENDARIO   ========================= */
+
 .calendar {
   width: 90%;
   margin: auto;
   font-family: Arial, sans-serif;
   border-radius: 6px;
-
   padding: 8px;
   background-color: #ffffff;
   color: #1e1e1e;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.calendar.animating {
+  opacity: 0;
+  transform: scale(0.97);
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: large;
   padding: 8px 12px;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  font-weight: bold;
+}
+
+.calendar-header.ten-days {
+  display: flex;
+  justify-content: center;
+  border-bottom: 0px solid rgba(0, 0, 0, 0.0);
+}
+
+.calendar-header button {
+  background-color: #1e1e1e;
+  color: white;
+  width: 45px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
 }
 
 .calendar-weekdays {
@@ -25,38 +120,162 @@
   font-weight: bold;
 }
 
-.calendar-grid {
-  display: grid;
-  grid-template-rows: repeat(auto-fill, 1fr);
-}
-
-.calendar-row {
+/* Modalità mese */
+.calendar-row.month {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  height: 130px;
+  overflow: hidden;
 }
+
+/* Modalità 10 giorni */
+.calendar-row.ten-days {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 220px;
+  overflow: hidden;
+}
+
+.calendar-cell.today {
+  border: 4px solid #1e1e1e; /* colore riquadro */
+  border-radius: 15px; /* arrotondato come le altre celle */
+  background-color: #e9e6e6;
+}
+
+/* =========================   CELLE E CONTENUTO   ========================= */
 
 .calendar-cell {
   border: 1px solid #ccc;
-  min-height: 100px;
+  min-width: 0;  /* NON permette di allargarsi anche se title lungo*/
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Scroll solo sui task */
+  transition: overflow 0.5s; /* opzionale, per effetto più fluido */
 }
 
 .calendar-cell.outside {
-  background-color: #f5f5f5;
+  background-color: #efebeb;
   color: #aaa;
 }
 
 .cell-content {
-  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.task {
-  font-size: 0.75em;
-  background-color: #3f51b5;
-  color: white;
-  margin-top: 2px;
-  padding: 2px 4px;
-  border-radius: 2px;
+.cell-content::after {
+  content: "";
+  flex-shrink: 0;
+  height: 3px; /* spazio sotto l’ultimo task */
+}
+
+.cell-content-header {
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.cell-content-header {
+  flex-shrink: 0; /* Non si riduce mai */
+  margin-bottom: 0px; /* Spazio tra header e task */
+}
+
+.cell-content-header.ten-days {
+  font-weight: bold;
+  margin-left: 10px;
+  margin-bottom: 12px;
+}
+
+.cell-tasks-wrapper {
+  flex: 1 1 auto; /* Occupa tutto lo spazio rimanente */
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 3px; /* spazio sotto l’ultimo task */
+  overflow-y: hidden;  /* scrollbar nascosta di default */
+}
+
+.cell-tasks-wrapper:hover {
+  overflow-y: auto; /* scrollbar visibile solo al passaggio del mouse */
+}
+
+.task-chip {
+  display: flex;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.task-chip:hover {
+  opacity: 0.7;
+  scale: 1.05;
+}
+
+.task{
+  width: 100%;
+  /* width: 100%; */ 
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 4px 7px;
+  
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.task-time {
+  flex-shrink: 0; /* non si accorcia mai */
+  white-space: nowrap;
+}
+
+.task-title {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-badge {
+  position: relative;
+  padding-right: 5px; /* spazio per il badge */
+}
+
+.task-badge-icon {
+  position:absolute;
+  top: -8px;
+  right: -4px;
+
+  font-size: 23px;
+  background: transparent;
+  color: #1e1e1e;
+
+  border-radius: 40%;
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================   OVERLAY DIALOG   ========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 30%;
+  min-width: 250px;
 }

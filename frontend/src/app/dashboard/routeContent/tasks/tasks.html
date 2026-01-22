@@ -1,1 +1,119 @@
-<p>tasks works!</p>
+<div class="tabs">
+  
+  <button class="tab" [class.active]="activeTab() === 'daFare'" (click)="setTab('daFare')">Da Fare</button>
+  <button class="tab" [class.active]="activeTab() === 'completati'" (click)="setTab('completati')">Completati</button>
+  <button class="tab" [class.active]="activeTab() === 'scaduti'" (click)="setTab('scaduti')">Scaduti</button>
+  
+</div>
+
+<div [ngSwitch]="activeTab()" class="tab-content">
+    <div *ngSwitchCase="'daFare'" class="tab-panel">
+        <ng-container [ngTemplateOutlet]="taskListTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="'completati'" class="tab-panel">
+        <ng-container [ngTemplateOutlet]="taskListTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="'scaduti'" class="tab-panel">
+        <ng-container [ngTemplateOutlet]="taskListTemplate"></ng-container>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="activeDialog()" (click)="closeDialog()">
+  <div class="dialogReminder" *ngIf="activeDialog() === 'addReminder'" (click)="$event.stopPropagation()">
+    <app-add-reminder [taskIdSignal]="selectedTaskId" (reminderCreated)="onReminderCreated($event)" (closeDialog)="closeDialog()"> </app-add-reminder>
+  </div>
+  <div class="dialogGetReminder" *ngIf="activeDialog() === 'viewReminders'" (click)="$event.stopPropagation()">
+    <app-reminders-from-task [taskIdSignal]="selectedTaskId" (reminderDeleted)="onReminderDeleted($event)" (closeDialog)="closeDialog()"></app-reminders-from-task>
+  </div>
+  <div class="dialogEditTask" *ngIf="activeDialog() === 'editTask'" (click)="$event.stopPropagation()">
+    <app-edit-task [task]="selectedTask()" (taskUpdated)="onTaskUpdate($event)" (closeDialog)="closeDialog()"></app-edit-task>
+  </div>
+  <div class="reopenTask" *ngIf="activeDialog() === 'reopenTask'" (click)="$event.stopPropagation()">
+    <app-reopen-task [task]="selectedTask()" (taskCreated)="onTaskCreated($event)" (closeDialog)="closeDialog()"></app-reopen-task>
+  </div>
+</div>
+
+<ng-template #taskListTemplate>
+
+    <div *ngIf="allTasks().length === 0">
+        <h2>Nessuna Attività Presente</h2>
+    </div>
+
+    <div *ngFor="let task of tasksWithPriority(); trackBy: trackById" class="task-card" [class.completing]="animatedTaskId === task.id && animationType === 'complete'" [class.removing]="animatedTaskId === task.id && animationType === 'remove'">
+
+        <div class="card-header">
+            <div class="header-text">
+                <h3 class="task-title">{{ task.title }}</h3>
+                <p class="task-description">{{ task.description }}</p>
+            </div>
+
+            <span
+                class="category-tag"
+                [ngStyle]="{ 'background-color': task.category_color }">
+                {{ task.category_name }}
+            </span>
+
+        </div>
+
+        <div class="card-body" [class.full-width]="activeTab() === 'scaduti' || activeTab() === 'completati'">
+            <div class="body-task">
+                <div class="task-body">
+                    <div>
+                        <span class="data-label">Priorità:</span>
+                        <span class="data-value">{{ task.priorityLabel }}</span>
+                    </div>
+
+                    <div>
+                        <span class="data-label">Scadenza:</span>
+                        <span class="data-value">
+                        {{ task.due_date ? (task.due_date | date:'dd/MM/yyyy - HH:mm') : 'N/A' }}
+                        </span>
+                    </div>
+
+                    <div *ngIf="activeTab() === 'completati'">
+                        <span class="data-label">Completata il:</span>
+                        <span class="data-value">
+                        {{ task.completed_at ? (task.completed_at | date:'dd/MM/yyyy - HH:mm') : 'N/A' }}
+                        </span>
+                    </div>
+
+                </div>
+                <div class="card-actions">
+                    <button *ngIf="activeTab() === 'daFare'" class="icon-btn" (click)="completaTask(task.id)">Completa Task
+                        <mat-icon>task_alt</mat-icon>
+                    </button>
+                    <button *ngIf="activeTab() === 'completati' || activeTab() === 'scaduti'" class="icon-btn" (click)="riapriTask(task.id)">Riapri Task
+                        <mat-icon>undo</mat-icon>
+                    </button>
+                    <button *ngIf="activeTab() === 'daFare'" class="icon-btn" (click)="editTask(task.id)">Modifica Task
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="icon-btn" (click)="deleteTask(task.id)">Elimina Task
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="activeTab() === 'daFare'" class="body-reminder">
+          
+                <div class="reminder-field">
+                    <span class="data-label">Prossima Notifica:</span>
+                    <span class="data-value">
+                        {{ 
+                        nextReminderMap()[task.id]?.remind_at 
+                        ? (nextReminderMap()[task.id]!.remind_at | date:'dd/MM/yyyy - HH:mm') 
+                        : 'N/A' 
+                        }}
+                    </span>
+                </div>
+                
+                <div class="reminder-actions">
+                    <button class="icon-btn" (click)="viewReminders(task.id)">Visualizza Notifiche</button>
+                    <button class="icon-btn" (click)="addReminder(task.id)">Aggiungi Notifica</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</ng-template>

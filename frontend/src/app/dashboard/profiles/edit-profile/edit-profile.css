@@ -119,3 +119,8 @@ input[type="text"] {
   background-color: rgb(80, 80, 80);
   color: white;
 }
+
+.error {
+  color: red;
+  font-size: 12px;
+}

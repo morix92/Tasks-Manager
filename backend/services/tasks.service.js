@@ -1,6 +1,7 @@
 const db = require('../SQLiteDB/db');
 const appError = require('../utils/appError');
 const { generateReminders } = require('../services/reminders.service');
+const formatLocalDate = require('../utils/formatLocalDate');
 
 /* ===================== GET ALL ===================== */
 exports.getAllTasks = (filters = {}) => {
@@ -11,18 +12,15 @@ exports.getAllTasks = (filters = {}) => {
     status,
     categoryName,
     due_date_order,
-    featured_order,
     order
   } = filters;
 
   let query = `
     SELECT 
-      t.id, t.title, t.description, t.priority, t.status,
-      t.due_date, t.completed_at, t.created_at,
-      t.exact_remind_at, t.recurrence_rule, t.recurrence_interval,
-      t.is_featured, t.featured_order,
+      t.*,
       u.username AS user_username,
-      c.name AS category_name
+      c.name AS category_name,
+      c.color AS category_color
     FROM tasks t
     LEFT JOIN users u ON t.user_id = u.id
     LEFT JOIN categories c ON t.category_id = c.id
@@ -62,8 +60,6 @@ exports.getAllTasks = (filters = {}) => {
 
   if (['asc', 'desc'].includes(due_date_order)) {
     query += ` ORDER BY t.due_date ${due_date_order.toUpperCase()}`;
-  } else if (['asc', 'desc'].includes(featured_order)) {
-    query += ` ORDER BY t.featured_order ${featured_order.toUpperCase()}`;
   } else {
     query += ` ORDER BY t.id ${order === 'desc' ? 'DESC' : 'ASC'}`;
   }
@@ -77,7 +73,8 @@ exports.getTaskById = (id) => {
     SELECT 
       t.*,
       u.username AS user_username,
-      c.name AS category_name
+      c.name AS category_name,
+      c.color AS category_color
     FROM tasks t
     LEFT JOIN users u ON t.user_id = u.id
     LEFT JOIN categories c ON t.category_id = c.id
@@ -91,81 +88,26 @@ exports.getTaskById = (id) => {
   return task;
 };
 
-/* ===================== CREATE ===================== */
-exports.createTask = (data) => {
-  const {
-    user_id,
-    category_id,
-    title,
-    description,
-    priority,
-    status = 'da_eseguire',
-    due_date,
-    exact_remind_at,
-    recurrence_rule,
-    recurrence_interval,
-    is_featured,
-    featured_order
-  } = data;
+/* ===================== GET BY USER-ID ===================== */
+exports.getTaskByUserId = (user_id, status) => {
 
-  if (category_id) {
-    const exists = db
-      .prepare('SELECT 1 FROM categories WHERE id = ?')
-      .get(category_id);
+  let query = 'SELECT t.*, c.name AS category_name, c.color AS category_color FROM tasks t LEFT JOIN categories c ON t.category_id = c.id WHERE t.user_id = ?'
+  const params = [user_id];
 
-    if (!exists) {
-      throw new appError(
-        `category_id ${category_id} does not exist`,
-        400
-      );
+  if (status !== null) {
+    if (![0,1,2].includes(status)) {
+      throw new appError('Inserire valori accettati (0 - 2) per il parametro status', 400);
     }
+    query += ' AND status = ?';
+    params.push(status);
   }
-
-  if (is_featured === true) {
-    const used = db.prepare(`
-      SELECT 1 FROM tasks
-      WHERE is_featured = 1 AND featured_order = ?
-    `).get(featured_order);
-
-    if (used) {
-      throw new appError(
-        `featured_order ${featured_order} is already used`,
-        400
-      );
-    }
-  }
-
-  const result = db.prepare(`
-    INSERT INTO tasks (
-      user_id, category_id, title, description, priority, status,
-      due_date, exact_remind_at, recurrence_rule, recurrence_interval,
-      is_featured, featured_order
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
-  `).run(
-    user_id,
-    category_id,
-    title,
-    description,
-    priority,
-    status,
-    due_date,
-    exact_remind_at,
-    recurrence_rule,
-    recurrence_interval,
-    is_featured ? 1 : 0,
-    featured_order
-  );
-
-  const task = db
-    .prepare('SELECT * FROM tasks WHERE id = ?')
-    .get(result.lastInsertRowid);
-
-  createReminders(task);
-  return task;
+  
+  const tasks = db.prepare(query).all(...params);
+  return tasks;
 };
 
-/* ===================== UPDATE ===================== */
-exports.updateTask = (id, data) => {
+/* ===================== COMPLETA TASK ===================== */
+exports.completeTask = (id) => {
   const task = db.prepare(`
     SELECT * FROM tasks WHERE id = ?
   `).get(id);
@@ -174,36 +116,161 @@ exports.updateTask = (id, data) => {
     throw new appError('Task not found', 404);
   }
 
+  const now = formatLocalDate(new Date());
+
+  db.prepare(`
+    UPDATE tasks SET status = 1, completed_at = ? WHERE id = ?
+  `).run(now,id);
+
+  const completedTask = db
+    .prepare(`
+      SELECT 
+        t.*,
+        u.username AS user_username,
+        c.name AS category_name,
+        c.color AS category_color
+      FROM tasks t
+      LEFT JOIN users u ON t.user_id = u.id
+      LEFT JOIN categories c ON t.category_id = c.id
+      WHERE t.id = ?
+    `)
+    .get(id);
+  
+  if (completedTask.status === 1){
+    deleteTaskReminders(id);
+  }
+  
+  return completedTask;
+};
+
+/* ===================== CREAZIONE REMINDERS ===================== */
+function createReminders(task) {
+  if (task.exact_remind_at) {
+    db.prepare(`
+      INSERT INTO reminders (user_id, task_id, task_title, task_due_date, remind_at)
+      VALUES (?,?,?,?,?)
+    `).run(
+      task.user_id,
+      task.id,
+      task.title,
+      task.due_date,
+      task.exact_remind_at
+    );
+  } else if (task.recurrence_rule) {
+    const dates = generateReminders(task.due_date, task.recurrence_rule, task.recurrence_interval);
+    for (const remindAt of dates) {
+      db.prepare(`
+        INSERT INTO reminders (user_id, task_id, task_title, task_due_date, remind_at)
+        VALUES (?,?,?,?,?)
+      `).run(
+        task.user_id,
+        task.id,
+        task.title,
+        task.due_date,
+        remindAt
+      );
+    }
+  }
+}
+
+/* ===================== RECREAZIONE REMINDERS ===================== */
+function recreateReminders(task) {
+  db.prepare('DELETE FROM reminders WHERE task_id = ?').run(task.id);
+  createReminders(task);
+}
+
+/* ===================== ELIMINA REMINDERS ===================== */
+function deleteTaskReminders(taskId) {
+  db.prepare('DELETE FROM reminders WHERE task_id = ?').run(taskId);
+}
+
+/* ===================== CREATE TASKS ===================== */
+exports.createTask = (data) => {
+  const {
+    user_id,
+    category_id,
+    title,
+    description,
+    priority,
+    due_date,
+    exact_remind_at,
+    recurrence_rule,
+    recurrence_interval
+  } = data;
+
+  if (category_id) {
+    const exists = db.prepare('SELECT 1 FROM categories WHERE id = ?').get(category_id);
+    if (!exists) throw new appError(`category_id ${category_id} does not exist`, 400);
+  }
+
+  const now = formatLocalDate(new Date());
+
+  const result = db.prepare(`
+    INSERT INTO tasks (
+      user_id, category_id, title, description, priority,
+      due_date, exact_remind_at, recurrence_rule, recurrence_interval, created_at
+    ) VALUES (?,?,?,?,?,?,?,?,?,?)
+  `).run(
+    user_id,
+    category_id,
+    title,
+    description,
+    priority,
+    due_date ?? null, 
+    exact_remind_at ?? null,
+    recurrence_rule,
+    recurrence_interval,
+    now
+  );
+
+  const task = db.prepare(`
+    SELECT 
+      t.*,
+      u.username AS user_username,
+      c.name AS category_name,
+      c.color AS category_color
+    FROM tasks t
+    LEFT JOIN users u ON t.user_id = u.id
+    LEFT JOIN categories c ON t.category_id = c.id
+    WHERE t.id = ?
+  `).get(result.lastInsertRowid);
+
+  createReminders(task);
+  return task;
+};
+
+/* ===================== UPDATE TASKS ===================== */
+
+exports.updateTask = (id, data) => {
+  const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id);
+  if (!task) throw new appError('Task not found', 404);
+
   db.prepare(`
     UPDATE tasks SET
       title = COALESCE(?, title),
       description = COALESCE(?, description),
       priority = COALESCE(?, priority),
-      status = COALESCE(?, status),
-      due_date = COALESCE(?, due_date),
-      exact_remind_at = COALESCE(?, exact_remind_at),
-      recurrence_rule = COALESCE(?, recurrence_rule),
-      recurrence_interval = COALESCE(?, recurrence_interval),
-      is_featured = COALESCE(?, is_featured),
-      featured_order = COALESCE(?, featured_order)
+      category_id = COALESCE(?, category_id)
     WHERE id = ?
   `).run(
     data.title,
     data.description,
     data.priority,
-    data.status,
-    data.due_date,
-    data.exact_remind_at,
-    data.recurrence_rule,
-    data.recurrence_interval,
-    data.is_featured,
-    data.featured_order,
+    data.category_id,
     id
   );
 
-  const updatedTask = db
-    .prepare('SELECT * FROM tasks WHERE id = ?')
-    .get(id);
+  const updatedTask = db.prepare(`
+    SELECT 
+      t.*,
+      u.username AS user_username,
+      c.name AS category_name,
+      c.color AS category_color
+    FROM tasks t
+    LEFT JOIN users u ON t.user_id = u.id
+    LEFT JOIN categories c ON t.category_id = c.id
+    WHERE t.id = ?
+  `).get(id);
 
   recreateReminders(updatedTask);
   return updatedTask;
@@ -219,47 +286,3 @@ exports.deleteTask = (id) => {
     throw new appError('Task not found', 404);
   }
 };
-
-/* ===================== FUNZIONI INTERNE ===================== */
-
-function formatDateForSQLite(date) {
-  return new Date(date).toISOString().replace('T', ' ').slice(0, 19);
-}
-
-function createReminders(task) {
-  if (task.exact_remind_at) {
-    db.prepare(`
-      INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
-      VALUES (?,?,?,?)
-    `).run(
-      task.id,
-      task.title,
-      formatDateForSQLite(task.due_date),
-      formatDateForSQLite(task.exact_remind_at)
-    );
-  } else if (task.recurrence_rule) {
-    const dates = generateReminders(
-      formatDateForSQLite(task.due_date),
-      task.recurrence_rule,
-      task.recurrence_interval
-    );
-
-    for (const remindAt of dates) {
-      db.prepare(`
-        INSERT INTO reminders (task_id, task_title, task_due_date, remind_at)
-        VALUES (?,?,?,?)
-      `).run(
-        task.id,
-        task.title,
-        formatDateForSQLite(task.due_date),
-        formatDateForSQLite(remindAt)
-      );
-    }
-  }
-}
-
-function recreateReminders(task) {
-  db.prepare('DELETE FROM reminders WHERE task_id = ?')
-    .run(task.id);
-  createReminders(task);
-}

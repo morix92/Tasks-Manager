@@ -5,6 +5,8 @@ import { Tasks } from './dashboard/routeContent/tasks/tasks';
 import { Reminders } from './dashboard/routeContent/reminders/reminders';
 import { authGuard } from './auth-guard';
 import { Profiles } from './dashboard/profiles/profiles';
+import { CreateTask } from './dashboard/routeContent/tasks/create-task/create-task';
+import { Faq } from './dashboard/routeContent/faq/faq';
 
 export const routes: Routes = [
 
@@ -15,6 +17,11 @@ export const routes: Routes = [
     {
         path:'home',
         component:Calendar,
+        canActivate: [authGuard]
+    },
+    {
+        path:'addTask',
+        component:CreateTask,
         canActivate: [authGuard]
     },
     {
@@ -31,6 +38,10 @@ export const routes: Routes = [
         path:'categories',
         component:Categories,
         canActivate: [authGuard]
+    },
+    {
+        path:'FAQ',
+        component:Faq,
     },
     {
         path:'',

@@ -19,6 +19,10 @@ export class Categories {
   showDialogAddCategory = signal<boolean>(false);
   showDialogEditCategory = signal<boolean>(false);
 
+  animationType: 'remove' | null = null;
+  animatedCategoryId: number | null = null;
+  private readonly ANIMATION_TIME = 500;
+
   constructor(private categoriesApi: CategoriesApi){}
 
   ngOnInit(){
@@ -46,7 +50,7 @@ export class Categories {
   onCategoryUpdated(category: Category) {
     const updatedCategories = this.allCategories().map(u => u.id === category.id ? category : u);
     this.allCategories.set(updatedCategories);
-    this.showDialogAddCategory.set(false);
+    this.showDialogEditCategory.set(false);
   }
 
   closeDialog(event: Event){
@@ -55,11 +59,25 @@ export class Categories {
   }
 
   deleteCategory(id: number) {
-    this.categoriesApi.deleteCategory(id).subscribe(()=>{
-      const filteredCategories = this.allCategories().filter(u => u.id !== id);
-      this.allCategories.set(filteredCategories);
-      console.log("Categoria eliminata")  
+    this.animateCategoryAndExecute(id, 'remove', () => {
+      this.categoriesApi.deleteCategory(id).subscribe(()=>{
+        const filteredCategories = this.allCategories().filter(u => u.id !== id);
+        this.allCategories.set(filteredCategories);
+        console.log("Categoria eliminata")  
+      })
     })
   }
+
+  animateCategoryAndExecute(id: number, type: 'remove', action: () => void) {
+    this.animatedCategoryId = id;
+    this.animationType = type;
+
+    setTimeout(() => {
+      action();
+      this.animatedCategoryId = null;
+      this.animationType = null;
+    }, this.ANIMATION_TIME);
+  }
+
 
 }

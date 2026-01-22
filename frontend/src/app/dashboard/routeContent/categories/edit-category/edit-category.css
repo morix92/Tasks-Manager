@@ -3,7 +3,7 @@ h1{
     margin-bottom: 40px;
 }
 
-.update-category-form {
+.category-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -63,5 +63,10 @@ input[type="text"] {
 
 .color.selected {
   border: 4px solid #1e1e1e;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
 }
 

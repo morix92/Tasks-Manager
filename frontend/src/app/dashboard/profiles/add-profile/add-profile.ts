@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, EventEmitter, Output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreateUserDto } from '../../../models/createUser.model';
 import { UsersApi } from '../../../services/crud/users/users-api';
@@ -22,6 +22,7 @@ export class AddProfile {
   constructor(private usersApi: UsersApi, private avatarsApi: Avatars){}
 
   avatars = signal<string[]>([]);
+  isSubmitted = signal(false);
 
   ngOnInit() {
     this.avatarsApi.getAvatars().subscribe(data => {
@@ -33,7 +34,22 @@ export class AddProfile {
     username: '',
     avatar_url: ''
   });
+  
+  formErrors = computed(() => {
+    const f = this.formModel();
+    const errors: Record<string, string> = {};
 
+    if (!f.username) {
+      errors['username'] = 'Il campo Nome è obbligatorio';
+    } else if (f.username.trim().length < 3) {
+      errors['username'] = 'Il campo Nome deve contenere almeno 3 caratteri';
+    }
+    if (!f.avatar_url) errors['avatar_url'] = 'Selezionare un Avatar';
+    return errors;
+  });
+
+  isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
+  
   updateUsername(value: string) {
     this.formModel.set({ ...this.formModel(), username: value });
   }
@@ -44,9 +60,10 @@ export class AddProfile {
 
   submit(event: Event) {
     event.preventDefault();
+    this.isSubmitted.set(true);
+    if (!this.isValidForm()) return;
     this.createUser(this.formModel());
   }
-
 
   createUser(body: CreateUserDto) {
   this.usersApi.createUser(body).subscribe({
@@ -69,7 +86,5 @@ export class AddProfile {
       container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   }
-
-
 
 }

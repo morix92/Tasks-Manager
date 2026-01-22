@@ -7,6 +7,8 @@ const tasksRoutes = require('./routes/tasks.routes');
 const categoriesRoutes = require('./routes/categories.routes');
 const RemindersRoutes = require('./routes/reminders.routes');
 const { startReminderJob } = require('./jobs/reminder.job');
+const { TasksStatusCheck } = require('./jobs/tasksStatusCheck.job');
+
 
 const app = express();
 const PORT = 3000;
@@ -40,6 +42,7 @@ app.use((err, req, res, next) => {
 });
 
 startReminderJob();
+TasksStatusCheck();
 
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);

@@ -1,0 +1,192 @@
+.task {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
+}
+
+.task h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 24px;
+}
+
+.add-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-sizing: border-box;
+  flex: 0 0 calc(50% - 20px);
+
+}
+
+.form-field.full-width {
+  flex: 0 0 100%;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: #555;
+  
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="time"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+input[type="time"]:focus {
+  outline: none;
+  border-color: rgba(196, 176, 68, 0.8);
+}
+
+/* =========================   SELECT   ========================= */
+
+.custom-select {
+  height: 40px;
+  padding: 0 10px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 2px solid #1e1e1e;
+  background-color: white;
+  color: #1e1e1e;
+  cursor: pointer;
+}
+
+select.limited-options {
+  max-height: calc(4 * 2.5em); /* 4 righe da 2.5em ciascuna circa */
+  overflow-y: auto;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: rgba(196, 176, 68, 0.8);
+}
+
+/* =========================   CheckBox   ========================= */
+
+.checkbox-section {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 18px;
+}
+
+.checkbox-section input {
+    width: 20px;
+    height: 20px;
+    accent-color: #1e1e1e;
+}
+
+/* =========================   Animazione Contenuto   ========================= */
+
+.reminder-block {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 2000ms ease, opacity 2000ms ease;
+}
+
+.reminder-block.show {
+  max-height: 500px;
+  opacity: 1;
+}
+
+/* =========================   Tabs   ========================= */
+
+.tabs {
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 90%;
+  margin: 10px auto 0;
+  margin-bottom: 20px;
+  height: 40px;
+  background-color: #1e1e1e;
+  gap: 8px;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  border: none;
+  font-size: 20px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.8s ease;
+  z-index: 1;
+}
+
+.tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    #1e1e1e 0%,
+    rgba(196, 176, 68, 0.8) 33%,
+    rgba(196, 176, 68, 0.8) 66%,
+    #1e1e1e 100%
+  );
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  z-index: -1;
+}
+
+.tab.active::before {
+  opacity: 1;
+}
+
+
+/* =========================   Submit   ========================= */
+
+.btn-submit {
+  align-self: center;
+  padding: 10px 18px;
+  width: 50%;
+  background-color: #1e1e1e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+.btn-submit:hover {
+  background-color: rgba(196, 176, 68, 0.8);
+}
+
+small.error {
+  color: #d32f2f;
+  font-size: 12px;
+}

@@ -1,28 +1,50 @@
-<div class="container">
-    <div class="calendar">
-    <div class="calendar-header">
-        <button (click)="prevMonth()">&lt;</button>
-        <span>{{ monthNames[currentMonth] }} {{ currentYear }}</span>
-        <button (click)="nextMonth()">&gt;</button>
+<div class="home">
+    <div class="calendar-toolbar">
+        <p class="toggleText">Mostrare solo i prossimi 10 giorni</p>
+        <label class="custom-toggle">
+            <input type="checkbox" [checked]="isChecked()" (change)="isChecked.set($event.target.checked); onToggle($event)"/>
+            <span class="slider"></span>
+        </label>
     </div>
+               
+    <div class="calendar" [class.animating]="isAnimating">
+        <div class="calendar-header" [class.ten-days]="viewMode() === 'tenDays'">
+            <button (click)="prevMonth()" *ngIf="viewMode() === 'month'"><mat-icon>chevron_left</mat-icon></button>
+            <span>{{ calendarTitle() }}</span>
+            <button (click)="nextMonth()"*ngIf="viewMode() === 'month'"><mat-icon>chevron_right</mat-icon></button>  
+        </div>
 
-    <div class="calendar-weekdays">
-        <div *ngFor="let day of weekDays">{{ day }}</div>
-    </div>
+        <div class="calendar-weekdays" *ngIf="viewMode() === 'month'">
+            <div *ngFor="let day of weekDays">{{ day }}</div>
+        </div>
 
-    <div class="calendar-grid">
-        <div *ngFor="let week of weeks" class="calendar-row">
-        <div *ngFor="let day of week" class="calendar-cell" 
-            [class.outside]="!day.inMonth">
-            <div class="cell-content">
-            {{ day.date.getDate() }}
-            <div *ngFor="let task of day.tasks" class="task">
-                {{ task.title }}
-            </div>
+        <div class="calendar-grid">
+            <div *ngFor="let week of weeks()" class="calendar-row" [class.ten-days]="viewMode() === 'tenDays'" [class.month]="viewMode() === 'month'">
+                <div *ngFor="let day of week, let i = index" class="calendar-cell" [class.outside]="!day.inMonth" [class.today]="day.isToday">
+                <div class="cell-content">
+                    <span class="cell-content-header" [class.ten-days]="viewMode() === 'tenDays'"> {{ day.date.getDate() }} <span *ngIf="viewMode() === 'tenDays'">{{ day.weekDayLabel }}</span></span>
+                    <div class="cell-tasks-wrapper">
+                        <div *ngFor="let task of day.tasks" class="task-chip task-badge" (click)="openTask(task)" tabindex="0">
+                            <div class="task " [ngStyle]="{ 'background-color': task.category_color }" [title]="task.title">
+                                <span class="task-time">{{ task.due_date ? (task.due_date | date:'HH:mm') : 'N/A' }}</span>
+                                <span class="task-title" >{{ task.title }}</span>
+                                <mat-icon class="task-badge-icon" *ngIf="task.status === 1">task_alt</mat-icon>
+                                <mat-icon class="task-badge-icon" *ngIf="task.status === 0">highlight_off</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
+
     </div>
 
+
+</div>
+
+<div class="overlay" *ngIf="activeDialog()" (click)="closeDialog()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <app-task-dialog [task]="selectedTask()" (closeDialog)="closeDialog()"> </app-task-dialog>
+  </div>
 </div>

@@ -1,0 +1,32 @@
+<div class="card" *ngIf="taskView() as t">
+    <div>
+        <span class="category-tag" [ngStyle]="{ 'background-color': t.category_color }"> {{ t.category_name }}</span>
+    </div>
+    <div class="card-header">
+        <span class="data-label">Nome Attività:</span>
+        <h3 class="task-title">{{ t.title }}</h3>
+        <span class="data-label">Descrizione:</span>
+        <p class="task-description">{{ t.description }}</p>
+    </div>
+    
+
+    <div class="card-body">
+        <div>
+            <span class="data-label">Priorità:</span>
+            <span class="data-value">{{ t.priorityLabel }}</span>
+        </div>
+        <div>
+            <span class="data-label">Data di Scadenza:</span>
+            <span class="data-value">{{ t.due_date }}</span>
+        </div>
+
+        <div>
+            <span class="data-label">Status:</span>
+            <span class="data-value">{{ t.statusLabel }}</span>
+        </div>
+        <div>
+            <span class="data-label">Completato il:</span>
+            <span class="data-value">{{ t.completed_at }}</span>
+        </div>
+    </div>
+</div>
