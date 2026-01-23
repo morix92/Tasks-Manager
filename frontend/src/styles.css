@@ -1,32 +1,3 @@
-/* Override Calendario Angular Material */
-.mat-calendar-body-label {
-    visibility: hidden;
-}
-
-.mat-calendar-body-cell {
-  border: 1px solid rgba(0, 0, 0, 0.15)!important;
-}
-
-.mat-calendar-body-cell .mat-calendar-body-cell-content { 
-    border-radius: 0; 
-    display: flex; 
-    align-items: start; 
-    justify-content: start;
-    padding: 0;
-}
-/* Track quando spento */
-.mat-slide-toggle {
-  --mat-slide-toggle-track-color: #666666;    /* Track OFF */
-  --mat-slide-toggle-thumb-color: #cccccc;    /* Thumb OFF */
-}
-
-/* Track e thumb quando ON */
-.mat-slide-toggle.mat-checked {
-  --mat-slide-toggle-track-color: #1e1e1e;    /* Track ON */
-  --mat-slide-toggle-thumb-color: #ffffff;    /* Thumb ON */
-}
-
-/* Transizioni */
-.mat-slide-toggle, .mat-slide-toggle .mat-slide-toggle-thumb {
-  transition: background-color 0.3s ease, transform 0.3s ease;
+body{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

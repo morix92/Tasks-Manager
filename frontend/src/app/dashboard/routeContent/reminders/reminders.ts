@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { EditReminder } from './edit-reminder/edit-reminder';
 import { Auth } from '../../../services/auth';
+import { FilterService } from '../../../services/filter-service';
 
 @Component({
   selector: 'app-reminders',
@@ -24,9 +25,71 @@ export class Reminders {
   animatedReminderId: number | null = null;
   private readonly ANIMATION_TIME = 500;
 
-  constructor(private remindersApi: RemindersApi, private auth: Auth){}
+  constructor(private remindersApi: RemindersApi, private auth: Auth, private filters: FilterService){
+    this.filters.setShowOrdering(false);
+  }
 
   currentUser = computed(() => this.auth.currentUser());
+
+  
+  filteredReminders = computed(() => {
+    const reminders = this.allReminders();
+    const title = this.filters.title().toLowerCase();
+    const dueDate = this.filters.dueDate();
+    const remindAt = this.filters.remindAt();
+
+    return reminders.filter(reminders => {
+
+      const matchesTitle =
+        !title || reminders.task_title?.toLowerCase().includes(title);
+
+      const matchesDueDate =
+        !dueDate || this.isSameDate(reminders.task_due_date, dueDate);
+
+      const matchesRemindAt =
+        !remindAt || this.isSameDate(reminders.remind_at, remindAt);
+
+      return matchesTitle && matchesRemindAt && matchesDueDate;
+    });
+  });
+  
+  private isSameDate(d1: Date | string, d2: Date): boolean {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    date1.setHours(0,0,0,0);
+    date2.setHours(0,0,0,0);
+
+    return date1.getTime() === date2.getTime();
+  }
+
+  sortedReminders = computed(() => {
+    const reminders = [...this.filteredReminders()];
+
+    const orderBy = this.filters.orderBy();
+    const direction = this.filters.orderDirection();
+
+    if (!orderBy) return reminders;
+
+    return reminders.sort((a, b) => {
+      let compare = 0;
+
+      if (orderBy === 'remindAt') {
+        compare =
+          new Date(a.remind_at).getTime() -
+          new Date(b.remind_at).getTime();
+      }
+
+      if (orderBy === 'dueDate') {
+        compare =
+          new Date(a.task_due_date).getTime() -
+          new Date(b.task_due_date).getTime();
+      }
+
+      return direction === 'asc' ? compare : -compare;
+    });
+  });
+
 
   ngOnInit(){
     const user = this.currentUser();

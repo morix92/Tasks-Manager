@@ -32,6 +32,18 @@ export class CreateTask {
   reminderDatePart = signal<string>('');
   reminderTimePart = signal<string>('');
 
+  formModel = signal<CreateTaskDto>({
+    user_id: 0,
+    category_id: 0,
+    title: '',
+    description: '',
+    priority: 0,
+    due_date: new Date(),
+    exact_remind_at: null,
+    recurrence_rule: null,
+    recurrence_interval: null
+  });
+
   constructor(
     private tasksApi: TasksApi, 
     private auth: Auth, 
@@ -91,18 +103,6 @@ export class CreateTask {
       this.allCategories.set(data);
     });
   }
-
-  formModel = signal<CreateTaskDto>({
-    user_id: 0,
-    category_id: 0,
-    title: '',
-    description: '',
-    priority: 0,
-    due_date: new Date(),
-    exact_remind_at: null,
-    recurrence_rule: null,
-    recurrence_interval: null
-  });
 
   formErrors = computed(() => {
     const f = this.formModel();

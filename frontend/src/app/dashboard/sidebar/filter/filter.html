@@ -1,0 +1,44 @@
+<div class="filter">
+    <div class="filter-orders">
+        <p>Ordina Per...</p>
+        <button [class.active]="filters.orderBy() === 'dueDate'" (click)="filters.toggleOrder('dueDate')">Data Scadenza
+            <mat-icon>
+            {{ filters.orderBy() === 'dueDate' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
+            </mat-icon>
+        </button>
+        <button *ngIf="filters.showOrdering()" [class.active]="filters.orderBy() === 'priority'" (click)="filters.toggleOrder('priority')">Priorità
+            <mat-icon>
+            {{ filters.orderBy() === 'priority' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
+            </mat-icon>
+        </button>
+        <button *ngIf="!filters.showOrdering()" [class.active]="filters.orderBy() === 'remindAt'" (click)="filters.toggleOrder('remindAt')">Data Promemoria
+            <mat-icon>
+            {{ filters.orderBy() === 'remindAt' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
+            </mat-icon>
+        </button>
+        <hr>
+    </div>
+
+    <div class="filter-fields">
+        <p>Filtra Per...</p>
+        
+        <label>Nome Attività</label>
+        <input type="text" [value]="filters.title()" (input)="filters.setTitle($any($event.target).value)" />
+
+        <div *ngIf="filters.showOrdering()">
+            <label>Categoria</label>
+            <input type="text" [value]="filters.categoryName()" (input)="filters.setCategory($any($event.target).value)"/>
+        </div>
+
+        <label>Data Scadenza</label>
+        <input type="date" [value]="filters.dueDate() ? (filters.dueDate() | date:'yyyy-MM-dd') : ''" (change)="filters.setDueDate($any($event.target).valueAsDate)" />
+        
+        <div *ngIf="!filters.showOrdering()">
+            <label>Data Promemoria</label>
+            <input type="date" [value]="filters.remindAt() ? (filters.remindAt() | date:'yyyy-MM-dd') : ''" (change)="filters.setRemindAt($any($event.target).valueAsDate)" />
+        </div>
+        
+    </div>
+
+    <button class="reset" (click)="filters.reset()">Azzera</button>
+</div>

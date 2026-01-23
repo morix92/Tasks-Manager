@@ -1,0 +1,111 @@
+.filter {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 2px solid #717171;
+  box-sizing: border-box;
+  color: white;
+}
+
+/* ---------- ORDINI ---------- */
+.filter-orders {
+  display: flex;
+  flex-wrap: wrap; /* bottoni su più righe se serve */
+  gap: 0.7rem;
+  width: 100%;
+}
+
+.filter-orders p {
+  font-size: 0.9rem;
+  margin: 3px;
+  width: 100%;
+}
+
+.filter-orders button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(211, 190, 70, 0.863);
+  background: transparent;
+  color: rgb(211, 190, 70, 0.863);
+}
+
+.filter-orders button.active {
+  background-color: rgb(211, 190, 70, 0.863);
+  color: black;
+}
+
+.filter-orders button:hover:not(.active) {
+  scale: 1.05;
+}
+
+.filter-orders button mat-icon {
+  font-size: 20px;
+  margin-left: auto;
+}
+
+/* ---------- CAMPI ---------- */
+.filter-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.filter-fields p {
+  font-size: 0.9rem;
+  margin: 3px
+}
+
+.filter-fields label {
+  font-size: 0.75rem;
+  margin-bottom: 0.05rem;
+  margin-left: 3px;
+}
+
+.filter-fields input {
+  padding: 0.25rem 0.3rem;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  border: 1px solid #555;
+  width: 100%;
+  box-sizing: border-box;
+  background: #333;
+  color: #fff;
+}
+
+.filter-fields input:focus {
+  outline: none;
+  border-color: rgba(211, 190, 70, 0.863);
+}
+
+/* ---------- RESET ---------- */
+.filter .reset {
+  align-self: center;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(211, 190, 70, 0.863);
+  background: transparent;
+  color: rgb(211, 190, 70, 0.863);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 60%;
+  margin-top: 5px;
+}
+
+.filter .reset:hover {
+  background-color: rgb(211, 190, 70, 0.863);
+  color: black;
+}
+
+hr {
+  width: 80%;
+  margin: 8px auto 0 auto;
+  border: 0.5px solid #555;
+}

@@ -12,6 +12,7 @@ import { catchError, forkJoin, of } from 'rxjs';
 import { RemindersFromTask } from '../reminders/reminders-from-task/reminders-from-task';
 import { EditTask } from './edit-task/edit-task';
 import { ReopenTask } from './reopen-task/reopen-task';
+import { FilterService } from '../../../services/filter-service';
 
 type Tab = 'daFare' | 'completati' | 'scaduti';
 type ActiveDialog = 'addReminder' | 'viewReminders' | 'editTask' | 'reopenTask' | null;
@@ -60,9 +61,71 @@ export class Tasks {
     }))
   );
 
+  filteredTasks = computed(() => {
+    const tasks = this.tasksWithPriority();
+    const title = this.filters.title().toLowerCase();
+    const priorityId = this.filters.priorityId();
+    const categoryName = this.filters.categoryName();
+    const dueDate = this.filters.dueDate();
+
+    return tasks.filter(task => {
+
+      const matchesTitle =
+        !title || task.title?.toLowerCase().includes(title);
+
+      const matchesPriority =
+        priorityId === null || task.priority === priorityId;
+
+      const matchesCategory =
+        !categoryName || task.category_name?.toLowerCase().includes(categoryName);;
+
+      const matchesDueDate =
+        !dueDate || this.isSameDate(task.due_date, dueDate);
+
+      return matchesTitle && matchesPriority && matchesCategory && matchesDueDate;
+    });
+  });
+  
+  private isSameDate(d1: Date | string, d2: Date): boolean {
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    date1.setHours(0,0,0,0);
+    date2.setHours(0,0,0,0);
+
+    return date1.getTime() === date2.getTime();
+  }
+
+  filteredAndSortedTasks = computed(() => {
+    const tasks = [...this.filteredTasks()];
+
+    const orderBy = this.filters.orderBy();
+    const direction = this.filters.orderDirection();
+
+    if (!orderBy) return tasks;
+
+    return tasks.sort((a, b) => {
+      let compare = 0;
+
+      if (orderBy === 'priority') {
+        compare = (a.priority ?? 0) - (b.priority ?? 0);
+      }
+
+      if (orderBy === 'dueDate') {
+        compare =
+          new Date(a.due_date).getTime() -
+          new Date(b.due_date).getTime();
+      }
+
+      return direction === 'asc' ? compare : -compare;
+    });
+  });
+
+
   trackById = (_: number, task: Task) => task.id;
 
-  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi){
+  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService){
+    this.filters.setShowOrdering(true);
     effect(() => {
       const user = this.currentUser();
       const tab = this.statusByTabIndex();

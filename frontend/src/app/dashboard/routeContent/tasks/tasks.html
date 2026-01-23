@@ -39,7 +39,7 @@
         <h2>Nessuna Attività Presente</h2>
     </div>
 
-    <div *ngFor="let task of tasksWithPriority(); trackBy: trackById" class="task-card" [class.completing]="animatedTaskId === task.id && animationType === 'complete'" [class.removing]="animatedTaskId === task.id && animationType === 'remove'">
+    <div *ngFor="let task of filteredAndSortedTasks(); trackBy: trackById" class="task-card" [class.completing]="animatedTaskId === task.id && animationType === 'complete'" [class.removing]="animatedTaskId === task.id && animationType === 'remove'">
 
         <div class="card-header">
             <div class="header-text">

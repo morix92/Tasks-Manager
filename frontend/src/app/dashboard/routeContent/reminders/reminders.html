@@ -1,6 +1,6 @@
 <h1>I Miei Promemoria</h1>
 <div class="reminders">
-    <div *ngFor="let reminder of allReminders()" class="reminder-card" [class.removing]="animatedReminderId === reminder.id && animationType === 'remove'">
+    <div *ngFor="let reminder of sortedReminders()" class="reminder-card" [class.removing]="animatedReminderId === reminder.id && animationType === 'remove'">
         <div class="reminder-data">
             <div class="data-field">
                 <span class="data-label">Attività</span>

@@ -1,19 +1,14 @@
 .sidebar {
     width: 80%;
     margin-left: auto;
-    margin-top: 50px;
+    margin-top: 10px;
     font-size: 20px;
     color: white;
 }
 
-hr{
-    width: 80%;
-    margin-left: 0px;
-}
-
 .sidebar a {
   display: block;
-  padding: 12px;
+  padding: 8px;
   text-decoration: none;
   color: white;
   border-left: 4px solid transparent;

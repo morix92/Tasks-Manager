@@ -6,7 +6,7 @@ import { Reminders } from './dashboard/routeContent/reminders/reminders';
 import { authGuard } from './auth-guard';
 import { Profiles } from './dashboard/profiles/profiles';
 import { CreateTask } from './dashboard/routeContent/tasks/create-task/create-task';
-import { Faq } from './dashboard/routeContent/faq/faq';
+import { FaqComponent } from './dashboard/routeContent/faq/faq';
 
 export const routes: Routes = [
 
@@ -41,7 +41,7 @@ export const routes: Routes = [
     },
     {
         path:'FAQ',
-        component:Faq,
+        component:FaqComponent,
     },
     {
         path:'',

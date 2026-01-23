@@ -1,17 +1,20 @@
-<div class="faq">
-    <a class="faq-links" routerLink="/profiles" routerLinkActive="active"><mat-icon>arrow_back</mat-icon>Torna ai profili</a>
-    <section class="faq-section">
-    <h2>FAQ</h2>
+<div class="faq-container">
+  <a class="faq-links" routerLink="/profiles" routerLinkActive="active" *ngIf="!currentUser()">
+    <mat-icon>arrow_back</mat-icon>Torna ai profili
+  </a>
 
-    <div *ngFor="let faq of faqs; let i = index" class="faq-item" [class.active]="activeIndex === i">
-        <button class="faq-question" (click)="toggleFaq(i)">
-        {{ faq.question }}
-        <span class="faq-toggle">+</span>
-        </button>
-        <div class="faq-answer">
+  <section class="faq-section">
+    <h2>Domande Frequenti</h2>
+
+    <div *ngFor="let faq of allFaqs(); let i = index" class="faq-item" [class.active]="activeIndex === i">
+      <button class="faq-question" (click)="toggleFaq(i)">
+        <span>{{ faq.question }}</span>
+        <mat-icon class="faq-toggle">expand_more</mat-icon>
+      </button>
+
+      <div class="faq-answer">
         <p>{{ faq.answer }}</p>
-        </div>
+      </div>
     </div>
-    </section>
+  </section>
 </div>
-

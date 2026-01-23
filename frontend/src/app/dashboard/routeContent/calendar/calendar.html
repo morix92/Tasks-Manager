@@ -29,7 +29,7 @@
                                 <span class="task-time">{{ task.due_date ? (task.due_date | date:'HH:mm') : 'N/A' }}</span>
                                 <span class="task-title" >{{ task.title }}</span>
                                 <mat-icon class="task-badge-icon" *ngIf="task.status === 1">task_alt</mat-icon>
-                                <mat-icon class="task-badge-icon" *ngIf="task.status === 0">highlight_off</mat-icon>
+                                <mat-icon class="task-badge-icon" *ngIf="task.status === 2">highlight_off</mat-icon>
                             </div>
                         </div>
                     </div>

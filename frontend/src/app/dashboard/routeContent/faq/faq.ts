@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { faqService } from '../../../services/faq';
+import { Faq } from '../../../models/faq.model';
+import { Auth } from '../../../services/auth';
+
 
 @Component({
   selector: 'app-faq',
@@ -9,15 +13,11 @@ import { RouterLink } from '@angular/router';
   templateUrl: './faq.html',
   styleUrl: './faq.css',
 })
-export class Faq {
+export class FaqComponent {
 
   activeIndex: number | null = null;
-
-  faqs = [
-    { question: 'Come posso creare un task?', answer: 'La risposta qui. Puoi spiegare passo passo come creare un task.' },
-    { question: 'Posso modificare un task già creato?', answer: 'Sì, clicca sul task e poi su “Modifica”.' },
-    { question: 'Come eliminare un task completato?', answer: 'Clicca sull’icona del cestino accanto al task completato. Conferma per eliminare.' },
-  ];
+  allFaqs = signal<Faq[]>([]);
+  currentUser = computed(() => this.auth.currentUser());
 
   toggleFaq(index: number) {
     if (this.activeIndex === index) {
@@ -25,5 +25,11 @@ export class Faq {
     } else {
       this.activeIndex = index; // apre l’item cliccato
     }
+  }
+
+  constructor(private faqService: faqService, private auth: Auth){}
+
+  ngOnInit() {
+    this.faqService.getFaqs().subscribe(faqs => this.allFaqs.set(faqs));
   }
 }

@@ -2,31 +2,36 @@
 
 .tabs {
   display: flex;
-  border: 2px solid #e0e0e0;
   border-radius: 20px;
   overflow: hidden;
   width: 90%;
   margin: 10px auto 0;
   height: 40px;
-  background-color: #1e1e1e;
+  border: 2px solid rgba(211, 190, 70, 0.863);
+  background: transparent;
+  color: rgb(211, 190, 70, 0.863);
 }
 
 .tab {
   flex: 1;
   padding: 8px;
-  background-color: #1e1e1e;
   cursor: pointer;
-  border: none;
   font-size: 20px;
   text-align: center;
-  color: white;
   position: relative;
   overflow: hidden;
   transition: color 0.8s ease;
   z-index: 1;
+  border: none;
+  background: transparent;
+  color: rgb(211, 190, 70, 0.863);
 }
 
-.tab::before {
+button.active {
+  color: black;
+}
+
+.tab:before {
   content: "";
   position: absolute;
   inset: 0;
@@ -42,7 +47,7 @@
   z-index: -1;
 }
 
-.tab.active::before {
+.tab.active:before {
   opacity: 1;
 }
 

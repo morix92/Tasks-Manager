@@ -1,0 +1,14 @@
+[
+   {
+      "question":"Come posso creare un task?",
+      "answer":"La risposta qui. Puoi spiegare passo passo come creare un task."
+   },
+   {
+      "question":"Posso modificare un task già creato?",
+      "answer":"Sì, clicca sul task e poi su “Modifica”."
+   },
+   {
+      "question":"Come eliminare un task completato?",
+      "answer":"Clicca sull’icona del cestino accanto al task completato. Conferma per eliminare."
+   }
+]

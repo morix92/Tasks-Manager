@@ -41,17 +41,13 @@ h1{
     width: 45%;
 }
 
+.card-actions button:hover{
+  scale: 1.15;
+  border: none;
+  background-color: #696969;
+}
+
 .icon-btn {
-  background: linear-gradient(
-    to right,
-    rgb(240, 213, 64) 0%,
-    rgba(196, 176, 68, 0.8) 10%,
-    #1e1e1e 33%,
-    #1e1e1e 66%,
-    rgba(196, 176, 68, 0.8) 90%,
-    rgb(240, 213, 64) 100%
-  );
-  color: white;
   cursor: pointer;
   width: 40%;
   height: 40px;
@@ -61,7 +57,14 @@ h1{
   font-size: 18px;
   gap: 1rem;
   border-radius: 15px;
-  
+  border: 1px solid rgba(211, 190, 70, 0.863);
+  background: transparent;
+  color: rgb(211, 190, 70, 0.863);
+}
+
+.icon-btn:hover{
+  background-color: rgb(211, 190, 70, 0.863);
+  color: black;
 }
 
 .addCategory{

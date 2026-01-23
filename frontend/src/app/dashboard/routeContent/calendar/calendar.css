@@ -40,7 +40,8 @@
   position: relative;
   width: 64px;
   height: 30px;
-  background-color: #aaa;
+  background-color: transparent;
+  border: 1px solid rgba(211, 190, 70, 0.863);
   border-radius: 10px;
   transition: background-color 0.40s ease;
 }
@@ -52,8 +53,9 @@
   width: 30px;
   height: 26px;
   left: 2px;
-  top: 2px;
-  background-color: #1e1e1eed;
+  top: 1px;
+  border: 1px solid rgba(211, 190, 70, 0.863);
+  background-color: #1e1e1e;
   border-radius: 10px;
   transition: transform 0.50s ease;
 }
@@ -111,6 +113,11 @@
   height: 30px;
   border-radius: 10px;
   border: none;
+}
+
+.calendar-header button:hover{
+  scale: 1.1;
+  background-color: rgba(196, 176, 68, 0.9);
 }
 
 .calendar-weekdays {
