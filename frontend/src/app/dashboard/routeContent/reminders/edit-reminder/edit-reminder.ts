@@ -2,6 +2,7 @@ import { Component, computed, effect, EventEmitter, Input, Output, signal } from
 import { Reminder } from '../../../../models/reminder.model';
 import { RemindersApi } from '../../../../services/crud/reminders/reminders-api';
 import { UpdateReminderDto } from '../../../../models/updateReminder.model';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-edit-reminder',
@@ -11,7 +12,7 @@ import { UpdateReminderDto } from '../../../../models/updateReminder.model';
 })
 export class EditReminder {
 
-  @Input() reminderSignal = signal<Reminder | null>(null);
+  @Input({ required: true }) reminder!: Reminder | null;
   @Output() reminderUpdated = new EventEmitter<Reminder>();
   @Output() closeDialog = new EventEmitter<void>();
 
@@ -19,20 +20,27 @@ export class EditReminder {
   timePart = signal<string>('');
   isSubmitted = signal(false);
   
-  constructor(private reminderApi: RemindersApi){
+  constructor(private reminderApi: RemindersApi, private alertService: Alert){
     effect(() => {
-      const reminder = this.reminderSignal();
-      if (reminder) {
+      if (!this.reminder) return;
 
-        const date = reminder.remind_at;
+      const date = new Date(this.reminder.remind_at);
 
-        this.datePart.set(date.toISOString().slice(0, 10));
-        this.timePart.set(date.toISOString().slice(11, 16));
+      this.datePart.set(
+        date.toLocaleDateString('en-CA')
+      );
 
-        this.formModel.set({
-          remind_at: reminder.remind_at
-        });
-      }
+      this.timePart.set(
+        date.toLocaleTimeString('it-IT', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        })
+      );
+
+      this.formModel.set({
+        remind_at: date
+      });
     });
   }
 
@@ -75,13 +83,16 @@ export class EditReminder {
   }
 
   updateReminder(body: UpdateReminderDto) {
-    const reminder = this.reminderSignal();
-    if (!reminder) return;
+    if (!this.reminder) return;
     
-    this.reminderApi.updateReminder(reminder.id, body).subscribe({
+    this.reminderApi.updateReminder(this.reminder.id, body).subscribe({
       next: (reminder: Reminder) => {
         this.reminderUpdated.emit(reminder);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+          message: `Promemoria del task ${reminder.task_title} modificato con successo`,
+          classAlert: 'success'
+        });
       },
       error: (err) => {
         console.error(err);

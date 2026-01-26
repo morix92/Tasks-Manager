@@ -5,6 +5,7 @@ import { CreateTaskDto } from '../../../../models/createTask.model';
 import { TasksApi } from '../../../../services/crud/tasks/tasks-api';
 import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../../services/alert';
 
 
 type Tab = 'singleReminder' | 'recurrenceReminder';
@@ -90,7 +91,7 @@ export class ReopenTask {
 
   isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
 
-  constructor(private tasksApi: TasksApi){
+  constructor(private tasksApi: TasksApi, private alertService: Alert){
 
     effect(() => {
       if (this.task) {
@@ -153,6 +154,10 @@ export class ReopenTask {
       next: (task: Task) => {
         this.taskCreated.emit(task);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+            message: `Attività ${task.title} ricreata con successo`,
+            classAlert: 'success'
+        });
       },
       error: (err) => console.error(err)
     });

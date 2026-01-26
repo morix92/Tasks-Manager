@@ -5,6 +5,7 @@ import { RemindersApi } from '../../../../services/crud/reminders/reminders-api'
 import { Auth } from '../../../../services/auth';
 import { catchError, of } from 'rxjs';
 import { MatIcon } from '@angular/material/icon';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-reminders-from-task',
@@ -25,7 +26,7 @@ export class RemindersFromTask {
   animatedReminderId: number | null = null;
   private readonly ANIMATION_TIME = 500;
   
-  constructor(private remindersApi: RemindersApi, private auth: Auth){
+  constructor(private remindersApi: RemindersApi, private auth: Auth, private alertService: Alert){
        effect(() => {
       const user = this.currentUser();
 
@@ -45,7 +46,10 @@ export class RemindersFromTask {
         this.allReminders.set(filteredReminders);
         const task_id = this.taskIdSignal();
         if (task_id) {this.reminderDeleted.emit(task_id)};
-        console.log("Categoria eliminata")  
+        this.alertService.sendAlert({
+          message: `Promemoria eliminato con successo`,
+          classAlert: 'success'
+        });
       })
     })
   }

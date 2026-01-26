@@ -7,6 +7,7 @@ import { AddProfile } from './add-profile/add-profile';
 import { EditProfile } from './edit-profile/edit-profile';
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
+import { Alert } from '../../services/alert';
 
 @Component({
   selector: 'app-profiles',
@@ -21,7 +22,7 @@ export class Profiles {
   showDialogAddUser = signal<boolean>(false);
   showDialogEditUser = signal<boolean>(false);
 
-  constructor(private usersApi: UsersApi, private auth: Auth, private router: Router){}
+  constructor(private usersApi: UsersApi, private auth: Auth, private router: Router, private alertService: Alert){}
   
   ngOnInit() {
     this.usersApi.getAllUsers().subscribe((data: User[]) => {
@@ -60,7 +61,10 @@ export class Profiles {
     this.usersApi.deleteUser(id).subscribe(()=>{
       const filteredUsers = this.allUsers().filter(u => u.id !== id);
       this.allUsers.set(filteredUsers);
-      console.log("Utente eliminato")  
+      this.alertService.sendAlert({
+          message: `Profilo eliminato con successo`,
+          classAlert: 'success'
+      });
     })
   }
 

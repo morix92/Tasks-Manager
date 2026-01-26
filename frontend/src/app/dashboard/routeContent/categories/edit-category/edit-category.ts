@@ -3,6 +3,7 @@ import { Category } from '../../../../models/category.model';
 import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CreateCategoryDto } from '../../../../models/createCategory.model';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-edit-category',
@@ -23,7 +24,7 @@ export class EditCategory {
 
   isSubmitted = signal(false);
   
-  constructor(private categoryApi: CategoriesApi){
+  constructor(private categoryApi: CategoriesApi, private alertService: Alert){
     effect(() => {
       const category = this.categorySignal();
       if (category) {
@@ -78,6 +79,10 @@ export class EditCategory {
       next: (category: Category) => {
         this.categoryUpdated.emit(category);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+            message: `Categoria ${category.name} modificata con successo`,
+            classAlert: 'success'
+        });
       },
       error: (err) => {
         console.error(err);

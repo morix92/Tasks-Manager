@@ -26,6 +26,6 @@
 
 <div class="overlay" *ngIf="showDialogEditReminder()" (click)="closeDialog($event)">
     <div class="dialog" (click)="$event.stopPropagation()">
-        <app-edit-reminder [reminderSignal]="selectedReminder" (reminderUpdated)="onReminderUpdated($event)" (closeDialog)="showDialogEditReminder.set(false)"></app-edit-reminder>
+        <app-edit-reminder [reminder]="selectedReminder()" (reminderUpdated)="onReminderUpdated($event)" (closeDialog)="showDialogEditReminder.set(false)"></app-edit-reminder>
     </div>
 </div>

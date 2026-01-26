@@ -3,6 +3,7 @@ import { Category } from '../../../../models/category.model';
 import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CreateCategoryDto } from '../../../../models/createCategory.model';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-add-category',
@@ -22,7 +23,7 @@ export class AddCategory {
   @Output() categoryCreated = new EventEmitter<Category>();
   @Output() closeDialog = new EventEmitter<void>();
 
-  constructor(private categoryApi: CategoriesApi){}
+  constructor(private categoryApi: CategoriesApi, private alertService: Alert){}
 
   formModel = signal<CreateCategoryDto>({
     name: '',
@@ -64,6 +65,10 @@ export class AddCategory {
     next: (category: Category) => {
       this.categoryCreated.emit(category);
       this.closeDialog.emit();
+      this.alertService.sendAlert({
+          message: `Categoria ${category.name} creata con successo`,
+          classAlert: 'success'
+      });
     },
     error: (err) => {
       console.error(err);

@@ -6,6 +6,9 @@
         </div>
         <div class="content">
             <router-outlet></router-outlet>
+            <div *ngIf="alert() as a" class="top-alert" [ngClass]="a.classAlert">
+                <strong>{{ a.message }}</strong>
+            </div>
         </div>
     </div>
     <app-footer></app-footer>

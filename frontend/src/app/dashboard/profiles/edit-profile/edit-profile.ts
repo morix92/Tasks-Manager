@@ -4,6 +4,7 @@ import { CreateUserDto } from '../../../models/createUser.model';
 import { UsersApi } from '../../../services/crud/users/users-api';
 import { Avatars } from '../../../services/avatars';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../services/alert';
 
 @Component({
   selector: 'app-edit-profile',
@@ -27,7 +28,7 @@ export class EditProfile {
   avatars = signal<string[]>([]);
   isSubmitted = signal(false);
 
-  constructor(private usersApi: UsersApi, private avatarsApi: Avatars){
+  constructor(private usersApi: UsersApi, private avatarsApi: Avatars, private alertService: Alert){
     effect(() => {
       const user = this.userSignal();
       if (user) {
@@ -80,6 +81,10 @@ export class EditProfile {
       next: (updatedUser: User) => {
         this.userUpdated.emit(updatedUser);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+          message: `Profilo ${updatedUser.username} modificato con successo`,
+          classAlert: 'success'
+        });
       }
     });
   }

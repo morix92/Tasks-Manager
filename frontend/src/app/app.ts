@@ -5,6 +5,8 @@ import { Footer } from './dashboard/footer/footer';
 import { Sidebar } from './dashboard/sidebar/sidebar';
 import { Auth } from './services/auth';
 import { CommonModule } from '@angular/common';
+import { socketService } from './services/socket';
+import { Alert } from './services/alert';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +17,9 @@ import { CommonModule } from '@angular/common';
 export class App {
   protected readonly title = signal('frontend');
 
-  constructor(private auth : Auth){}
+  constructor(private auth : Auth, private socketService: socketService, private alertService: Alert){}
 
   isLoggedIn = computed(() => this.auth.isLoggedIn());
+  alert = computed(() => this.alertService.alert());
 
 }

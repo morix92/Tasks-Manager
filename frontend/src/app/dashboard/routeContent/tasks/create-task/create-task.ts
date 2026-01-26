@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../../../services/auth';
+import { Alert } from '../../../../services/alert';
 
 type Tab = 'singleReminder' | 'recurrenceReminder';
 
@@ -48,7 +49,8 @@ export class CreateTask {
     private tasksApi: TasksApi, 
     private auth: Auth, 
     private categoriesApi: CategoriesApi, 
-    private router: Router
+    private router: Router,
+    private alertService: Alert
   ){
     effect(() => {
       this.formModel.update(f => ({
@@ -133,7 +135,6 @@ export class CreateTask {
         if (f.recurrence_interval && f.recurrence_interval < 1) errors['recurrence_interval'] = 'Il campo Numero Ricorrenza non può essere minore o uguale a zero';
       }
     }
-    console.log(errors);
     return errors;
   });
 
@@ -175,7 +176,10 @@ export class CreateTask {
   createTask(body: CreateTaskDto) {
     this.tasksApi.createTask(body).subscribe({
       next: (task: Task) => {
-        console.log(task);
+        this.alertService.sendAlert({
+            message: `Attività ${task.title} creata con successo`,
+            classAlert: 'success'
+        });
         this.router.navigate(['/home']);
       },
       error: (err) => console.error(err)

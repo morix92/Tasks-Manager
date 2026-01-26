@@ -4,6 +4,7 @@ import { CreateUserDto } from '../../../models/createUser.model';
 import { UsersApi } from '../../../services/crud/users/users-api';
 import { User } from '../../../models/user.model';
 import { Avatars } from '../../../services/avatars';
+import { Alert } from '../../../services/alert';
 
 @Component({
   selector: 'app-add-profile',
@@ -19,7 +20,7 @@ export class AddProfile {
 
   @ViewChild('avatarContainer') avatarContainer!: ElementRef<HTMLDivElement>;
 
-  constructor(private usersApi: UsersApi, private avatarsApi: Avatars){}
+  constructor(private usersApi: UsersApi, private avatarsApi: Avatars, private alertService: Alert){}
 
   avatars = signal<string[]>([]);
   isSubmitted = signal(false);
@@ -70,6 +71,10 @@ export class AddProfile {
     next: (user: User) => {
       this.userCreated.emit(user);
       this.closeDialog.emit();
+      this.alertService.sendAlert({
+        message: `Profilo ${user.username} creato con successo`,
+        classAlert: 'success'
+      });
     },
     error: (err) => {
       console.error(err);

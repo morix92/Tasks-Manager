@@ -31,16 +31,40 @@ export class RemindersApi {
   }
 
   createReminder(body:CreateReminderDto): Observable<Reminder> {
-    return this.http.post<Reminder>(`${this.url}`, body)
+
+    const bodyForBE = {
+      ...body,
+      remind_at: this.formatLocalForBE(body.remind_at)
+    }
+
+    return this.http.post<Reminder>(`${this.url}`, bodyForBE)
   } 
 
   updateReminder(id: number, body: UpdateReminderDto): Observable<Reminder> {
-    return this.http.put<Reminder>(`${this.url}/${id}`, body)
+
+    const bodyForBE = {
+      ...body,
+      remind_at: this.formatLocalForBE(body.remind_at)
+    }
+
+    return this.http.put<Reminder>(`${this.url}/${id}`, bodyForBE)
   }
 
   deleteReminder(id: number){
     return this.http.delete(`${this.url}/${id}`)
   }
 
+  formatLocalForBE(date: Date | null): string | null {
+    if (!date) return null;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return (
+      date.getFullYear() + '-' +
+      pad(date.getMonth() + 1) + '-' +
+      pad(date.getDate()) + ' ' +
+      pad(date.getHours()) + ':' +
+      pad(date.getMinutes()) + ':' +
+      pad(date.getSeconds())
+    );
+  }
 
 }

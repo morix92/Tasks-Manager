@@ -13,6 +13,7 @@ import { RemindersFromTask } from '../reminders/reminders-from-task/reminders-fr
 import { EditTask } from './edit-task/edit-task';
 import { ReopenTask } from './reopen-task/reopen-task';
 import { FilterService } from '../../../services/filter-service';
+import { Alert } from '../../../services/alert';
 
 type Tab = 'daFare' | 'completati' | 'scaduti';
 type ActiveDialog = 'addReminder' | 'viewReminders' | 'editTask' | 'reopenTask' | null;
@@ -124,7 +125,7 @@ export class Tasks {
 
   trackById = (_: number, task: Task) => task.id;
 
-  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService){
+  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService, private alertService: Alert){
     this.filters.setShowOrdering(true);
     effect(() => {
       const user = this.currentUser();
@@ -238,6 +239,10 @@ export class Tasks {
     this.animateTaskAndExecute(id, 'remove', () => {
       this.tasksApi.deleteTask(id).subscribe(() => {
         this.allTasks.set(this.allTasks().filter(t => t.id !== id));
+        this.alertService.sendAlert({
+          message: `Attività eliminata con successo`,
+          classAlert: 'success'
+        });
       });
     });
   }
@@ -251,6 +256,10 @@ export class Tasks {
     this.animateTaskAndExecute(id, 'complete', () => {
       this.tasksApi.completeTask(id).subscribe(() => {
         this.allTasks.set(this.allTasks().filter(t => t.id !== id));
+        this.alertService.sendAlert({
+          message: `Attività Completata con successo`,
+          classAlert: 'success'
+        });
       });
     });
   }

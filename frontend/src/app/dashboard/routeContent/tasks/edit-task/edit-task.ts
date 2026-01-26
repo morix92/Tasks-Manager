@@ -5,6 +5,7 @@ import { TasksApi } from '../../../../services/crud/tasks/tasks-api';
 import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CommonModule } from '@angular/common';
 import { UpdateTaskDto } from '../../../../models/updateTask.model';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-edit-task',
@@ -47,12 +48,11 @@ export class EditTask {
 
   isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
 
-  constructor(private tasksApi: TasksApi, private categoriesApi: CategoriesApi){
+  constructor(private tasksApi: TasksApi, private categoriesApi: CategoriesApi, private alertService: Alert){
 
     effect(() => {
       if (this.task) {
         this.taskId.set(this.task.id);
-        console.log("test: "+JSON.stringify(this.task))
         this.formModel.set({
           category_id: this.task.category_id,
           title: this.task.title,
@@ -90,6 +90,10 @@ export class EditTask {
       next: (task: Task) => {
         this.taskUpdated.emit(task);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+          message: `Attività ${task.title} modificata con successo`,
+          classAlert: 'success'
+        });
       },
       error: (err) => console.error(err)
     });

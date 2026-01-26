@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { EditReminder } from './edit-reminder/edit-reminder';
 import { Auth } from '../../../services/auth';
 import { FilterService } from '../../../services/filter-service';
+import { Alert } from '../../../services/alert';
 
 @Component({
   selector: 'app-reminders',
@@ -25,7 +26,7 @@ export class Reminders {
   animatedReminderId: number | null = null;
   private readonly ANIMATION_TIME = 500;
 
-  constructor(private remindersApi: RemindersApi, private auth: Auth, private filters: FilterService){
+  constructor(private remindersApi: RemindersApi, private auth: Auth, private filters: FilterService, private alertService: Alert){
     this.filters.setShowOrdering(false);
   }
 
@@ -122,7 +123,10 @@ export class Reminders {
       this.remindersApi.deleteReminder(id).subscribe(()=>{
         const filteredCategories = this.allReminders().filter(u => u.id !== id);
         this.allReminders.set(filteredCategories);
-        console.log("Categoria eliminata")  
+        this.alertService.sendAlert({
+          message: `Promemoria eliminato con successo`,
+          classAlert: 'success'
+        });
       })
     })
   }

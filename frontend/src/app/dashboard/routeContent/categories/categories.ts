@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AddCategory } from './add-category/add-category';
 import { EditCategory } from './edit-category/edit-category';
+import { Alert } from '../../../services/alert';
 
 @Component({
   selector: 'app-categories',
@@ -23,7 +24,7 @@ export class Categories {
   animatedCategoryId: number | null = null;
   private readonly ANIMATION_TIME = 500;
 
-  constructor(private categoriesApi: CategoriesApi){}
+  constructor(private categoriesApi: CategoriesApi, private alertService: Alert){}
 
   ngOnInit(){
     this.categoriesApi.getAllCategories().subscribe((data: Category[]) => {
@@ -63,7 +64,10 @@ export class Categories {
       this.categoriesApi.deleteCategory(id).subscribe(()=>{
         const filteredCategories = this.allCategories().filter(u => u.id !== id);
         this.allCategories.set(filteredCategories);
-        console.log("Categoria eliminata")  
+        this.alertService.sendAlert({
+          message: `Categoria eliminata con successo`,
+          classAlert: 'success'
+        });
       })
     })
   }
@@ -78,6 +82,5 @@ export class Categories {
       this.animationType = null;
     }, this.ANIMATION_TIME);
   }
-
 
 }

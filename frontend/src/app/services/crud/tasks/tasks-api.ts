@@ -56,7 +56,6 @@ export class TasksApi {
     return this.http.delete(`${this.url}/${id}`)
   }
 
-
   formatLocalForBE(date: Date | null): string | null {
     if (!date) return null;
     const pad = (n: number) => String(n).padStart(2, '0');

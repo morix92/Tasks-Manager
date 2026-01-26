@@ -3,6 +3,7 @@ import { Reminder } from '../../../../models/reminder.model';
 import { RemindersApi } from '../../../../services/crud/reminders/reminders-api';
 import { CreateReminderDto } from '../../../../models/createReminder.model';
 import { CommonModule } from '@angular/common';
+import { Alert } from '../../../../services/alert';
 
 @Component({
   selector: 'app-add-reminder',
@@ -20,13 +21,13 @@ export class AddReminder {
   timePart = signal<string>('');
   isSubmitted = signal(false);
 
-  constructor(private reminderApi: RemindersApi){
+  constructor(private reminderApi: RemindersApi, private alertService: Alert){
       effect(() => {
         const taskId = this.taskIdSignal();
         if (taskId) {
           this.formModel.set({
             task_id: taskId,
-            remind_at: new Date()
+            remind_at: this.remindAtComputed()
           });
         }
       });
@@ -72,7 +73,7 @@ export class AddReminder {
     if (task_id) {
       this.isSubmitted.set(true);
       if (!this.isValidForm()) return;
-      this.addReminder({task_id: task_id, remind_at: this.remindAtComputed()});
+      this.addReminder(this.formModel());
     } else {
       console.log("Errore nella lettura del task_id")
       return;
@@ -84,6 +85,10 @@ export class AddReminder {
       next: (reminder: Reminder) => {
         this.reminderCreated.emit(reminder);
         this.closeDialog.emit();
+        this.alertService.sendAlert({
+          message: `Promemoria aggiunto all'attività: ${reminder.task_title}`,
+          classAlert: 'success'
+        });
       },
       error: (err) => {
         console.error(err);
