@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "TaskManager",
+  "version": "1.2.0",
+  "identifier": "it.morimanno.taskmanager",
+
+  "build": {
+    "frontendDist": "../frontend/dist/frontend/browser"
+  },
+
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Task Manager",
+        "url": "splash.html",
+        "visible": false,
+        "decorations": true,
+        "resizable": false,
+        "maximizable": true,
+		"fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": ["icons/icon.ico"],
+    "resources": ["../backend"]
+  }
+}

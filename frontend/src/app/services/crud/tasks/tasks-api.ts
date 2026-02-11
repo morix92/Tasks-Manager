@@ -12,7 +12,7 @@ export class TasksApi {
     
   private http: HttpClient = inject(HttpClient);
 
-  url = "http://localhost:3000/tasks"
+  url = "http://127.0.0.1:3000/tasks"
 
   getAllTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.url}`)

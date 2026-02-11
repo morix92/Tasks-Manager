@@ -1,5 +1,17 @@
+const path = require('path');
+const fs = require('fs-extra'); // per copiare avatar
 const db = require('./db');
 
+// Assicurati che ci sia la cartella avatar dentro dataDir
+const dataDir = process.env.TASK_MANAGER_DATA_DIR;
+const avatarDestDir = path.join(dataDir, 'avatar');
+fs.ensureDirSync(avatarDestDir);
+
+// Copia gli avatar dalla cartella originale (backend/public/avatar) solo se non esistono
+const avatarSrcDir = path.join(__dirname, '..' , 'public', 'avatar');
+fs.copySync(avatarSrcDir, avatarDestDir, { overwrite: false });
+
+// Esegui SQL di inizializzazione
 db.exec(`
   PRAGMA foreign_keys = ON;
 
@@ -59,7 +71,6 @@ db.exec(`
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
   );
 
-  -- Tabella di configurazione per primo inserimento dati
   CREATE TABLE IF NOT EXISTS app_config (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     key TEXT NOT NULL UNIQUE,
@@ -69,11 +80,13 @@ db.exec(`
   INSERT OR IGNORE INTO app_config (key, value) 
   VALUES ('initialized', '0');
 
+  -- Inserimento default user solo se non esiste e DB non inizializzato
   INSERT INTO users (id, username, avatar_url)
-  SELECT 1, 'Default_User', '/avatar/profile.png'
+  SELECT 1, 'Utente', 'http://127.0.0.1:3000/avatar/profile.png'
   WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'Default_User') 
   AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
+  -- Inserimento categorie di default
   INSERT INTO categories (name, color)
   SELECT 'Lavoro', '#e85b2e'
   WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Lavoro') 
@@ -94,6 +107,8 @@ db.exec(`
   WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Pagamenti') 
   AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
-  -- Imposta il flag "initialized" a 1 dopo che i dati di default sono stati inseriti
+  -- Segna DB come inizializzato
   UPDATE app_config SET value = '1' WHERE key = 'initialized';
 `);
+
+console.log('DB inizializzato in:', dataDir);

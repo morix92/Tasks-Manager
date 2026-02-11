@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "shell",
+  "description": "Allow running backend sidecar",
+  "windows": ["main", "splash"],
+  "webviewWindows": ["main", "splash"],
+  "permissions": [
+    "shell:allow-execute"
+  ]
+}

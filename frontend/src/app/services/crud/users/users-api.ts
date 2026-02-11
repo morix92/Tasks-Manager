@@ -11,7 +11,7 @@ export class UsersApi {
 
   private http: HttpClient = inject(HttpClient);
 
-  url = "http://localhost:3000/users"
+  url = "http://127.0.0.1:3000/users"
 
 getAllUsers(): Observable<User[]> {
   return this.http.get<User[]>(`${this.url}`);

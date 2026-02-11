@@ -11,7 +11,7 @@ export class CategoriesApi {
   
   private http: HttpClient = inject(HttpClient);
 
-  url = "http://localhost:3000/categories"
+  url = "http://127.0.0.1:3000/categories"
 
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.url}`);

@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "dev": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "tauri:build": "tauri build",
+    "watch": "ng build --ts-config tsconfig.tauri.json",
     "test": "ng test"
   },
   "prettier": {
@@ -31,6 +32,7 @@
     "@angular/material": "^21.0.5",
     "@angular/platform-browser": "^21.0.0",
     "@angular/router": "^21.0.0",
+    "@tauri-apps/api": "^2.10.1",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0"
@@ -39,6 +41,7 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
+    "@types/node": "^25.2.1",
     "@types/socket.io-client": "^1.4.36",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",

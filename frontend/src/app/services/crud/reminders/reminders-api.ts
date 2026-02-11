@@ -12,7 +12,7 @@ export class RemindersApi {
   
   private http: HttpClient = inject(HttpClient);
 
-  url = "http://localhost:3000/reminders"
+  url = "http://127.0.0.1:3000/reminders"
 
   getAllReminders(): Observable<Reminder[]> {
     return this.http.get<Reminder[]>(`${this.url}`)
