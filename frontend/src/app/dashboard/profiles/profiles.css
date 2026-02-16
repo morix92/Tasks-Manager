@@ -95,11 +95,21 @@ h1{
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 30%;
-    min-width: 320px;
     height: auto;
 }
 
 .zIndex0{
     z-index: 0;
+}
+
+@media (max-width: 999px) {
+    .dialog {
+        width: 320px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .dialog {
+        width: 420px;
+    }
 }

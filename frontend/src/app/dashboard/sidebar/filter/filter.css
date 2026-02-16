@@ -14,14 +14,17 @@
 .filter-orders {
   display: flex;
   flex-wrap: wrap; /* bottoni su più righe se serve */
-  gap: 0.7rem;
+  width: 100%;
+}
+
+h3 {
+  margin: 3px;
   width: 100%;
 }
 
 .filter-orders p {
-  font-size: 0.9rem;
-  margin: 3px;
-  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .filter-orders button {
@@ -29,7 +32,6 @@
   align-items: center;
   width: 100%;
   padding: 0.25rem 0.4rem;
-  font-size: 0.8rem;
   border-radius: 999px;
   border: 1px solid rgba(211, 190, 70, 0.863);
   background: transparent;
@@ -54,29 +56,21 @@
 .filter-fields {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-}
-
-.filter-fields p {
-  font-size: 0.9rem;
-  margin: 3px
 }
 
 .filter-fields label {
-  font-size: 0.75rem;
-  margin-bottom: 0.05rem;
   margin-left: 3px;
 }
 
 .filter-fields input {
   padding: 0.25rem 0.3rem;
-  font-size: 0.7rem;
   border-radius: 4px;
   border: 1px solid #555;
   width: 100%;
   box-sizing: border-box;
   background: #333;
   color: #fff;
+  color-scheme: dark;
 }
 
 .filter-fields input:focus {
@@ -88,7 +82,6 @@
 .filter .reset {
   align-self: center;
   padding: 0.4rem 0.6rem;
-  font-size: 0.8rem;
   border-radius: 999px;
   border: 1px solid rgba(211, 190, 70, 0.863);
   background: transparent;
@@ -108,4 +101,61 @@ hr {
   width: 80%;
   margin: 8px auto 0 auto;
   border: 0.5px solid #555;
+}
+
+@media (max-width: 999px) {
+    .textButtonPriority {
+      margin-left: 12px;
+    }
+    .filter-orders {
+        gap: 0.4rem;
+    }
+    .filter-orders button {
+      font-size: 0.65rem;
+    }
+    .filter-fields {
+      gap: 2px;
+    }
+    .filter-fields label {
+      font-size: 0.65rem;
+    }
+    .filter-fields input {
+      font-size: 0.6rem;
+    }
+    h3 {
+      font-size: 0.9rem;
+    }
+    .filter .reset {
+      font-size: 0.7rem;
+    }
+}
+
+@media (min-width: 1000px) {
+
+    .filter-orders {
+      gap: 0.9rem;
+    }
+    .filter-orders button {
+      font-size: 1rem;
+    }
+    .filter-orders p {
+      margin-left: 5px;
+    }
+    .filter-fields {
+      gap: 8px;
+    }
+    .filter-fields label {
+      font-size: 0.9rem;
+    }
+    .filter-fields input {
+      gap: 15px;
+      font-size: 1rem;
+    }
+    h3 {
+      font-size: 1.1rem;
+    }
+    .filter .reset {
+      font-size: 0.9rem;
+    }
+  
 }

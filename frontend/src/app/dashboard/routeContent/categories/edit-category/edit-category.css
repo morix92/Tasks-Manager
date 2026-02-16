@@ -44,7 +44,7 @@ input[type="text"] {
 
 .color-picker {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   gap: 5px;
   margin-top: 5px;
 }

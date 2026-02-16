@@ -15,7 +15,7 @@ const { startReminderJob } = require('./jobs/reminder.job');
 const { TasksStatusCheck } = require('./jobs/tasksStatusCheck.job');
 
 // --------------------
-// Controllo variabile Tauri
+// Controllo variabile Tauri / dev
 if (!process.env.TASK_MANAGER_DATA_DIR) {
   throw new Error("TASK_MANAGER_DATA_DIR non definita!");
 }

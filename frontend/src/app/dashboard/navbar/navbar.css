@@ -15,13 +15,13 @@
   height: auto;
   display: flex;
   align-items: center;
+  color: white;
 }
 
 .buttonLogout{
   background-color: transparent;
   border: none;
   color: white;
-  margin-right: 100px;
 }
 
 .app-logo {
@@ -30,6 +30,7 @@
   object-fit: contain;
   margin: 20px;
 }
+
 .app-name {
   font-size: 30px;
   margin-left: 30px;
@@ -39,7 +40,6 @@
 .username {
   font-size: 25px;
   color: white;
-  margin-right: 30px;
 }
 
 .user-avatar {
@@ -47,8 +47,8 @@
   height: 80px;
   border-radius: 20%;
   object-fit: cover;
-  margin-right: 30px;
 }
+
 
 .buttonLogout mat-icon {
     width: 40px;
@@ -67,4 +67,28 @@
     border: none;
     height: 20px;      
     background-color: #1e1e1e;
+}
+
+@media (max-width: 999px) {
+  .buttonLogout {
+    margin-right: 40px;
+  }
+  .username {
+    margin-right: 10px;
+  }
+  .user-avatar {
+    margin-right: 10px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .buttonLogout {
+    margin-right: 100px;
+  }
+  .username {
+    margin-right: 30px;
+  }
+  .user-avatar {
+    margin-right: 30px;
+  }
 }

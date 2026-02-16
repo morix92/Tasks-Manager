@@ -23,22 +23,22 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 2;
 }
 
 .task-title {
   margin: 2px 0 10px;
-  font-size: 1.3rem;
   font-weight: 600;
-  color: #2d2d2d;
+}
+
+.hrHeader {
+  border: none;
+  background-color: #eee;
 }
 
 .task-description {
   margin: 2px 0 10px;
-  font-size: 1rem;
-  color: #222222;
 }
 
 /* Corpo */
@@ -48,28 +48,70 @@
   gap: 12px 16px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #eee;
+}
+
+.card-fields {
+  border: 1.2px solid #eee;
+  border-radius: 10px;
+  padding: 5px;
 }
 
 /* Label e valori */
 .data-label {
   display: block;
-  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #686868;
-  margin-bottom: 2px;
+  color: #7b7a7a;
 }
 
-.data-value {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
-}
 
-/* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 999px) {
   .card-body {
     grid-template-columns: 1fr;
   }
+  .category-tag {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    letter-spacing: 0.4px;
+  }
+  .task-title {
+    font-size: 1.2rem;
+  }
+  .hrHeader {
+    height: 1px;
+  }
+  .task-description {
+    font-size: 0.9rem;
+  }
+  .data-label {
+    font-size: 0.6rem;
+    margin-bottom: 0px;
+  }
+  .data-value {
+    font-size: 0.9rem;
+  }
+  
+}
+
+@media (min-width: 1000px) {
+  .category-tag {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+  .task-title {
+    font-size: 1.4rem;
+  }
+  .hrHeader {
+    height: 0.8px;
+  }
+  .task-description {
+    font-size: 1.1rem;
+  }
+  .data-label {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+  }
+  .data-value {
+    font-size: 1.1rem;
+  }
+
 }

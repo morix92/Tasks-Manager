@@ -1,7 +1,6 @@
 .task {
-  max-width: 900px;
+  width: 60%;
   margin: 20px auto;
-  padding: 25px;
   background-color: #f9f9f9;
   border-radius: 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -10,30 +9,24 @@
 
 .task h1 {
   text-align: center;
-  margin-bottom: 10px;
   color: #333;
-  font-size: 24px;
+  margin-top: 3px;
 }
 
 .add-task-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
 }
 
 .form-group {
   display: flex;
-  gap: 40px;
   width: 100%;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
   box-sizing: border-box;
-  flex: 0 0 calc(50% - 20px);
-
 }
 
 .form-field.full-width {
@@ -43,7 +36,7 @@
 .form-field label {
   font-weight: 600;
   color: #555;
-  
+  margin-left: 3px;
 }
 
 input[type="text"],
@@ -56,6 +49,14 @@ input[type="time"] {
   box-sizing: border-box;
 }
 
+input,
+select {
+  width: 100%;
+  border-radius: 10px;
+  border: 2px solid #1e1e1e;
+  box-sizing: border-box;
+}
+
 input[type="text"]:focus,
 input[type="date"]:focus,
 input[type="number"]:focus,
@@ -64,17 +65,12 @@ input[type="time"]:focus {
   border-color: rgba(196, 176, 68, 0.8);
 }
 
+
 /* =========================   SELECT   ========================= */
 
 .custom-select {
-  height: 40px;
-  padding: 0 10px;
-  font-size: 15px;
-  font-weight: 500;
   border-radius: 10px;
-  border: 2px solid #1e1e1e;
   background-color: white;
-  color: #1e1e1e;
   cursor: pointer;
 }
 
@@ -93,13 +89,9 @@ select.limited-options {
 .checkbox-section {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 18px;
 }
 
 .checkbox-section input {
-    width: 20px;
-    height: 20px;
     accent-color: #1e1e1e;
 }
 
@@ -180,6 +172,7 @@ select.limited-options {
   font-size: 15px;
   cursor: pointer;
   transition: background-color 0.5s;
+  margin-top: 10px;
 }
 
 .btn-submit:hover {
@@ -189,4 +182,119 @@ select.limited-options {
 small.error {
   color: #d32f2f;
   font-size: 12px;
+}
+
+@media (max-width: 999px) {
+  .task {
+    padding: 18px;
+  }
+  .task h1 {
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
+  .add-task-form {
+    gap: 8px;
+  }
+  .form-group {
+    gap: 15px;
+  }
+  .form-group .form-field {
+    flex: 1;
+  }
+  .custom-select {
+    padding: 0 3px;
+    font-size: 10px;
+  }
+  .form-field label {
+    font-size: 12px;
+  }
+  input,
+  select {
+    height: 30px;
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+  .checkbox-section {
+    gap: 3px;
+    font-size: 14px;
+  }
+  .checkbox-section input {
+      width: 16px;
+      height: 16px;
+  }
+  .tabs {
+    margin-bottom: 15px;
+    height: 30px;
+    gap: 5px;
+  }
+  .tab {
+    padding: 5px;
+    font-size: 14px;
+  }
+  .btn-submit {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  p {
+    font-size: 10px;
+    margin-bottom: 0px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .task {
+    padding: 25px;
+  }
+  .task h1 {
+    margin-bottom: 12px;
+    font-size: 24px;
+  }
+  .add-task-form {
+    gap: 15px;
+  }
+  .form-group {
+    gap: 40px;
+  }
+  .form-group .form-field {
+    flex: 1;
+  }
+  .custom-select {
+    padding: 0 10px;
+    font-size: 15px;
+  }
+  .form-field label {
+    font-size: 16px;
+    margin-bottom: 3px;
+  }
+  input,
+  select {
+    height: 40px;
+    padding: 8px 10px;
+    font-size: 17px;
+  }
+  .checkbox-section {
+    gap: 7px;
+    font-size: 18px;
+  }
+  .checkbox-section input {
+      width: 20px;
+      height: 20px;
+  }
+  .tabs {
+    margin-bottom: 20px;
+    height: 40px;
+    gap: 8px;
+  }
+  .tab {
+    padding: 8px;
+    font-size: 20px;
+  }
+  .btn-submit {
+    padding: 10px 18px;
+    font-size: 16px;
+  }
+  p {
+    font-size: 16px;
+    margin-bottom: 0px;
+  }
 }

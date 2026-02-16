@@ -110,5 +110,3 @@ db.exec(`
   -- Segna DB come inizializzato
   UPDATE app_config SET value = '1' WHERE key = 'initialized';
 `);
-
-console.log('DB inizializzato in:', dataDir);

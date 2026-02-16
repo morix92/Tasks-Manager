@@ -99,3 +99,15 @@
   transform: rotate(180deg);
 }
 
+
+@media (max-width: 999px) {
+  .faq-section {
+    width: 550px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .faq-section {
+    width: 800px;
+  }
+}

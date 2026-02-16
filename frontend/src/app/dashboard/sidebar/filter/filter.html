@@ -1,17 +1,20 @@
 <div class="filter">
     <div class="filter-orders">
-        <p>Ordina Per...</p>
-        <button [class.active]="filters.orderBy() === 'dueDate'" (click)="filters.toggleOrder('dueDate')">Data Scadenza
+        <h3>Ordina Per...</h3>
+        <button [class.active]="filters.orderBy() === 'dueDate'" (click)="filters.toggleOrder('dueDate')">
+            <p>Data Scadenza</p>
             <mat-icon>
             {{ filters.orderBy() === 'dueDate' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
             </mat-icon>
         </button>
-        <button *ngIf="filters.showOrdering()" [class.active]="filters.orderBy() === 'priority'" (click)="filters.toggleOrder('priority')">Priorità
+        <button *ngIf="filters.showOrdering()" [class.active]="filters.orderBy() === 'priority'" (click)="filters.toggleOrder('priority')">
+            <p class="textButtonPriority">Priorità</p>
             <mat-icon>
             {{ filters.orderBy() === 'priority' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
             </mat-icon>
         </button>
-        <button *ngIf="!filters.showOrdering()" [class.active]="filters.orderBy() === 'remindAt'" (click)="filters.toggleOrder('remindAt')">Data Promemoria
+        <button *ngIf="!filters.showOrdering()" [class.active]="filters.orderBy() === 'remindAt'" (click)="filters.toggleOrder('remindAt')">
+            <p>Data Promemoria</p>
             <mat-icon>
             {{ filters.orderBy() === 'remindAt' ? (filters.orderDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward') : '' }}
             </mat-icon>
@@ -20,18 +23,22 @@
     </div>
 
     <div class="filter-fields">
-        <p>Filtra Per...</p>
+        <h3>Filtra Per...</h3>
         
-        <label>Nome Attività</label>
-        <input type="text" [value]="filters.title()" (input)="filters.setTitle($any($event.target).value)" />
+        <div>
+            <label>Nome Attività</label>
+            <input type="text" [value]="filters.title()" (input)="filters.setTitle($any($event.target).value)" />
+        </div>
 
         <div *ngIf="filters.showOrdering()">
             <label>Categoria</label>
             <input type="text" [value]="filters.categoryName()" (input)="filters.setCategory($any($event.target).value)"/>
         </div>
 
-        <label>Data Scadenza</label>
-        <input type="date" [value]="filters.dueDate() ? (filters.dueDate() | date:'yyyy-MM-dd') : ''" (change)="filters.setDueDate($any($event.target).valueAsDate)" />
+        <div>
+            <label>Data Scadenza</label>
+            <input type="date" [value]="filters.dueDate() ? (filters.dueDate() | date:'yyyy-MM-dd') : ''" (change)="filters.setDueDate($any($event.target).valueAsDate)" />
+        </div>
         
         <div *ngIf="!filters.showOrdering()">
             <label>Data Promemoria</label>

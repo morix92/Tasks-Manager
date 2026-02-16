@@ -15,40 +15,35 @@
 .app-footer{
     display: flex;
     align-items: center;       /* allinea verticalmente h1 e content */
-    justify-content: space-between; /* h1 a sx, footer-content a dx */
+    justify-content: space-between; /* h2 a sx, footer-content a dx */
     height: 80px;
     background-color: #1e1e1e;
     color: white;
-    padding: 10px 20px;
+    padding: 8px 18px;
+    font-size: 14px;
 }
 
-/* Footer-content: dividi lo spazio tra i blocchi interni */
 .footer-content {
-    margin-left: 120px;
-    margin-right: 120px;
     display: flex;
     flex: 1;                   /* occupa tutto lo spazio disponibile */
     justify-content: space-between; /* distribuisce blocchi tra loro */
     align-items: center;
-    font-size: 15px;
 }
 
-
 .footer-contact p {
-    margin: 2px 0;
+    margin: 3px 0;
     line-height: 1.2; 
 }
 
 .footer-git{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 8px;
 }
 
 .footer-git .git-link {
     color: white; /* link bianco */
     text-decoration: none;
-    font-size: 15px;
 }
 
 .footer-git .git-link:hover {
@@ -73,3 +68,16 @@
     text-decoration: underline; /* sottolineatura al mouseover */
 }
 
+@media (max-width: 999px) {
+    .footer-content {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+@media (min-width: 1000px) {
+    .footer-content {
+        margin-left: 12%;
+        margin-right: 12%;
+    }
+}
