@@ -1,4 +1,4 @@
-import { Component, computed, Input, signal } from '@angular/core';
+import { Component, computed, effect, Input, signal } from '@angular/core';
 import { Reminder } from '../../../models/reminder.model';
 import { RemindersApi } from '../../../services/crud/reminders/reminders-api';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { EditReminder } from './edit-reminder/edit-reminder';
 import { Auth } from '../../../services/auth';
 import { FilterService } from '../../../services/filter-service';
 import { Alert } from '../../../services/alert';
+import { socketService } from '../../../services/socket';
 
 @Component({
   selector: 'app-reminders',
@@ -21,17 +22,26 @@ export class Reminders {
   allReminders = signal<Reminder[]>([]);
   selectedReminder = signal<Reminder | null>(null);
   showDialogEditReminder = signal<boolean>(false);
+  notified = computed(() => this.socketService.notified());
 
   animationType: 'remove' | null = null;
   animatedReminderId: number | null = null;
   private readonly ANIMATION_TIME = 500;
 
-  constructor(private remindersApi: RemindersApi, private auth: Auth, private filters: FilterService, private alertService: Alert){
+  constructor(private remindersApi: RemindersApi, private auth: Auth, private filters: FilterService, private alertService: Alert, private socketService: socketService){
     this.filters.setShowOrdering(false);
+    effect(() => {
+      const _trigger = this.socketService.notified();
+      const user = this.currentUser();
+      if (user?.id) {
+        this.remindersApi.getRemindersByUserId(user.id, 0).subscribe((data: Reminder[]) => {
+          this.allReminders.set(data);
+        })
+      }
+    }) 
   }
 
   currentUser = computed(() => this.auth.currentUser());
-
   
   filteredReminders = computed(() => {
     const reminders = this.allReminders();
@@ -90,16 +100,6 @@ export class Reminders {
       return direction === 'asc' ? compare : -compare;
     });
   });
-
-
-  ngOnInit(){
-    const user = this.currentUser();
-    if (user?.id) {
-      this.remindersApi.getRemindersByUserId(user.id, 0).subscribe((data: Reminder[]) => {
-        this.allReminders.set(data);
-      })
-    }
-  }
 
   editReminder(id: number) {
     this.remindersApi.getReminderById(id).subscribe((data: Reminder) => {

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { TaskDialog } from './task-dialog/task-dialog';
 import { MatIcon } from '@angular/material/icon';
+import { socketService } from '../../../services/socket';
 
 interface CalendarDay {
   date: Date;
@@ -37,6 +38,7 @@ export class Calendar {
     d.setHours(0,0,0,0);
     return d;
   });
+  notified = computed(() => this.socketService.notified());
 
   monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   weekDays = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
@@ -59,10 +61,11 @@ export class Calendar {
     }, 200);
   }
   
-  constructor(private auth: Auth, private tasksApi: TasksApi){
+  constructor(private auth: Auth, private tasksApi: TasksApi, private socketService: socketService){
     this.generateCalendar();
 
     effect(() => {
+      const _trigger = this.socketService.notified();
       const user = this.currentUser();
       if (!user?.id) return;
 

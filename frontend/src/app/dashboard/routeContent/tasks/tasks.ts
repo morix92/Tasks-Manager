@@ -14,6 +14,7 @@ import { EditTask } from './edit-task/edit-task';
 import { ReopenTask } from './reopen-task/reopen-task';
 import { FilterService } from '../../../services/filter-service';
 import { Alert } from '../../../services/alert';
+import { socketService } from '../../../services/socket';
 
 type Tab = 'daFare' | 'completati' | 'scaduti';
 type ActiveDialog = 'addReminder' | 'viewReminders' | 'editTask' | 'reopenTask' | null;
@@ -39,6 +40,7 @@ export class Tasks {
   animationType: 'remove' | 'complete' | null = null;
   animatedTaskId: number | null = null;
   private readonly ANIMATION_TIME = 600;
+  notified = computed(() => this.socketService.notified());
 
   setTab(tab: Tab) {
     this.activeTab.set(tab);
@@ -125,11 +127,12 @@ export class Tasks {
 
   trackById = (_: number, task: Task) => task.id;
 
-  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService, private alertService: Alert){
+  constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService, private alertService: Alert, private socketService: socketService){
     this.filters.setShowOrdering(true);
     effect(() => {
       const user = this.currentUser();
       const tab = this.statusByTabIndex();
+      const _trigger = this.socketService.notified();
 
       if (!user?.id) return;
 

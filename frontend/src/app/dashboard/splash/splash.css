@@ -1,0 +1,23 @@
+.splash-container {
+    margin: 0;
+    background: #1e1e1e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: sans-serif;
+}
+
+.spinner {
+    width: 120px;
+    height: 120px;
+    border: 8px solid rgba(255, 255, 255, 0.1);
+    border-top: 8px solid #4cafef; /* colore principale app */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

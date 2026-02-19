@@ -49,10 +49,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ error: status === 500 ? 'Internal server error' : err.message });
 });
 
-// Job
-startReminderJob();
-TasksStatusCheck();
-
 // Server + Socket.io
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: 'http://127.0.0.1:4200', methods: ['GET', 'POST'] } });
@@ -60,6 +56,14 @@ const io = new Server(server, { cors: { origin: 'http://127.0.0.1:4200', methods
 io.on('connection', socket => console.log('Client Socket connesso:', socket.id));
 notificationEmitter.on('reminder', data => io.emit('reminder', data));
 notificationEmitter.on('task', data => io.emit('task', data));
+
+// Job
+setTimeout(() => {
+  //Aspetto 5 secondi dall'avvio del BE
+  startReminderJob();
+  TasksStatusCheck();
+}, 6000);
+
 
 // Porta fissa 3000
 const PORT = 3000;

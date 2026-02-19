@@ -5,7 +5,8 @@
             <app-sidebar></app-sidebar>
         </div>
         <div class="content">
-            <router-outlet></router-outlet>
+            <app-splash *ngIf="loading()"></app-splash>
+            <router-outlet *ngIf="!loading()"></router-outlet>
             <div *ngIf="alert() as a" class="top-alert" [ngClass]="a.classAlert">
                 <strong>{{ a.message }}</strong>
             </div>

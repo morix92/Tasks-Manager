@@ -7,7 +7,6 @@ h1{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -16,11 +15,8 @@ h1{
 .category-card {
   background: #fff;
   color: #1e1e1e;
-  width: 180px;
   border-radius: 20px;
-  padding: 2rem;
   text-align: center;
-  font-size: 25px;
 }
 
 .category-name {
@@ -31,8 +27,6 @@ h1{
 .card-actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
 }
 
 .card-actions button {
@@ -49,13 +43,9 @@ h1{
 
 .icon-btn {
   cursor: pointer;
-  width: 40%;
-  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
-  gap: 1rem;
   border-radius: 15px;
   border: 1px solid rgba(211, 190, 70, 0.863);
   background: transparent;
@@ -71,8 +61,6 @@ h1{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 60px;
-    margin-bottom: 30px;
 }
 
 .category-card.removing {
@@ -121,10 +109,66 @@ h1{
     .dialog {
         width: 350px;
     }
+    h1{
+        font-size: 25px;
+    }
+    .categories {
+      gap: 2rem;
+    }
+    .category-card {
+      width: 180px;
+      padding: 2rem;
+      font-size: 25px;
+    }
+
+    .card-actions {
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .icon-btn {
+      width: 40%;
+      height: 40px;
+      font-size: 18px;
+      gap: 1rem;
+    }
+
+    .addCategory{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
 }
 
 @media (min-width: 1000px) {
     .dialog {
         width: 520px;
+    }
+    h1{
+        font-size: 30px;
+    }
+    .categories {
+      gap: 2rem;
+    }
+    .category-card {
+      width: 180px;
+      padding: 2rem;
+      font-size: 25px;
+    }
+
+    .card-actions {
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .icon-btn {
+      width: 40%;
+      height: 40px;
+      font-size: 18px;
+      gap: 1rem;
+    }
+
+    .addCategory{
+        margin-top: 60px;
+        margin-bottom: 30px;
     }
 }

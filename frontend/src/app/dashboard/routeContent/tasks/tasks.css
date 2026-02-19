@@ -52,6 +52,7 @@ button.active {
 .tab-panel {
   animation: fadeSlide 0.8s ease;
   display: flex;
+  align-items: center;
   flex-direction: column;
 }
 
@@ -274,6 +275,7 @@ mat-icon {
     gap: 1.3rem;
   }
   .task-card {
+    width: 90%;
     padding: 1.1rem 1.6rem;
     box-shadow: 8px 8px 8px rgba(196, 176, 68, 0.6);
   }
@@ -358,6 +360,7 @@ mat-icon {
     padding: 16px;
   }
   .task-card {
+    width: 100%;
     padding: 1.5rem 2rem;
     box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
   }
