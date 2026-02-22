@@ -55,15 +55,29 @@ h1{
 }
 
 .card-actions button {
-    background-color: #1e1e1e;
-    color: white;
-    width: 45%;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45%;
+  border: none;
+}
+
+.card-actions button:hover {
+  background-color: rgba(196, 176, 68, 0.9);
+  scale: 1.1;
 }
 
 .icon-btn {
   border: none;
   background: transparent;
   cursor: pointer;
+}
+
+.icon-btn:hover {
+  scale: 1.4;
 }
 
 .login {
@@ -74,8 +88,15 @@ h1{
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 3px;
   gap: 0.5rem;
-  font-size: 15PX;
+  font-size: 15px;
+  border: none;
+}
+
+.login:hover {
+  background-color: rgba(196, 176, 68, 0.9);
+  scale: 1.05;
 }
 
 .overlay {

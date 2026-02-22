@@ -1,0 +1,14 @@
+{
+  "identifier": "shell-open",
+  "description": "Permette di aprire URL esterni con il plugin shell",
+  "permissions": [
+    {
+      "identifier": "shell:allow-open",
+      "with": {
+        "scope": [
+          "https://morix92.github.io/*"
+        ]
+      }
+    }
+  ]
+}

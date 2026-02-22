@@ -129,15 +129,15 @@ fn notify_with_image_winrt(
         // Layout: immagine a sinistra + testo a destra (ToastGeneric)
         // Se vuoi rotonda: aggiungi hint-crop="circle" nell'elemento <image>
         let xml = format!(
-r#"<toast>
-  <visual>
-    <binding template="ToastGeneric">
-      <image placement="appLogoOverride" src="{src}" />
-      <text>{title}</text>
-      <text>{body}</text>
-    </binding>
-  </visual>
-</toast>"#,
+			r#"<toast>
+			  <visual>
+				<binding template="ToastGeneric">
+				  <image placement="appLogoOverride" src="{src}" />
+				  <text>{title}</text>
+				  <text>{body}</text>
+				</binding>
+			  </visual>
+			</toast>"#,
             src = img_uri,
             title = title_esc,
             body = body_esc
@@ -197,12 +197,6 @@ fn main() {
 
     // ---- 6) COSTRUZIONE DELL'APP TAURI ----
     Builder::default()
-        // 📜 LOG: inizializziamo il plugin di log
-        .plugin(
-            tauri_plugin_log::Builder::default()
-                .level(log::LevelFilter::Debug)
-                .build(),
-        )
         // 🔔 Plugin notifiche Tauri (fallback per altri OS)
         .plugin(tauri_plugin_notification::init())
         // 🔊 Comandi invocabili dal FE

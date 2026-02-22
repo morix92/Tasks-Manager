@@ -1,14 +1,58 @@
 [
    {
-      "question":"Come posso creare un task?",
-      "answer":"La risposta qui. Puoi spiegare passo passo come creare un task."
+      "question":"Cosa sono i profili?",
+      "answer":"I profili servono per effettuare una suddivisione logica delle attività.\nPossono essere visti sia come una suddivisione degli utenti che condividono il PC, che come una suddivisione macroscopica delle tipologie di attività (ad esempio: Lavoro, Casa, ecc)"
    },
    {
-      "question":"Posso modificare un task già creato?",
-      "answer":"Sì, clicca sul task e poi su “Modifica”."
+      "question":"Per accedere ad un profilo devo autenticarmi?",
+      "answer":"No, l'applicazione è pensata per essere utilizzata dal proprietario del PC su cui è installata.\n Qualora si utilizzassero i profili come suddivisione Utente, bisognerebbe tenere in considerazione che la privacy delle informazioni non è garantita, in quanto tutti i profili sono accessibili per chiunque possa utilizzare il proprio PC.\nTuttavia, per una distinzione netta delle attività, accedendo con un profilo verranno visualizzate solo le informazioni relative a quel profilo"
    },
    {
-      "question":"Come eliminare un task completato?",
-      "answer":"Clicca sull’icona del cestino accanto al task completato. Conferma per eliminare."
+      "question":"Quanti Profili posso registrare?",
+      "answer":"L'applicazione consente un massimo di 4 profili."
+   },
+   {
+      "question":"Posso utilizzare un'immagine a piacere dentro il profilo?",
+      "answer":"Si! purché l'immagine sia in formato png e il file venga salvato nella cartella 'avatar', presente nel percorso '/AppData/Roaming/TaskManager' del proprio PC."
+   },
+   {
+      "question":"A cosa servono le categorie?",
+      "answer":"Le categorie permettono di raggruppare le attività.\nQualora fossero già i profili ad essere utilizzati come un raggruppamento, anziché come un utente, le categorie avrebbero la funzione di 'sottocategorie'. Un esempio potrebbe essere il seguente: Profilo: Lavoro; Categorie: Appuntamenti, Pagamenti, ecc."
+   },
+   {
+      "question":"Posso creare categorie personalizzate",
+      "answer":"Certo, è possibile modificare le categorie di default o crearne di nuove; non esiste un limite numerico per le categorie, ma i colori associabili ad una categoria sono 18."
+   },
+   {
+      "question":"Quali sono gli stati delle attività?",
+      "answer":"Le attività possono essere in stato: Da Fare, Completate o Scadute.\nQuando si crea una nuova attività, il sistema la considera nello stato 'Da Fare'; una volta effettuata l'attività è possibile segnalarla manualmente come 'Completata'; tutte le attività non Completate, appena superata la soglia prevista come scadenza, vengono considerate 'Scadute'."
+   },
+   {
+      "question":"Posso Riaprire un'attività completata o scaduta?",
+      "answer":"Si, sia le attività Completate che Scadute possono essere 'Riaperte':\nQuesta operazione genera di fatto una nuova attività con stesso nome, descrizione, priorità e categoria della precedente, mentre i campi scadenza e promemoria, ovviamente, devono essere ricompilati."
+   },
+   {
+      "question":"Quando ricevo una notifica?",
+      "answer":"Le notifiche vengono ricevute: o quando viene eguagliata la data/ora prevista per un promemoria, oppure quando scade un'attività.\nDunque, una qualsiasi attività, genererà almeno una notifica, e cioè quella della scadenza dell'attività stessa"
+   },
+   {
+      "question":"Quali informazioni mostra una notifica?",
+      "answer":"Le notifiche mostrano:\n - Un riquadro a sinistra con l'immagine del profilo su cui è registrata quella attività;\n - La scritta 'Profilo' con accanto il nome del profilo (per esplicitare il profilo anche testualmente);\n - La scritta 'Scadenza' oppure 'Promemoria', in base al caso, con accanto il titolo dell'attività per cui si riceve la notifica."
+   },
+   {
+      "question":"La notifica arriva anche se sull'app non ho fatto accesso ad un profilo?",
+      "answer":"Si. Le notifiche sono pensate per dare un feedback all'utente, quindi si è scelto di mostrare sempre e comunque le notifiche: anche quando la notifica non riguarda il profilo aperto in quel momento, o quando l'app è in background."
+   },
+   {
+      "question":"Quanti promemoria può avere un'attività?",
+      "answer":"Durante l'apertura o riapertura di un'attività, l'applicazione consente di inserire due tipologie di promemoria: Notifica Singola o Notifiche Multiple\n - Nel primo caso è sufficiente inserire una data antecedente a quella della scadenza per ricevere una singola notifica (oltre, ovviamente, alla notifica relativa alla vera scadenza dell'attività);\n - Nel secondo caso, invece, è necessario compilare i due campi indicati nel form: il primo relativo alla regola da usare (oraria, giornaliera, ecc); il secondo relativo al numero di ricorrenze (ogni 2, ogni 3, ecc); così facendo vengono generati tanti promemoria quanti possibili, partendo dalla data di scadenza fino ad arrivare alla data di creazione dell'attività, utilizzando regola e ricorrenza scelta (ad esempio: ogni 2 giorni, ogni 4 mesi, ecc)."
+   },
+   {
+      "question":"Posso personalizzare il suono delle notifiche?",
+      "answer":"Si! è possibile inserire un suono personalizzato, ma il suono sarà uguale per tutte le notifiche di tutti i profili. Di seguito le istruzioni:\n 1) Realizzare un file audio con estensione '.wav' (qui un tool online per realizzarlo: https://musiclab.chromeexperiments.com/Song-Maker/);\n 2) Salvare il file.wav sul proprio PC, all'interno della cartella 'assets', nel percorso: '/AppData/Local/TaskManager' (se non si riesce a trovare, fare click con il tasto destro sul collegamento generato sul desktop e cliccare su 'apri percorso file');\n 3) Rinominarla esattamente 'notify.wav', in quanto il suono della notifica sarà sempre quello eseguito dal file avente questo nome;\n 4) Chiudere e riaprire l'app nel caso fosse in esecuzione."
+   },
+   {
+      "question":"Come chiudo definitivamente l'applicazione?",
+      "answer":"Essendo un'applicazione che prevede notifiche, è pensata per lavorare in background anche quando non viene utilizzata;\nPer chiuderla definitivamente è necessario cliccare sulla freccetta in basso a destra del proprio pc, cercare l'icona dell'applicazione, cliccare con il tasto destro e, infine, cliccare su 'chiudi'."
    }
 ]

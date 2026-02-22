@@ -35,6 +35,7 @@ exports.validateCreateTask = ({ user_id, title, due_date, priority, status, exac
     const exactDate  = new Date(exact_remind_at);
     if (isNaN(exactDate.getTime())) throw new appError('exact_remind_at must be a valid date', 400);
     if (exactDate.getTime() > dueDateObj.getTime()) throw new appError('exact_remind_at cannot be after the task due_date', 400);
+    if (exactDate.getTime() < now.getTime()) throw new appError('exact_remind_at cannot be in the past', 400);
   }
 
   if (recurrence_rule && !VALID_RECURRENCE_RULES.includes(recurrence_rule)) {

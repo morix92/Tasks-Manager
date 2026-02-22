@@ -10,6 +10,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { TaskDialog } from './task-dialog/task-dialog';
 import { MatIcon } from '@angular/material/icon';
 import { socketService } from '../../../services/socket';
+import { DataDialog } from './data-dialog/data-dialog';
 
 interface CalendarDay {
   date: Date;
@@ -21,7 +22,7 @@ interface CalendarDay {
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, MatSlideToggleModule, FormsModule, MatChipsModule, TaskDialog, MatIcon],
+  imports: [CommonModule, MatSlideToggleModule, FormsModule, MatChipsModule, TaskDialog, MatIcon, DataDialog],
   providers: [],
   templateUrl: './calendar.html',
   styleUrl: './calendar.css',
@@ -49,8 +50,35 @@ export class Calendar {
   allTasks = signal<Task[]>([]);
   selectedTask = signal<Task | null>(null);
   activeDialog = signal<boolean>(false);
+  activeDateDialog = signal<boolean>(false);
 
   isAnimating = false;
+
+  calendarTitle = computed(() => {
+    if (this.viewMode() === 'month') {
+      return `${this.monthNames[this.currentMonth()]} ${this.currentYear()}`;
+    }
+
+    const days = this.weeks().flat();
+    if (!days.length) return '';
+
+    const first = days[0].date;
+    const last = days[days.length - 1].date;
+
+    const sameMonth =
+      first.getMonth() === last.getMonth() &&
+      first.getFullYear() === last.getFullYear();
+
+    if (sameMonth) {
+      return `${this.monthNames[first.getMonth()]} ${first.getFullYear()}`;
+    }
+
+    if (first.getFullYear() === last.getFullYear()) {
+      return `${this.monthNames[first.getMonth()]} / ${this.monthNames[last.getMonth()]} ${first.getFullYear()}`;
+    }
+
+    return `${this.monthNames[first.getMonth()]} ${first.getFullYear()} / ${this.monthNames[last.getMonth()]} ${last.getFullYear()}`;
+  });
 
   private animateAndRun(action: () => void) {
     this.isAnimating = true;
@@ -214,33 +242,33 @@ export class Calendar {
 
   closeDialog(){
     this.activeDialog.set(false);
+    this.activeDateDialog.set(false);
   }
 
+  changeDate() {
+    this.activeDateDialog.set(true);
+  }
 
-  calendarTitle = computed(() => {
-    if (this.viewMode() === 'month') {
-      return `${this.monthNames[this.currentMonth()]} ${this.currentYear()}`;
-    }
+  setNewDate(event: { month: number; year: number }) {
+    this.animateAndRun(() => {
+      this.currentMonth.set(event.month);
+      this.currentYear.set(event.year);
+      this.generateCalendar();
+    });
 
-    const days = this.weeks().flat();
-    if (!days.length) return '';
+    this.closeDialog();
+  }
 
-    const first = days[0].date;
-    const last = days[days.length - 1].date;
+  goToToday() {
+    const now = new Date();
 
-    const sameMonth =
-      first.getMonth() === last.getMonth() &&
-      first.getFullYear() === last.getFullYear();
+    this.animateAndRun(() => {
+      this.currentMonth.set(now.getMonth());
+      this.currentYear.set(now.getFullYear());
+      this.generateCalendar();
+    });
 
-    if (sameMonth) {
-      return `${this.monthNames[first.getMonth()]} ${first.getFullYear()}`;
-    }
-
-    if (first.getFullYear() === last.getFullYear()) {
-      return `${this.monthNames[first.getMonth()]} / ${this.monthNames[last.getMonth()]} ${first.getFullYear()}`;
-    }
-
-    return `${this.monthNames[first.getMonth()]} ${first.getFullYear()} / ${this.monthNames[last.getMonth()]} ${last.getFullYear()}`;
-  });
+    this.closeDialog();
+  }
 
 }

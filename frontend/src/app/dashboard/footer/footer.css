@@ -2,7 +2,7 @@
     margin: 0px;
     border: none;
     height: 5px;
-    background-color: rgba(196, 176, 68, 0.815); /* colore oro */
+    background-color: rgba(196, 176, 68, 0.9); /* colore oro */
 }
 
 .separatore2{
@@ -39,16 +39,16 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative; /* Necessario per posizionare il tooltip */
 }
 
-.footer-git .git-link {
-    color: white; /* link bianco */
-    text-decoration: none;
-}
-
-.footer-git .git-link:hover {
+.git-link {
+    background-color: transparent;
+    color: white;
     text-decoration: underline;
+    border: none;
 }
+
 
 .gitIcon {
     width: 25px;
@@ -67,6 +67,31 @@
 .footer-links a:hover {
     text-decoration: underline; /* sottolineatura al mouseover */
 }
+
+
+.copy-tooltip {
+  position: absolute;
+  top: -35px;         /* distanza dal bottone */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeSlide 1.5s forwards;
+  z-index: 20;
+}
+
+@keyframes fadeSlide {
+  0%   { opacity: 0; transform: translate(-50%, 5px); }
+  10%  { opacity: 1; transform: translate(-50%, 0); }
+  90%  { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -5px); }
+}
+
 
 @media (max-width: 999px) {
     .footer-content {

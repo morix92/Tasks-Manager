@@ -1,9 +1,7 @@
 import { Component, computed, effect, EventEmitter, Input, Output, signal } from '@angular/core';
 import { Task } from '../../../../models/task.model';
-import { Category } from '../../../../models/category.model';
 import { CreateTaskDto } from '../../../../models/createTask.model';
 import { TasksApi } from '../../../../services/crud/tasks/tasks-api';
-import { CategoriesApi } from '../../../../services/crud/categories/categories-api';
 import { CommonModule } from '@angular/common';
 import { Alert } from '../../../../services/alert';
 
@@ -85,7 +83,6 @@ export class ReopenTask {
         if (f.recurrence_interval && f.recurrence_interval < 1) errors['recurrence_interval'] = 'Il campo Numero Ricorrenza non può essere minore o uguale a zero';
       }
     }
-    console.log(errors);
     return errors;
   });
 

@@ -9,9 +9,9 @@
                
     <div class="calendar" [class.animating]="isAnimating">
         <div class="calendar-header" [class.ten-days]="viewMode() === 'tenDays'">
-            <button (click)="prevMonth()" *ngIf="viewMode() === 'month'"><mat-icon>chevron_left</mat-icon></button>
-            <span>{{ calendarTitle() }}</span>
-            <button (click)="nextMonth()"*ngIf="viewMode() === 'month'"><mat-icon>chevron_right</mat-icon></button>  
+            <button (click)="prevMonth()" class="changeMonth" *ngIf="viewMode() === 'month'"><mat-icon>chevron_left</mat-icon></button>
+            <button (click)="changeDate()" class="editDate" [disabled]="viewMode() === 'tenDays'" [class.month]="viewMode() === 'month'"><span>{{ calendarTitle() }}</span></button>
+            <button (click)="nextMonth()" class="changeMonth" *ngIf="viewMode() === 'month'"><mat-icon>chevron_right</mat-icon></button>  
         </div>
 
         <div class="calendar-weekdays" *ngIf="viewMode() === 'month'">
@@ -46,5 +46,10 @@
 <div class="overlay" *ngIf="activeDialog()" (click)="closeDialog()">
   <div class="dialog" (click)="$event.stopPropagation()">
     <app-task-dialog [task]="selectedTask()" (closeDialog)="closeDialog()"> </app-task-dialog>
+  </div>
+</div>
+<div class="overlay" *ngIf="activeDateDialog()" (click)="closeDialog()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <app-data-dialog [month]="currentMonth()" [year]="currentYear()" (confirm)="setNewDate($event)" (goToday)="goToToday()" (closeDialog)="closeDialog()"></app-data-dialog>
   </div>
 </div>

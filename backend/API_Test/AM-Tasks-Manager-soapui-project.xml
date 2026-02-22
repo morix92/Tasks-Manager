@@ -5,10 +5,10 @@
   "title": "OREsoapUI3",
   "description": "Buttare la spazza che se no puzza",
   "priority": 3,
-  "due_date": "2026-01-20 17:03",
-  "exact_remind_at": null,
-  "recurrence_rule": "daily",
-  "recurrence_interval": 1
+  "due_date": "2026-03-20 17:03",
+  "exact_remind_at": "2026-01-26 11:23",
+  "recurrence_rule": null,
+  "recurrence_interval": null
 }</con:request><con:originalUri>http://localhost/users</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="status" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>status</con:entry></con:parameterOrder></con:request></con:method><con:method name="PUT Task by Id" id="82c399d4-6801-411c-8cdb-ce5b98ccb20b" method="PUT"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200 201 202</con:status><con:params/><con:element>Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>404 400 500 403</con:status><con:params/><con:element xmlns:user="http://localhost/users">user:Fault</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>204</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="fa68f575-9152-4ec7-b91e-e8059122f5bd" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000/tasks/1</con:endpoint><con:request>{
   "user_id": 1,
   "category_id": 4,

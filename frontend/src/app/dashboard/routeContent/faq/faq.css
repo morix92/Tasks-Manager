@@ -87,7 +87,8 @@
   margin: 0;
   padding: 16px 0;
   line-height: 1.6;
-  color: white
+  color: white;
+  white-space: pre-line;
 }
 
 /* Stato aperto */

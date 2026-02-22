@@ -38,12 +38,12 @@ export class socketService {
     });
 
     this.socket.on('reminder', (data: Reminder) => {
-      console.log('Notifica ricevuta:', data);
+      console.log('Promemoria ricevuto:', data);
       this.showNotification(`PROFILO: ${data.username}\nPROMEMORIA: ${data.title}`, data.avatar_url);
     });
 
     this.socket.on('task', (data: Task) => {
-      console.log('Scadenza Task ricevuta:', data);
+      console.log('Scadenza ricevuta:', data);
       this.showNotification(`PROFILO: ${data.username}\nSCADENZA: ${data.title}`, data.avatar_url);
     });
   }
