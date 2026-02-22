@@ -272,7 +272,7 @@ fn main() {
             // ------- Setup finestra -------
             let win = app.get_webview_window("main").unwrap();
 
-            let medium_size = PhysicalSize::new(990, 990);
+            let medium_size = PhysicalSize::new(990, 980);
             win.set_resizable(false)?;
             win.unmaximize()?;
             win.set_size(medium_size)?;
