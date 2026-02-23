@@ -21,6 +21,7 @@ L’applicazione è pensata per girare completamente in locale, senza dipendenze
 
 ## Stato del progetto 
 Completato.
+Provalo subito scaricando l'installer dal mio portfolio: https://morix92.github.io/Portfolio/
 
 ## Tech Stack
 - Database: SQLite (file-based, locale)
