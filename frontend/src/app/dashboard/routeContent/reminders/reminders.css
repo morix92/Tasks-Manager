@@ -5,20 +5,16 @@ h1{
 
 .reminders {
   display: flex;
-  flex-direction: column;  /* schede una sotto l’altra */
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  margin: 2rem;
 }
 
 .reminder-card {
   border-radius: 20px;
-  padding: 1rem 2rem;
   box-shadow: 10px 10px 10px rgba(196, 176, 68, 0.6);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 2rem;
+  justify-content: space-between;
   background: #fff;
 }
 
@@ -40,28 +36,34 @@ h1{
   100% { opacity: 0; transform: scale(0); filter: blur(8px);}
 }
 
+.reminder-data {
+  display: flex;
+}
 .data-field {
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+.taskTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: center;
 }
-
 .data-label {
-  font-size: 14px;
+  display: flex;
+  justify-content: center;
   font-weight: 600;
   color: #777;
 }
-
 .data-field p {
-  margin: 0;
+  margin: 0px;
+  padding: 0px;
 }
 
 .card-actions{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
 }
 
 .card-actions button {
@@ -75,6 +77,11 @@ h1{
 .card-actions button:hover {
   background-color: rgba(196, 176, 68, 0.9);
   transform: scale(1.2);
+}
+.card-actions mat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .overlay {
@@ -103,20 +110,32 @@ h1{
 
 
 @media (max-width: 999px) {
+  .reminders {
+      gap: 15px;
+      margin: 15px;
+    }
     .reminder-card {
       width: 500px;
+      padding: 1rem 2rem;
+    }
+    .taskTitle {
+      width: 120px;
     }
     .card-actions button {
-      padding: 0.3rem 0.8rem;
+      padding: 4px 6px;
+    }
+    .card-actions mat-icon {
+      font-size: 20px;
+    }
+    .card-actions {
+      gap: 15px;
     }
     .data-label {
-      font-size: 12px;
+      font-size: 11px;
     }
     .reminder-data {
-      display: flex;
-      gap: 1.5rem;
-      width: 75%;
-      font-size: 16px;
+      gap: 15px;
+      font-size: 13px;
     }
     .dialog{
       width: 250px;
@@ -124,21 +143,33 @@ h1{
 }
 
 @media (min-width: 1000px) {
+    .reminders {
+      gap: 15px;
+      margin: 15px;
+    }
     .reminder-card {
       width: 800px;
+      padding: 17px 25px;
+    }
+    .reminder-data {
+      gap: 30px;
+      font-size: 18px;
+    }
+    .taskTitle {
+      width: 260px;
+    }
+    .card-actions {
+      gap: 20px;
     }
     .card-actions button {
-      padding: 0.5rem 1rem;
+      padding: 8px 12px;
+    }
+    .card-actions mat-icon {
+      font-size: 27px;
     }
     .data-label {
       font-size: 14px;
-      margin-bottom: 0.1rem;
-    }
-    .reminder-data {
-      display: flex;
-      gap: 3rem;
-      width: 75%;
-      font-size: 20px;
+      margin-bottom: 2px;
     }
     .dialog{
       width: 350px;

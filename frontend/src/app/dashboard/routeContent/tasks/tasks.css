@@ -115,7 +115,6 @@ button.active {
   flex-direction: column;
   align-items: center;
   color: white;
-  padding: 16px;
 }
 
 /* =========================   CARD   ========================= */
@@ -130,17 +129,16 @@ button.active {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
 }
 
 .header-text {
-  max-width: 75%;
+  max-width: 85%;
 }
 
 .task-title {
   margin: 0;
   font-weight: 700;
-  color: #1e1e1e;
+  color: black;
 }
 
 .task-description {
@@ -149,9 +147,7 @@ button.active {
 }
 
 .category-tag {
-  padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  font-size: 15px;
   color: white;
 }
 
@@ -187,6 +183,7 @@ button.active {
 .card-actions {
   display: flex;
   gap: 0.8rem;
+  cursor: pointer;
 }
 
 .icon-btn {
@@ -198,6 +195,7 @@ button.active {
   border: none;
   border-radius: 10px;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
 }
 
 .icon-btn:hover {
@@ -264,15 +262,18 @@ mat-icon {
 @media (max-width: 999px) {
   .tabs {
     width: 90%;
-    height: 40px;
+    height: 35px;
   }
   .tab {
-    padding: 8px;
-    font-size: 20px;
+    padding: 6px;
+    font-size: 17px;
+  }
+  .tab-content {
+    padding: 16px;
   }
   .tab-panel {
     width: 550px;
-    gap: 1.3rem;
+    gap: 16px;
   }
   .task-card {
     width: 90%;
@@ -282,12 +283,16 @@ mat-icon {
   .card-body {
     flex-direction: column;
   }
+  .category-tag {
+    padding: 0.4rem 0.8rem;
+    font-size: 14px;
+  }
   .body-task {
     width: 100%;
     margin-top: 0px;
   }
   .task-body {
-    gap: 1.4rem;
+    gap: 20px;
   }
   .body-reminder {
     margin-top: 15px;
@@ -302,20 +307,21 @@ mat-icon {
   }
   .data-label {
     white-space: normal;
-    font-size: 0.75rem;
+    font-size: 12px;
     margin-right: 3px;
   }
   .data-value {
     white-space: normal;
-    font-size: 0.85rem;
+    font-size: 13px;
   }
   .task-title {
-    font-size: 1.1rem;
+    font-size: 17px;
+    margin-top: 4px;
   }
   .task-description {
-    margin-top: 0.6rem;
+    margin-top: 4px;
     margin-bottom: 0.6rem;
-    font-size: 1rem;
+    font-size: 14px;
   }
   .icon-btn {
     width: 150px;
@@ -330,16 +336,16 @@ mat-icon {
     padding: 0.4rem;
   }
   .dialogReminder { 
-    width: 280px;
+    width: 300px;
   }
   .dialogGetReminder { 
     width: 450px;
   }
   .reopenTask { 
-    width: 350px;
+    width: 400px;
   }
   .dialogEditTask { 
-    width: 350px;
+    width: 300px;
   }
 }
 
@@ -350,14 +356,14 @@ mat-icon {
   }
   .tab {
     padding: 8px;
-    font-size: 20px;
+    font-size: 22px;
   }
   .tab-panel {
-    gap: 1rem;
+    gap: 25px;
     width: 900px;
   } 
   .tab-content {
-    padding: 16px;
+    padding: 25px;
   }
   .task-card {
     width: 100%;
@@ -366,6 +372,10 @@ mat-icon {
   }
   .body-task {
     margin-top: 10px;
+  }
+  .category-tag {
+    padding: 8px 12px;
+    font-size: 18px;
   }
   .task-body {
     gap: 2rem;
@@ -376,22 +386,22 @@ mat-icon {
     gap: 0.8rem;
   }
   .data-label {
-    font-size: 1rem;
+    font-size: 18px;
     margin-right: 6px;
   }
   .data-value {
-    font-size: 1rem;
+    font-size: 18px;
   }
   .card-actions {
     margin-top: 12px;
   }
   .task-title {
-    font-size: 1.4rem;
+    font-size: 22px;
   }
   .task-description {
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
-    font-size: 1.4rem;
+    font-size: 20px;
   }
   .icon-btn {
     width: 150px;
@@ -408,7 +418,7 @@ mat-icon {
     width: 400px;
   }
   .dialogGetReminder { 
-    width: 600px;
+    width: 700px;
   }
   .reopenTask { 
     width: 550px;

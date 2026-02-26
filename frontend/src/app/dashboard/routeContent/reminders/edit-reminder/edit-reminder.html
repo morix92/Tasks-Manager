@@ -2,10 +2,10 @@
   <h1>Modifica Promemoria</h1>
     <form (submit)="submit($event)" class="update-reminder-form">
         <div class="form-group">
-            <label>Modifica Data Promemoria</label>
-            <input type="date" [value]="datePart()" (input)="datePart.set($event.target.value)">
-            <label>Modifica Ora Promemoria</label>
-            <input type="time" [value]="timePart()" (input)="timePart.set($event.target.value)">
+            <span>Modifica Data Promemoria</span>
+            <input name="Data" autocomplete="off" type="date" [value]="datePart()" (input)="datePart.set($event.target.value)">
+            <span>Modifica Ora Promemoria</span>
+            <input name="Ora" autocomplete="off" type="time" [value]="timePart()" (input)="timePart.set($event.target.value)">
         </div>
         <button type="submit" class="btn-submit">Salva</button>
     </form>

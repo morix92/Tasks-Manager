@@ -121,8 +121,8 @@ export class Reminders {
   deleteReminder(id: number) {
     this.animateCategoryAndExecute(id, 'remove', () => {
       this.remindersApi.deleteReminder(id).subscribe(()=>{
-        const filteredCategories = this.allReminders().filter(u => u.id !== id);
-        this.allReminders.set(filteredCategories);
+        const filteredReminders = this.allReminders().filter(u => u.id !== id);
+        this.allReminders.set(filteredReminders);
         this.alertService.sendAlert({
           message: `Promemoria eliminato con successo`,
           classAlert: 'success'

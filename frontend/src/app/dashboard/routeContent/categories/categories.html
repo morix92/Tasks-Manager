@@ -4,7 +4,7 @@
 </div>
 <div class="categories">
   <div *ngFor="let category of allCategories()" class="category-card" [ngStyle]="{ 'background-color' : category.color}" [class.removing]="animatedCategoryId === category.id && animationType === 'remove'">
-    <p class="category-name">{{ category.name }}</p>
+    <p class="category-name" [title]="category.name">{{ category.name }}</p>
     <div class="card-actions">
       <button (click)="editCategory(category.id)"><mat-icon>edit</mat-icon></button>
       <button class="action-remove" (click)="deleteCategory(category.id)"><mat-icon>delete</mat-icon></button>

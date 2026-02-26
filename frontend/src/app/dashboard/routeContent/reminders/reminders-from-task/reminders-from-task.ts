@@ -6,6 +6,7 @@ import { Auth } from '../../../../services/auth';
 import { catchError, of } from 'rxjs';
 import { MatIcon } from '@angular/material/icon';
 import { Alert } from '../../../../services/alert';
+import { socketService } from '../../../../services/socket';
 
 @Component({
   selector: 'app-reminders-from-task',
@@ -21,22 +22,23 @@ export class RemindersFromTask {
 
   allReminders = signal<Reminder[]>([]);
   currentUser = computed(() => this.auth.currentUser());
+  notified = computed(() => this.socketService.notified());
 
   animationType: 'remove' | null = null;
   animatedReminderId: number | null = null;
   private readonly ANIMATION_TIME = 500;
   
-  constructor(private remindersApi: RemindersApi, private auth: Auth, private alertService: Alert){
-       effect(() => {
-      const user = this.currentUser();
-
-      if (!user?.id) return;
-      const task_id = this.taskIdSignal();
-      if (!task_id) return;
-      this.remindersApi.getReminderByTask(task_id, false).pipe(catchError(() => of([]))).subscribe(reminders => {
-        this.allReminders.set(reminders);
+  constructor(private remindersApi: RemindersApi, private auth: Auth, private alertService: Alert, private socketService: socketService){
+      effect(() => {
+        const user = this.currentUser();
+        const _trigger = this.socketService.notified();
+        if (!user?.id) return;
+        const task_id = this.taskIdSignal();
+        if (!task_id) return;
+        this.remindersApi.getReminderByTask(task_id, 0).pipe(catchError(() => of([]))).subscribe(reminders => {
+          this.allReminders.set(reminders);
+        });
       });
-    });
   }
 
   deleteReminder(id: number){

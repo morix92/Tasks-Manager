@@ -2,16 +2,16 @@
   <h1>Aggiungi Categoria</h1>
     <form (submit)="submit($event)" class="category-form">
         <div class="form-group">
-            <label>Nome Categoria</label>
-            <input type="text" [value]="formModel().name" (input)="updateName($event.target.value)">
+            <span>Nome Categoria</span>
+            <input name="Nome" autocomplete="off" type="text" [value]="formModel().name" (input)="updateName($event.target.value)">
             <small class="error" *ngIf="isSubmitted() && formErrors()['name']">{{ formErrors()['name'] }}</small>
         </div>
         <div class="form-group">
-            <label>Colore Categoria</label>
+            <span>Colore Categoria</span>
             <div class="color-picker">
                 <div class="color" *ngFor="let color of colors" [ngStyle]="{'background-color': color}" [class.selected]="color === formModel().color" (click)="updateColor(color)"></div>
             </div>
-            <input type="hidden" [value]="formModel().color" (input)="updateColor($event.target.value)">
+            <input name="Colore" autocomplete="off" type="hidden" [value]="formModel().color" (input)="updateColor($event.target.value)">
             <small class="error" *ngIf="isSubmitted() && formErrors()['color']">{{ formErrors()['color'] }}</small>
         </div>
         <button type="submit" class="btn-submit">Salva</button>

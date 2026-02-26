@@ -16,12 +16,6 @@ h1, h3{
   align-items: center;
 }
 
-.reminder-card button { 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .reminder-card.removing {
   animation: implodeFade 0.6s ease forwards;
 }
@@ -42,28 +36,26 @@ h1, h3{
 
 .reminder-data {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
   width: 100%;
-  font-size: 15px;
 }
 
 .data-field {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
 
-.secondary {
+}
+.taskTitle {
+  text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .data-label {
-  font-size: 14px;
+  display: flex;
+  justify-content: center;
   font-weight: 600;
   color: #777;
-  margin-bottom: 0.5rem;
 }
 
 .data-field p {
@@ -78,12 +70,14 @@ mat-icon {
 }
 
 .btn {
-  width: 50px;
-  height: 50px;
   background-color: #1e1e1e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: white;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -94,61 +88,63 @@ mat-icon {
 @media (max-width: 999px) {
 
   .reminders {
-    gap: 1.3rem;
-    margin: 0.8rem;
+    gap: 10px;
+    margin: 5px;
   }
 
   .reminder-card { 
-    padding: 0.9rem;
+    padding: 8px;
     box-shadow:
       -7px -7px 7px rgba(98, 98, 98, 0.788),
       7px -7px 7px rgba(98, 98, 98, 0.788),
       -7px  7px 7px rgba(98, 98, 98, 0.788),
       7px  7px 7px rgba(98, 98, 98, 0.788);
-    gap: 0.9rem;
+    gap: 15px;
   }
-  
   .reminder-data {
-    gap: 1.5rem;
-    font-size: 12.5px;
+    gap: 15px;
+    font-size: 11px;
   }
-
+  .taskTitle {
+    width: 120px;
+  }
   .data-label {
     font-size: 11px;
     margin-bottom: 0px
   }
+ 
   mat-icon {
     font-size: 21px;
   }
   .btn {
     width: 30px;
     height: 30px;
+    margin-left: 12px;
   }
 }
 
 @media (min-width: 1000px) {
 
   .reminders {
-    gap: 1.5rem;
-    margin: 1rem;
+    gap: 15px;
+    margin: 10px;
   }
-
   .reminder-card { 
-    max-width: 800px;
-    padding: 1rem;
+    padding: 15px;
     box-shadow:
       -7px -7px 7px rgba(98, 98, 98, 0.788),
       7px -7px 7px rgba(98, 98, 98, 0.788),
       -7px  7px 7px rgba(98, 98, 98, 0.788),
       7px  7px 7px rgba(98, 98, 98, 0.788);
-    gap: 1rem;
+    gap: 25px;
   }
   .reminder-data {
-    gap: 2rem;
-    width: 100%;
+    gap: 25px;
     font-size: 16px;
   }
-
+  .taskTitle {
+    width: 200px;
+  }
   .data-label {
     font-size: 14px;
     margin-bottom: 3px;
@@ -156,7 +152,6 @@ mat-icon {
   mat-icon {
     font-size: 30px;
   }
-
   .btn {
     width: 50px;
     height: 50px;

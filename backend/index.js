@@ -42,6 +42,18 @@ app.use('/avatars', require('./routes/avatars.routes'));
 // Health check per FE
 app.get('/health', (req, res) => res.send('OK'));
 
+app.get('/debug/task/:id', (req, res) => {
+  const db = require('./SQLiteDB/db');
+  const taskId = Number(req.params.id);
+  const row = db.prepare('SELECT id, title, due_date FROM tasks WHERE id = ?').get(taskId);
+  res.json({
+    receivedParam: req.params.id,
+    numeric: taskId,
+    found: !!row,
+    row
+  });
+});
+
 // Middleware errori
 app.use((err, req, res, next) => {
   console.error(err);

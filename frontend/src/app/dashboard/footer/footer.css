@@ -47,6 +47,7 @@
     color: white;
     text-decoration: underline;
     border: none;
+    cursor: pointer;
 }
 
 
@@ -98,11 +99,23 @@
         margin-left: 5%;
         margin-right: 5%;
     }
+    .app-footer{
+        font-size: 11px;
+    }
+    .footer-git{
+        gap: 3px;
+    }
 }
 
 @media (min-width: 1000px) {
     .footer-content {
         margin-left: 12%;
         margin-right: 12%;
+    }
+    .app-footer{
+        font-size: 15px;
+    }
+    .footer-git{
+        gap: 8px;
     }
 }

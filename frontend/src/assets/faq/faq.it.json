@@ -12,16 +12,16 @@
       "answer":"L'applicazione consente un massimo di 4 profili."
    },
    {
-      "question":"Posso utilizzare un'immagine a piacere dentro il profilo?",
-      "answer":"Si! purché l'immagine sia in formato png e il file venga salvato nella cartella 'avatar', presente nel percorso '/AppData/Roaming/TaskManager' del proprio PC."
+      "question":"Posso utilizzare altri avatar o immagini come immagine del profilo?",
+      "answer":"Si! purché l'immagine sia in formato png e il file venga salvato nella cartella 'avatar', presente nel percorso: '/AppData/Roaming/TaskManager' del proprio PC, autogenerato durante l'installazione."
    },
    {
       "question":"A cosa servono le categorie?",
       "answer":"Le categorie permettono di raggruppare le attività.\nQualora fossero già i profili ad essere utilizzati come un raggruppamento, anziché come un utente, le categorie avrebbero la funzione di 'sottocategorie'. Un esempio potrebbe essere il seguente: Profilo: Lavoro; Categorie: Appuntamenti, Pagamenti, ecc."
    },
    {
-      "question":"Posso creare categorie personalizzate",
-      "answer":"Certo, è possibile modificare le categorie di default o crearne di nuove; non esiste un limite numerico per le categorie, ma i colori associabili ad una categoria sono 18."
+      "question":"Posso creare categorie personalizzate?",
+      "answer":"Certo, è possibile modificare le categorie di default o crearne di nuove; non esiste un limite numerico per le categorie, ma i colori associabili ad una categoria sono 18.\nSi noti che le categorie sono in comune, quindi tutti i profili vedono le medesime categorie, e non è possibile creare/cancellare una categoria solo per un profilo."
    },
    {
       "question":"Quali sono gli stati delle attività?",

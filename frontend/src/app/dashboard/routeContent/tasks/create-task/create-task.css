@@ -1,3 +1,8 @@
+
+* {
+    box-sizing: border-box;  /* Garantisce che padding e bordi siano inclusi nella larghezza */
+}
+
 .task {
   width: 60%;
   margin: 20px auto;
@@ -10,7 +15,6 @@
 .task h1 {
   text-align: center;
   color: #333;
-  margin-top: 3px;
 }
 
 .add-task-form {
@@ -18,9 +22,24 @@
   flex-direction: column;
 }
 
+/* =========================   Form   ========================= */
+
 .form-group {
   display: flex;
   width: 100%;
+}
+
+.form-group-recurrence {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.form-group-recurrence mat-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-field {
@@ -33,11 +52,48 @@
   flex: 0 0 100%;
 }
 
-.form-field label {
+.form-field span {
   font-weight: 600;
   color: #555;
   margin-left: 3px;
 }
+
+.recurrenceField {
+  display: flex;
+  width: 100%;
+  margin: 0;
+}
+
+.ruleField {
+  flex: 0 0 50%;  /* Impostare la larghezza al 60% */
+  padding-right: 10px;
+}
+
+.intervalField {
+  flex: 0 0 25%;  /* Impostare la larghezza al 20% */
+  padding-right: 10px;
+}
+
+/* =========================   Labels   ========================= */
+
+.recurrenceRuleLabel {
+  display: flex;
+  align-items: center;
+  flex: 0 0 75%;
+  font-weight: 600;
+  color: #555;
+}
+
+.recurrenceOccurrencesLabel {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 25%;
+  font-weight: 600;
+  color: #555;
+}
+
+/* =========================   Input   ========================= */
 
 input[type="text"],
 input[type="date"],
@@ -65,7 +121,6 @@ input[type="time"]:focus {
   border-color: rgba(196, 176, 68, 0.8);
 }
 
-
 /* =========================   SELECT   ========================= */
 
 .custom-select {
@@ -92,72 +147,48 @@ select.limited-options {
 }
 
 .checkbox-section input {
-    accent-color: #1e1e1e;
+  accent-color: #1e1e1e;
+  cursor: pointer;
+}
+
+.reminder-checkbox-section {
+  display: flex;
+  align-items: center;
+}
+
+.reminder-checkbox-section input {
+  accent-color: #1e1e1e;
+  cursor: pointer;
 }
 
 /* =========================   Animazione Contenuto   ========================= */
-
 .reminder-block {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 2000ms ease, opacity 2000ms ease;
+  transition: max-height 1600ms ease, opacity 1600ms ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .reminder-block.show {
-  max-height: 500px;
   opacity: 1;
 }
 
-/* =========================   Tabs   ========================= */
+/* =========================   Tipologia Reminder   ========================= */
 
-.tabs {
-  display: flex;
-  border-radius: 20px;
-  overflow: hidden;
+.reminderBox {
+  border: solid 2px #adadad;
   width: 90%;
-  margin: 10px auto 0;
-  margin-bottom: 20px;
-  height: 40px;
-  background-color: #1e1e1e;
-  gap: 8px;
+  border-radius: 10px;
 }
 
-.tab {
-  flex: 1;
-  padding: 8px;
-  background-color: #1e1e1e;
-  cursor: pointer;
-  border: none;
-  font-size: 20px;
-  text-align: center;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.8s ease;
-  z-index: 1;
+/* =========================   Tooltip   ========================= */
+.tooltip {
+  cursor:pointer;
 }
-
-.tab::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    #1e1e1e 0%,
-    rgba(196, 176, 68, 0.8) 33%,
-    rgba(196, 176, 68, 0.8) 66%,
-    #1e1e1e 100%
-  );
-  opacity: 0;
-  transition: opacity 0.8s ease;
-  z-index: -1;
-}
-
-.tab.active::before {
-  opacity: 1;
-}
-
 
 /* =========================   Submit   ========================= */
 
@@ -189,11 +220,12 @@ small.error {
     padding: 18px;
   }
   .task h1 {
-    margin-bottom: 10px;
+    margin-bottom: 4px;
+    margin-top: 2px;
     font-size: 20px;
   }
   .add-task-form {
-    gap: 8px;
+    gap: 2px;
   }
   .form-group {
     gap: 15px;
@@ -201,11 +233,27 @@ small.error {
   .form-group .form-field {
     flex: 1;
   }
+
+  .form-group-recurrence {
+    gap: 3px;
+  }
+  .form-group-recurrence mat-icon{
+    font-size: 18px;
+  }
+  .recurrenceRuleLabel {
+    margin-left: 3px;
+    font-size: 11px;
+    gap: 3px
+  }
+  .recurrenceOccurrencesLabel {
+      font-size: 11px;
+  }
+
   .custom-select {
     padding: 0 3px;
     font-size: 10px;
   }
-  .form-field label {
+  .form-field span {
     font-size: 12px;
   }
   input,
@@ -213,31 +261,54 @@ small.error {
     height: 30px;
     padding: 6px 8px;
     font-size: 13px;
+    margin-bottom: 5px;
   }
   .checkbox-section {
     gap: 3px;
-    font-size: 14px;
+    font-size: 13px;
   }
   .checkbox-section input {
       width: 16px;
       height: 16px;
   }
-  .tabs {
-    margin-bottom: 15px;
-    height: 30px;
-    gap: 5px;
+  .reminder-checkbox-section {
+    gap: 2px;
+    font-size: 11px;
+    margin-bottom: 3px;
   }
-  .tab {
-    padding: 5px;
-    font-size: 14px;
+
+  .reminder-checkbox-section input {
+    width: 15px;
+    height: 15px;
+  }
+
+  small.error {
+    font-size: 10px;
+  }
+  .errorReminder {
+    margin-left: 8px;
+  }
+
+  .reminder-block {
+    gap: 10px;
+  }
+
+  .reminder-block.show {
+    max-height: 320px;
+    gap: 10px;
+  }
+
+  .reminderBox {
+    padding: 7px;
+    padding-top: 3px;
   }
   .btn-submit {
     padding: 8px 12px;
     font-size: 13px;
   }
-  p {
+  .reminderInfo {
     font-size: 10px;
-    margin-bottom: 0px;
+    margin: 0px;
   }
 }
 
@@ -246,15 +317,47 @@ small.error {
     padding: 25px;
   }
   .task h1 {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     font-size: 24px;
   }
   .add-task-form {
-    gap: 15px;
+    gap: 4px;
   }
   .form-group {
     gap: 40px;
   }
+  .form-group-recurrence {
+    gap: 5px;
+  }
+  .form-group-recurrence mat-icon{
+    font-size: 26px;
+  }
+  .recurrenceRuleLabel {
+    margin-left: 3px;
+    gap: 3px
+  }
+  .recurrenceOccurrencesLabel {
+      margin-left: 3px;
+  }
+  .reminderExact {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .reminder-checkbox-section {
+    gap: 3px;
+    font-size: 11px;
+    margin: 5px;
+  }
+  .reminder-checkbox-section input {
+    width: 16px;
+    height: 16px;
+  }
+  small.error {
+    font-size: 12px;
+  }
+  .errorReminder {
+    margin-left: 10px;
+  }  
   .form-group .form-field {
     flex: 1;
   }
@@ -262,7 +365,7 @@ small.error {
     padding: 0 10px;
     font-size: 15px;
   }
-  .form-field label {
+  .form-field span {
     font-size: 16px;
     margin-bottom: 3px;
   }
@@ -271,7 +374,22 @@ small.error {
     height: 40px;
     padding: 8px 10px;
     font-size: 17px;
+    margin-bottom: 8px;
   }
+    .reminder-block {
+    gap: 15px;
+  }
+
+  .reminder-block.show {
+    max-height: 320px;
+    gap: 15px;
+  }
+
+  .reminderBox {
+    padding: 10px;
+    padding-top: 3px;
+  }
+
   .checkbox-section {
     gap: 7px;
     font-size: 18px;
@@ -280,21 +398,13 @@ small.error {
       width: 20px;
       height: 20px;
   }
-  .tabs {
-    margin-bottom: 20px;
-    height: 40px;
-    gap: 8px;
-  }
-  .tab {
-    padding: 8px;
-    font-size: 20px;
-  }
+
   .btn-submit {
     padding: 10px 18px;
     font-size: 16px;
   }
-  p {
-    font-size: 16px;
-    margin-bottom: 0px;
+  .reminderInfo {
+    font-size: 14px;
+    margin: 0px;
   }
 }

@@ -1,12 +1,10 @@
 .add-profile-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 h1{
     text-align: center;
-    margin-bottom: 40px;
 }
 
 .form-group {
@@ -14,23 +12,15 @@ h1{
   flex-direction: column;
 }
 
-.form-group label {
+.form-group span {
   font-weight: bold;
-  margin-bottom: 0.5rem;
-  font-size: 18px;
+  color: #555;
+  margin-left: 3px;
 }
 
 input[type="text"] {
-  padding: 0.5rem;
   border-radius: 10px;
   border: 2px solid #1e1e1e;
-}
-
-.avatar-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
 }
 
 .avatar-thumb {
@@ -41,10 +31,6 @@ input[type="text"] {
   border-radius: 4px;
   cursor: pointer;
   transition: border-color 0.2s;
-}
-
-.avatar-thumb.selected {
-  border-color: #007bff;
 }
 
 .btn-submit {
@@ -67,6 +53,7 @@ input[type="text"] {
   align-items: center;
   position: relative;
   gap: 1rem;
+  margin-top: 2px;
 }
 
 .avatar-carousel {
@@ -123,4 +110,40 @@ input[type="text"] {
 .error {
   color: red;
   font-size: 12px;
+}
+
+@media (max-width: 999px) {
+  .add-profile-form {
+    gap: 1rem;
+  }
+  h1{
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  .form-group span {
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  input[type="text"] {
+    padding: 0.5rem;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .add-profile-form {
+    gap: 2rem;
+  }
+  h1{
+    margin-bottom: 40px;
+    font-size: 28px;
+  }
+  .form-group span {
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  input[type="text"] {
+    padding: 0.8rem;
+    font-size: 19px;
+  }
 }

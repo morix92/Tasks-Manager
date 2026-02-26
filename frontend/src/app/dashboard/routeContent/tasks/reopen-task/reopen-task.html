@@ -5,77 +5,111 @@
     <!-- Data e Ora Scadenza affiancati -->
     <div class="form-group">
       <div class="form-field">
-        <label>Nuova Data di Scadenza</label>
-        <input type="date" [value]="datePart()" (input)="datePart.set($event.target.value)">
+        <span>Nuova Data di Scadenza</span>
+        <input name="dataScadenza" autocomplete="off" type="date" [value]="datePart()" (input)="datePart.set($event.target.value)">
         <small class="error" *ngIf="isSubmitted() && formErrors()['datePart']">{{ formErrors()['datePart'] }}</small>
       </div>
 
       <div class="form-field">
-        <label>Nuova Ora di Scadenza</label>
-        <input type="time" [value]="timePart()" (input)="timePart.set($event.target.value)">
+        <span>Nuova Ora di Scadenza</span>
+        <input name="oraScadenza" autocomplete="off" type="time" [value]="timePart()" (input)="timePart.set($event.target.value)">
         <small class="error" *ngIf="isSubmitted() && formErrors()['timePart']">{{ formErrors()['timePart'] }}</small>
       </div>
     </div>
 
     <!-- Checkbox Reminder -->
-    <div class="form-field full-width">
+    <div class="form-field">
       <section class="checkbox-section">
-        <input type="checkbox" [checked]="withReminder()" (change)="setwithReminder($event.target.checked)">
+        <input name="checkbox" autocomplete="off" type="checkbox" [checked]="withReminder()" (change)="setWithReminder($event.target.checked)"/>
         <span class="checkmark"></span>
         Si intende ricevere notifiche per questa attività?
       </section>
     </div>
 
-    <!-- Reminder Tabs -->
-    <div [class.show]="withReminder()" class="reminder-block full-width">
-        <div class="tabs">
-            <button type="button" class="tab" [class.active]="activeTab() === 'singleReminder'" (click)="setTab('singleReminder')">Notifica Singola</button>
-            <button type="button" class="tab" [class.active]="activeTab() === 'recurrenceReminder'" (click)="setTab('recurrenceReminder')">Notifiche Multiple</button>
-        </div>
+    <!-- Reminder Block: visibile SOLO se withReminder è true -->
+    <div [class.show]="withReminder()" class="reminder-block">
+      <!-- Sezione 1: Data/Ora esatta (sempre visibile) -->
+      <div class="reminderBox">
+          <section class="reminder-checkbox-section">
+          <input name="checkbox" autocomplete="off" type="checkbox" [checked]="useReminderExact()" (change)="setUseReminderExact($event.target['checked'])"/>
+          <span class="checkmark"></span>
+          <p class="reminderInfo">Inserire data esatta del promemoria:</p>
+        </section>
 
-        <div [ngSwitch]="activeTab()">
-            <ng-container *ngSwitchCase="'singleReminder'" [ngTemplateOutlet]="singleReminderTemplate"></ng-container>
-            <ng-container *ngSwitchCase="'recurrenceReminder'" [ngTemplateOutlet]="recurrenceReminderTemplate"></ng-container>
+        <div class="form-group reminderExact">
+          <div class="form-field" [class.disabled-block]="!useReminderExact()">
+            <span>Data Notifica</span>
+            <input name="dataNotifica" autocomplete="off" type="date" [value]="reminderDatePart()" (input)="reminderDatePart.set($event.target['value'])" [disabled]="!useReminderExact()"/>
+          </div>
+          <div class="form-field" [class.disabled-block]="!useReminderExact()">
+            <span>Ora Notifica</span>
+            <input name="oraNotifica" autocomplete="off" type="time" [value]="reminderTimePart()" (input)="reminderTimePart.set($event.target['value'])" [disabled]="!useReminderExact()"/>
+          </div>
         </div>
+        <small class="error errorReminder" *ngIf="isSubmitted() && formErrors()['reminderDate']">{{ formErrors()['reminderDate'] }}</small>
+      </div>
+
+      <div class="reminderBox">
+        <section class="reminder-checkbox-section">
+          <input name="checkbox" autocomplete="off" type="checkbox" [checked]="useReminderOffset()" (change)="setUseReminderOffset($event.target['checked'])"/>
+          <span class="checkmark"></span>
+          <p class="reminderInfo">
+            Inserire la quantità di minuti che precede la scadenza:
+          </p>
+        </section>
+
+        <div class="form-group reminderExact">
+          <div class="form-field" [class.disabled-block]="!useReminderOffset()">
+            <span>Minuti:</span>
+            <input name="offset" autocomplete="off" type="number" min="1" step="1" [value]="formModel().remind_offset_minutes ?? ''" (input)="updateremindOffsetMinutes($event.target['value'])" [disabled]="!useReminderOffset()"/>
+          </div>
+        </div>
+        <small class="error errorReminder" *ngIf="isSubmitted() && formErrors()['reminderOffset']">{{ formErrors()['reminderOffset'] }}</small>
+      </div>
+    </div>
+    <small class="error errorReminder" *ngIf="isSubmitted() && formErrors()['reminder']">{{ formErrors()['reminder'] }}</small>
+
+
+    <div class="form-field">
+      <section class="checkbox-section">
+        <input name="checkbox" autocomplete="off" type="checkbox" [checked]="withRecurrence()" (change)="setWithRecurrence($event.target.checked)">
+        <span class="checkmark"></span>
+        Si intende moltiplicare la creazione di questa attività?
+      </section>
     </div>
 
+    <div [class.show]="withRecurrence()" class="reminder-block">
+      <div class="form-group-recurrence">
+
+          <div class="recurrenceField">
+            <div class="recurrenceRuleLabel">
+              <span>Regola Ricorrenza e Moltiplicatore Regola</span>
+              <mat-icon class="tooltip" matTooltip="Questi due dati, insieme, rappresentano l'intervallo tra le scadenze (ogni 6 mesi, ogni 3 giorni, ogni 2 anni, ecc)">info</mat-icon>
+            </div>
+            <div class="recurrenceOccurrencesLabel">
+              <span>Ripetizioni</span>
+              <mat-icon class="tooltip" matTooltip="Rappresenta il numero di attività create">info</mat-icon>
+            </div>
+          </div>
+          <div class="recurrenceField">
+            <div class="ruleField">
+              <select name="rule" autocomplete="off" #recurrenceSelect class="custom-select" [value]="formModel().recurrence_rule" (change)="updateRecurrenceRule(recurrenceSelect.value)">
+                <option value="">Seleziona ricorrenza</option>
+                <option *ngFor="let rule of recurrenceRule()" [value]="rule.value">{{ rule.input }}</option>
+              </select>  
+            </div>
+            <div class="intervalField">
+              <input name="intervallo" autocomplete="off" type="number" [value]="formModel().recurrence_interval" (input)="updateRecurrenceInterval($event.target.value)">
+            </div>
+            <div class="intervalField">
+              <input name="occorrenze" autocomplete="off" type="number" [value]="formModel().occurrences" (input)="updateoccurrences($event.target.value)">
+            </div>
+          </div>
+          <small class="error" *ngIf="isSubmitted() && formErrors()['recurrenceRule']">{{ formErrors()['recurrenceRule'] }}</small>
+      </div>
+   
+    </div>
     <!-- Submit -->
     <button type="submit" class="btn-submit">Salva</button>
   </form>
 </div>
-
-<ng-template #singleReminderTemplate>
-  <div class="form-group">
-    <div class="form-field">
-      <label>Data Notifica</label>
-      <input type="date" [value]="reminderDatePart()" (input)="reminderDatePart.set($event.target.value)">
-      <small class="error" *ngIf="isSubmitted() && formErrors()['reminderDatePart']">{{ formErrors()['reminderDatePart'] }}</small>
-    </div>
-    <div class="form-field">
-      <label>Ora Notifica</label>
-      <input type="time" [value]="reminderTimePart()" (input)="reminderTimePart.set($event.target.value)">
-      <small class="error" *ngIf="isSubmitted() && formErrors()['reminderTimePart']">{{ formErrors()['reminderTimePart'] }}</small>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #recurrenceReminderTemplate>
-  <div class="form-group">
-      <div class="form-field">
-        <label>Regola Ricorrenza</label>
-        <select #recurrenceSelect class="custom-select" [value]="formModel().recurrence_rule" (change)="updateRecurrenceRule(recurrenceSelect.value)">
-            <option value="">Seleziona ricorrenza</option>
-            <option *ngFor="let rule of recurrenceRule()" [value]="rule.value" [selected]="rule.value === formModel().recurrence_rule">{{ rule.input }} </option>
-        </select>
-        <small class="error" *ngIf="isSubmitted() && formErrors()['recurrence_rule']">
-            {{ formErrors()['recurrence_rule'] }}
-        </small>
-      </div>
-      <div class="form-field">
-        <label>Numero di Ricorrenze</label>
-        <input type="number" [value]="formModel().recurrence_interval" (input)="updateRecurrenceInterval($event.target.value)">
-        <small class="error" *ngIf="isSubmitted() && formErrors()['recurrence_interval']">{{ formErrors()['recurrence_interval'] }}</small>
-      </div>
-    </div>
-    <p>Le notifiche verranno schedulate partendo dalla data di scadenza fino ad arrivare alla data attuale.<br>Il numero di ricorrenze sarà il moltiplicatore della regola; ad esempio "regola: oraria" e "numero: 3", significherà una notifica ogni 3 ore.</p>
-</ng-template>

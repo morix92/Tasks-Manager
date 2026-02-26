@@ -1,7 +1,7 @@
 <h1>Scelta Profilo</h1>
 <div class="profiles">
   <div *ngFor="let user of allUsers()" class="user-card">
-    <p class="user-name">{{ user.username }}</p>
+    <p class="user-name" [title]="user.username">{{ user.username }}</p>
     <img class="user-avatar" [src]="user.avatar_url" alt="Avatar di {{ user.username }}"/>
     <div class="card-actions">
       <button (click)="editUser(user.id)"><mat-icon>edit</mat-icon></button>

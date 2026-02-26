@@ -25,35 +25,26 @@
 }
 
 .app-logo {
-  width: 100px;
-  height: 100px;
   object-fit: contain;
-  margin: 20px;
 }
 
 .app-name {
-  font-size: 30px;
-  margin-left: 30px;
   color: white;
 
 }
 .username {
-  font-size: 25px;
   color: white;
 }
 
 .user-avatar {
-  width: 80px;
-  height: 80px;
   border-radius: 20%;
   object-fit: cover;
 }
 
 
 .buttonLogout mat-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 40px; /* font-size deve corrispondere */
+    margin-top: 5px;
+    cursor: pointer;  
 }
 
 .separatore{
@@ -70,25 +61,55 @@
 }
 
 @media (max-width: 999px) {
-  .buttonLogout {
-    margin-right: 40px;
+  .app-logo {
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+  }
+  .app-name {
+    font-size: 25px;
+    margin-left: 20px;
   }
   .username {
-    margin-right: 10px;
+    font-size: 21px;
+    margin-right: 7px;
   }
   .user-avatar {
-    margin-right: 10px;
+    width: 70px;
+    height: 70px;
+    margin-right: 7px;
+  }
+  .buttonLogout mat-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    margin-right: 40px;
   }
 }
 
 @media (min-width: 1000px) {
-  .buttonLogout {
-    margin-right: 100px;
+  .app-logo {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+  }
+  .app-name {
+    font-size: 30px;
+    margin-left: 30px;
   }
   .username {
-    margin-right: 30px;
+    font-size: 25px;
+    margin-right: 15px;
   }
   .user-avatar {
-    margin-right: 30px;
+    width: 80px;
+    height: 80px;
+    margin-right: 15px;
+  }
+  .buttonLogout mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    margin-right: 100px;
   }
 }

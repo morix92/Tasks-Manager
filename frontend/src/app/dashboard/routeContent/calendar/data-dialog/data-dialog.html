@@ -1,13 +1,13 @@
 <h3>Imposta Data Calendario</h3>
 
 <div class="jump-selectors">
-  <select [(ngModel)]="selectedMonthValue">
+  <select name="mese" autocomplete="off" [(ngModel)]="selectedMonthValue">
     <option *ngFor="let m of monthNames; let i = index" [ngValue]="i">
         {{ m }}
     </option>
   </select>
 
-  <select [(ngModel)]="selectedYearValue">
+  <select name="anno" autocomplete="off" [(ngModel)]="selectedYearValue">
     <option *ngFor="let y of years" [ngValue]="y">
         {{ y }}
     </option>
@@ -15,6 +15,6 @@
 </div>
 
 <div class="dialog-actions">
-  <button (click)="goToToday()">Torna all Data Attuale</button>
+  <button (click)="goToToday()">Torna alla Data Attuale</button>
   <button (click)="onConfirm()">Imposta Data Selezionata</button>
 </div>

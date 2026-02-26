@@ -1,25 +1,26 @@
 <div>
-  <h1>Aggiungi Profilo Utente</h1>
+  <h1>Modifica Profilo Utente</h1>
   
   <form (submit)="submit($event)" class="add-profile-form">
     <div class="form-group">
-        <label for="username">Username</label>
-        <input id="username" type="text" [value]="formModel().username" (input)="updateUsername($event.target.value)">
+        <span for="username">Username</span>
+        <input name="username" autocomplete="off" type="text" [value]="formModel().username" (input)="updateUsername($event.target.value)">
         <small class="error" *ngIf="isSubmitted() && formErrors()['username']">{{ formErrors()['username'] }}</small>
     </div>
 
     <div class="form-group">
-      <label>Seleziona Avatar</label>
+      <span>Avatar</span>
       <div class="avatar-carousel-wrapper">
         <button type="button" class="arrow left" (click)="scrollAvatars('left')">&lt;</button>
 
         <div class="avatar-carousel" #avatarContainer>
           <img *ngFor="let avatar of avatars()"
-               [src]="avatar"
-               [class.selected]="formModel().avatar_url === avatar"
-               (click)="updateAvatarUrl(avatar)"
-               alt="Avatar"
-               class="avatar-thumb">
+              id="username"
+              [src]="avatar"
+              [class.selected]="formModel().avatar_url === avatar"
+              (click)="updateAvatarUrl(avatar)"
+              alt="Avatar"
+              class="avatar-thumb">
         </div>
 
         <button type="button" class="arrow right" (click)="scrollAvatars('right')">&gt;</button>

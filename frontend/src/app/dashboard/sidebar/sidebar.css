@@ -6,7 +6,6 @@
 
 .sidebar a {
   display: block;
-  padding: 8px;
   text-decoration: none;
   color: white;
   border-left: 4px solid transparent;
@@ -28,11 +27,17 @@
         width:96%;
         font-size: 12.5px;
     }
+    .sidebar a {
+        padding: 4px;
+    }
 }
 
 @media (min-width: 1000px) {
     .sidebar {
         width: 80%;
         font-size: 20px;
+    }
+    .sidebar a {
+        padding: 8px;
     }
 }

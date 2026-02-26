@@ -1,25 +1,25 @@
 <div class="task">
-  <h1>Aggiungi Attività</h1>
+  <h1>Modifica Attività</h1>
   <form (submit)="submit($event)" class="add-task-form">
 
     <!-- Nome -->
     <div class="form-field full-width">
-      <label>Nome Attività</label>
-      <input type="text" [value]="formModel().title" (input)="updateName($event.target.value)">
+      <span>Nome Attività</span>
+      <input name="Nome" autocomplete="off" type="text" [value]="formModel().title" (input)="updateName($event.target.value)">
       <small class="error" *ngIf="isSubmitted() && formErrors()['title']">{{ formErrors()['title'] }}</small>
     </div>
 
     <!-- Descrizione -->
     <div class="form-field full-width">
-      <label>Descrizione Attività</label>
-      <input type="text" [value]="formModel().description" (input)="updateDescription($event.target.value)">
+      <span>Descrizione Attività</span>
+      <input name="Descrizione" autocomplete="off" type="text" [value]="formModel().description" (input)="updateDescription($event.target.value)">
     </div>
 
     <!-- Select Priorità e Categoria -->
     <div class="form-group">
       <div class="form-field">
-        <label>Priorità</label>
-        <select #prioritySelect class="custom-select" [value]="formModel().priority" (change)="updatePriority(prioritySelect.value)">
+        <span>Priorità</span>
+        <select  name="Priorità" autocomplete="off"  #prioritySelect class="custom-select" [value]="formModel().priority" (change)="updatePriority(prioritySelect.value)">
             <option value="">Seleziona priorità</option>
             <option *ngFor="let priority of priorities()" [value]="priority.id" [selected]="priority.id === formModel().priority">{{ priority.value }}</option>
         </select>
@@ -29,8 +29,8 @@
       </div>
 
       <div class="form-field">
-        <label>Categoria</label>
-        <select #categorySelect class="custom-select" [value]="formModel().category_id" (change)="updateCategory(categorySelect.value)">
+        <span>Categoria</span>
+        <select  name="Categoria" autocomplete="off" #categorySelect class="custom-select" [value]="formModel().category_id" (change)="updateCategory(categorySelect.value)">
             <option value="">Seleziona una categoria</option>
             <option *ngFor="let category of allCategories()" [value]="category.id" [selected]="category.id === formModel().category_id">{{ category.name }}</option>
         </select>

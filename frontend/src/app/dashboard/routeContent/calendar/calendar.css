@@ -95,6 +95,7 @@
   color: white;
   border-radius: 10px;
   border: none;
+  cursor: pointer;
 }
 
 .changeMonth:hover {
@@ -113,6 +114,7 @@
 
 .editDate.month:hover {
   scale: 1.1;
+  cursor: pointer;
 }
 
 .calendar-weekdays {
@@ -156,7 +158,7 @@
 
 .calendar-cell.outside {
   background-color: #efebeb;
-  color: #aaa;
+  opacity: 0.7;
 }
 
 .cell-content {
@@ -200,6 +202,7 @@
   display: flex;
   margin-left: 15px;
   margin-right: 15px;
+  cursor: pointer;
 }
 
 .task-chip:hover {
@@ -266,7 +269,7 @@
 
 @media (max-width: 999px) {
   .dialog {
-      width: 300px;
+      width: 550px;
   }
   .toggleText {
     margin-right: 10px;
@@ -328,7 +331,7 @@
 
 @media (min-width: 1000px) {
   .dialog {
-      width: 450px;
+      width: 750px;
   }
   .toggleText {
     margin-right: 20px;

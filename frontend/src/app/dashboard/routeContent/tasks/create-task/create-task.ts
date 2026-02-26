@@ -10,12 +10,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../../../services/auth';
 import { Alert } from '../../../../services/alert';
-
-type Tab = 'singleReminder' | 'recurrenceReminder';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-create-task',
-  imports: [CommonModule, MatSelectModule, MatFormFieldModule],
+  imports: [CommonModule, MatSelectModule, MatFormFieldModule, MatTooltipModule, MatIcon],
   templateUrl: './create-task.html',
   styleUrl: './create-task.css',
 })
@@ -28,10 +28,14 @@ export class CreateTask {
   recurrenceRule = signal([{input: 'oraria', value: 'hourly' },{input: 'giornaliera', value: 'daily'},{input: 'settimanale', value: 'weekly'},{input: 'mensile', value: 'monthly'},{input: 'annuale', value: 'yearly'}]);
   datePart = signal<string>('');
   timePart = signal<string>('');
+
   withReminder = signal<boolean>(false);
-  activeTab = signal<Tab>('singleReminder');
+  withRecurrence = signal<boolean>(false);
   reminderDatePart = signal<string>('');
   reminderTimePart = signal<string>('');
+
+  useReminderExact  = signal<boolean>(false);
+  useReminderOffset = signal<boolean>(false);
 
   formModel = signal<CreateTaskDto>({
     user_id: 0,
@@ -41,8 +45,10 @@ export class CreateTask {
     priority: 0,
     due_date: new Date(),
     exact_remind_at: null,
+    remind_offset_minutes: null,
     recurrence_rule: null,
-    recurrence_interval: null
+    recurrence_interval: null,
+    occurrences: null
   });
 
   constructor(
@@ -59,10 +65,6 @@ export class CreateTask {
         exact_remind_at: this.withReminder() ? this.exactRemindAtComputed() : null
       }));
     });
-  }
-
-  setTab(tab: Tab) {
-    this.activeTab.set(tab);
   }
 
   dueDateComputed = computed<Date>(() => {
@@ -96,8 +98,10 @@ export class CreateTask {
         priority: 0,
         due_date: new Date(),
         exact_remind_at: null,
+        remind_offset_minutes: null,
         recurrence_rule: null,
-        recurrence_interval: null
+        recurrence_interval: null,
+        occurrences: null
       });
     }
 
@@ -105,6 +109,8 @@ export class CreateTask {
       this.allCategories.set(data);
     });
   }
+
+  // ====== Gestione Errori Form ======
 
   formErrors = computed(() => {
     const f = this.formModel();
@@ -123,22 +129,40 @@ export class CreateTask {
 
     // Reminder
     if (this.withReminder()) {
-      if (this.activeTab() === 'singleReminder') {
-        if (!this.reminderDatePart()) errors['reminderDatePart'] = 'Data notifica obbligatoria';
-        if (!this.reminderTimePart()) errors['reminderTimePart'] = 'Ora notifica obbligatoria';
-        if (f.exact_remind_at && (!(f.exact_remind_at instanceof Date) || isNaN(f.exact_remind_at.getTime()))) {
-          errors['exact_remind_at'] = 'La Data di Notifica deve essere valida';
+      const useExact  = this.useReminderExact();
+      const useOffset = this.useReminderOffset();
+
+      if (!useExact && !useOffset) {
+        errors['reminder'] = 'Selezionare una delle 2 modalità di notifica';
+      } else if (useExact && useOffset) {
+        errors['reminder'] = 'Scegliere una sola tipologia di notifica';
+      } else if (useExact) {
+        if (!this.reminderTimePart() && !this.reminderDatePart()) {
+          errors['reminderDate'] = 'Data/Ora del promemoria non valida';
+        } else if (!this.reminderTimePart()) {
+          errors['reminderDate'] = 'Inserire l’ora del promemoria';
+        } else if (!this.reminderDatePart()) {
+          errors['reminderDate'] = 'Inserire la data del promemoria';
         }
-      } else if (this.activeTab() === 'recurrenceReminder') {
-        if (!f.recurrence_rule) errors['recurrence_rule'] = 'Il campo Regola Ricorrenza è obbligatorio';
-        if (!f.recurrence_interval) errors['recurrence_interval'] = 'Il campo Numero Ricorrenza è obbligatorio';
-        if (f.recurrence_interval && f.recurrence_interval < 1) errors['recurrence_interval'] = 'Il campo Numero Ricorrenza non può essere minore o uguale a zero';
+      } else if (useOffset) {
+        const minutes = f.remind_offset_minutes;
+        if (minutes == null || isNaN(minutes) || minutes <= 0) {
+          errors['reminderOffset'] = 'Inserire minuti > 0';
+        }
+      }
+    }
+    // Ricorrenze
+    if (this.withRecurrence()) {
+      if (!f.recurrence_rule || !f.recurrence_interval || !f.occurrences) {
+        errors['recurrenceRule'] = 'Inserire una regola valida';
       }
     }
     return errors;
   });
 
   isValidForm = computed(() => Object.keys(this.formErrors()).length === 0);
+
+  // ====== Aggiornamento Campi ======
 
   updateName(value: string) { this.formModel.update(f => ({ ...f, title: value })); }
   updateDescription(value: string) { this.formModel.update(f => ({ ...f, description: value })); }
@@ -148,29 +172,89 @@ export class CreateTask {
   updateExactReminderAt(value: Date) { this.formModel.update(f => ({ ...f, exact_remind_at: value })); }
   updateRecurrenceRule(value: string) { this.formModel.update(f => ({ ...f, recurrence_rule: value })); }
   updateRecurrenceInterval(value: number | string) { this.formModel.update(f => ({ ...f, recurrence_interval: Number(value) })); }
+  updateoccurrences(value: number | string) { this.formModel.update(f => ({ ...f, occurrences: Number(value) })); }
+  updateremindOffsetMinutes(value: number | string) {
+    const n = Number(value);
+    this.formModel.update(f => ({
+      ...f,
+      remind_offset_minutes: isNaN(n) ? null : n
+    }));
+  }
+
+  // ====== Toggle e setter ======
+
+  setWithReminder(choice: boolean) {
+    this.withReminder.set(choice);
+
+    if (choice) {
+      // Default: abilito la modalità Data/Ora esatta
+      this.useReminderExact.set(true);
+      this.useReminderOffset.set(false);
+      // reset coerente per offset
+      this.formModel.update(f => ({ ...f, remind_offset_minutes: null }));
+    } else {
+      // Pulizia completa quando non si vogliono promemoria
+      this.useReminderExact.set(false);
+      this.useReminderOffset.set(false);
+      this.reminderDatePart.set('');
+      this.reminderTimePart.set('');
+      this.formModel.update(f => ({
+        ...f,
+        exact_remind_at: null,
+        remind_offset_minutes: null
+      }));
+    }
+  }
+
+  setUseReminderExact(choice: boolean) {
+    this.useReminderExact.set(choice);
+
+    if (choice) {
+      // Se scelgo la modalità esatta, disattivo offset
+      this.useReminderOffset.set(false);
+      this.formModel.update(f => ({ ...f, remind_offset_minutes: null }));
+    } else {
+      // Se la disattivo, ripulisco i campi data/ora
+      this.reminderDatePart.set('');
+      this.reminderTimePart.set('');
+      this.formModel.update(f => ({ ...f, exact_remind_at: null }));
+    }
+  }
+
+  setUseReminderOffset(choice: boolean) {
+    this.useReminderOffset.set(choice);
+
+    if (choice) {
+      // Se scelgo la modalità offset, disattivo esatta
+      this.useReminderExact.set(false);
+      this.reminderDatePart.set('');
+      this.reminderTimePart.set('');
+      this.formModel.update(f => ({ ...f, exact_remind_at: null }));
+    } else {
+      // Se la disattivo, ripulisco i minuti
+      this.formModel.update(f => ({ ...f, remind_offset_minutes: null }));
+    }
+  }
+
+  setWithRecurrence(choice: boolean) { 
+    this.withRecurrence.set(choice); 
+
+    if (!choice) {
+
+      this.formModel.update(f => ({
+        ...f,
+        recurrence_rule: null,
+        recurrence_interval: null,
+        occurrences: null
+      }));
+    }
+  }
 
   submit(event: Event) {
     event.preventDefault();
     this.isSubmitted.set(true);
     if (!this.isValidForm()) return;
     this.createTask(this.formModel());
-  }
-
-  setwithReminder(choice: boolean) { 
-    this.withReminder.set(choice); 
-
-    if (!choice) {
-      this.activeTab.set('singleReminder');
-      this.reminderDatePart.set('');
-      this.reminderTimePart.set('');
-
-      this.formModel.update(f => ({
-        ...f,
-        exact_remind_at: null,
-        recurrence_rule: null,
-        recurrence_interval: null
-      }));
-    }
   }
 
   createTask(body: CreateTaskDto) {

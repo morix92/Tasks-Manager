@@ -1,117 +1,294 @@
 .card {
   position: relative;
-  width: auto; 
-  max-width: 500px;
-  margin: 0;
-  padding: 10px;
-  border-radius: 0;
-  box-shadow: none;
-  background-color: transparent;
+  border-radius: 16px;
+  background-color: #ffffff;
+  padding: 5px;
+}
+.card.closed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6); /* effetto opacità */
+  pointer-events: none;
 }
 
-
-/* Tag categoria */
+/* TAG CATEGORIA */
 .category-tag {
   position: absolute;
-  top: 0px;
-  right: 0px;
-
-  padding: 6px 12px;
-  border-radius: 14px 4px 14px 14px;
-  color: #000000;
-  font-size: 0.7rem;
+  border-radius: 20px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  z-index: 2;
+}
+.card.closed .category-tag {
+  z-index: 1;
 }
 
 .task-title {
-  margin: 2px 0 10px;
   font-weight: 600;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-.hrHeader {
-  border: none;
-  background-color: #eee;
+.card.closed .task-title {
+  position: relative;
+  z-index: 1;
 }
 
 .task-description {
-  margin: 2px 0 10px;
+  color: #555;
+  line-height: 1.5;
 }
 
-/* Corpo */
-.card-body {
+.card-info-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-  margin-top: 12px;
-  padding-top: 12px;
+  grid-template-columns: repeat(4, 1fr);
 }
 
-.card-fields {
-  border: 1.2px solid #eee;
-  border-radius: 10px;
-  padding: 5px;
+.info-box {
+  background: #f8f9fb;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.card.closed .info-box.status {
+  position: relative;
+  border: solid 3px black;
+  z-index: 1;
 }
 
-/* Label e valori */
+hr {
+  opacity: 0.3;
+}
+
 .data-label {
-  display: block;
+  color: #888;
+}
+.reminderTitle{
+  text-align: center;
   text-transform: uppercase;
-  color: #7b7a7a;
+  color: #888;
+  margin: 0px;
+}
+
+.reminder-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.reminder-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 2px #1e1e1e61;
+  border-radius: 10px;
+}
+.reminder-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.icon-btn {
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  width: 40%;
+}
+
+.icon-btn:hover {
+  scale: 1.1;
+  background-color: rgba(196, 176, 68, 0.9);
+}
+
+.btn {
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn:hover {
+  scale: 1.2;
+  background-color: rgba(196, 176, 68, 0.9);
+}
+
+.btn mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================   OVERLAY DIALOG   ========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialogReminder {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
 }
 
 
 @media (max-width: 999px) {
-  .card-body {
-    grid-template-columns: 1fr;
+  .card {
+    padding: 0px;
   }
+
   .category-tag {
-    padding: 6px 12px;
-    font-size: 0.7rem;
-    letter-spacing: 0.4px;
+    top: 2px;
+    right: 0px;
+    padding: 4px 9px;
+    font-size: 12px;
   }
+
+  .card-header {
+    margin-bottom: 12px;
+    padding-right: 90px; /* evita sovrapposizione col tag */
+  }
+
   .task-title {
-    font-size: 1.2rem;
+    margin: 0px;
+    font-size: 18px;
   }
-  .hrHeader {
-    height: 1px;
-  }
+
   .task-description {
-    font-size: 0.9rem;
+    margin: 0;
+    margin-top: 4px;
+    font-size: 16px;
   }
+
+  .card-info-row {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .info-box {
+    padding: 6px;
+  }
+
   .data-label {
-    font-size: 0.6rem;
+    font-size: 12px;
     margin-bottom: 0px;
   }
+
   .data-value {
-    font-size: 0.9rem;
+    font-size: 12px;
   }
-  
+
+  .reminder-container {
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .reminderTitle{
+    font-size: 12px;
+  }
+
+  .reminder-field {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .reminder-actions {
+    margin-top: 10px;
+  }
+
+  .icon-btn {
+    padding: 6px 10px;
+  }
+  .btn {
+    padding: 1px 3px;
+    font-size: 6px;
+  }
+  .btn mat-icon {
+    font-size: 18px;
+  }
 }
 
 @media (min-width: 1000px) {
+
   .category-tag {
-    padding: 8px 14px;
-    font-size: 0.9rem;
-  }
-  .task-title {
-    font-size: 1.4rem;
-  }
-  .hrHeader {
-    height: 0.8px;
-  }
-  .task-description {
-    font-size: 1.1rem;
-  }
-  .data-label {
-    font-size: 0.75rem;
-    margin-bottom: 3px;
-  }
-  .data-value {
-    font-size: 1.1rem;
+    top: 3px;
+    right: 5px;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 
+  .card-header {
+    margin-bottom: 16px;
+    padding-right: 90px; /* evita sovrapposizione col tag */
+  }
+
+  .task-title {
+    font-size: 22px;
+    margin: 0px;
+  }
+
+  .task-description {
+    margin: 0;
+    margin-top: 8px;
+    font-size: 18px;
+  }
+
+  .card-info-row {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .info-box {
+    padding: 10px;
+  }
+
+  .data-label {
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  .data-value {
+    font-size: 16px;
+  }
+
+  .reminder-container {
+    gap: 15px;
+    padding-top: 10px;
+  }
+  .reminderTitle{
+    font-size: 16px;
+  }
+  .reminder-field {
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+
+  .reminder-actions {
+    margin-top: 20px;
+  }
+
+  .icon-btn {
+    padding: 8px 14px;
+  }
+  .btn {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+  .btn mat-icon {
+    font-size: 25px;
+  }
 }

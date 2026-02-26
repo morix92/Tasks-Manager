@@ -1,6 +1,4 @@
 h3 {
-  margin: 0 0 18px 0;
-  font-size: 18px;
   font-weight: 600;
   font-family: inherit;
   text-align: center;
@@ -11,14 +9,10 @@ h3 {
 
 .jump-selectors {
   display: flex;
-  gap: 12px;
-  margin-bottom: 22px;
 }
 
 .jump-selectors select {
   flex: 1;
-  padding: 8px 10px;
-  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 10px;
@@ -53,4 +47,50 @@ h3 {
 
 .dialog-actions button:hover {
   background-color: rgba(196, 176, 68, 0.8);
+}
+
+@media (max-width: 999px) {
+  h3 {
+    margin: 0 0 18px 0;
+    font-size: 17px;
+  }
+  .jump-selectors {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .jump-selectors select {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .dialog-actions {
+    gap: 10px;
+  }
+  .dialog-actions button {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1000px) {
+
+  h3 {
+    margin: 0 0 18px 0;
+    font-size: 18px;
+  }
+  .jump-selectors {
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .jump-selectors select {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  .dialog-actions {
+    gap: 12px;
+  }
+  .dialog-actions button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
 }

@@ -24,15 +24,21 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next): Observable<H
             console.log(error.error.error)
             if (error.error.error === 'due_date cannot be in the past') {
               errorMessage = 'La Data di Scadenza non può essere nel passato';
-            } else if (error.error.error === "remind_at cannot be after the task due_date") {
-              errorMessage = 'La Data della Notifica non può essere successiva rispetto alla Data di Scadenza';
-            } else if (error.error.error === "exact_remind_at cannot be after the task due_date") {
+            } else if (error.error.error === "remind_at cannot be after task due_date") {
               errorMessage = 'La Data della Notifica non può essere successiva rispetto alla Data di Scadenza';
             } else if (error.error.error === "remind_at cannot be in the past") {
               errorMessage = 'La Data della Notifica non può essere nel passato';
             }  else if (error.error.error === "exact_remind_at cannot be in the past") {
               errorMessage = 'La Data della Notifica non può essere nel passato';
-            }             
+            }  else if (error.error.error === "exact_remind_at cannot be after due_date") {
+              errorMessage = 'La Data della Notifica non può essere successiva alla Data di Scadenza';
+            }  else if (error.error.error === "taskTitle cannot be more than 40 characters") {
+              errorMessage = 'Il nome Attività non può contenere più di 40 caratteri';
+            }  else if (error.error.error === "name cannot be more than 25 characters") {
+              errorMessage = 'Il nome Categoria non può contenere più di 25 caratteri';
+            }  else if (error.error.error === "username must be less than 25 characters") {
+              errorMessage = 'Il nome Profilo non può contenere più di 25 caratteri';
+            }
             else {
               errorMessage = 'Richiesta Malformata';
             }

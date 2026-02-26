@@ -1,3 +1,6 @@
+.app {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+}
 .container{
     display: flex;
     min-height: 70vh;

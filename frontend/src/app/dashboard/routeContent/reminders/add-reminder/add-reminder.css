@@ -1,10 +1,8 @@
 h1{
-    text-align: center;
-    margin-top: 5px;
-    line-height: 1.2;
+  text-align: center;
 }
 
-.add-reminder-form {
+.update-reminder-form {
   display: flex;
   flex-direction: column;
 }
@@ -12,19 +10,23 @@ h1{
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0px;
 }
 
-.form-group label {
+.form-group span {
   font-weight: bold;
+  color: #555;
+  margin-left: 3px;
 }
 
-input[type="text"] {
+input[type="text"],[type="date"],[type="time"] {
   border-radius: 10px;
+  padding: 4px;
+  border: 2px solid #1e1e1e;
 }
 
 .btn-submit {
   border-radius: 10px;
+  width: 100%;
   border: none;
   background-color: #1e1e1e;
   color: white;
@@ -35,66 +37,51 @@ input[type="text"] {
   color: red;
 }
 
-
-@media (max-width: 999px) {
-
-  h1{
-    margin-bottom: 0px;
-  }
-
-  .form-group label {
-    margin-bottom: 2px;
-    font-size: 14px;
-    margin-top: 12px;
-  }
-
-  input[type="text"] {
-    padding: 0.6rem;
-    border: 2px solid #1e1e1e;
-  }
-
-  .btn-submit {
-    padding: 0.4rem 0.8rem;
-    width: 100%;
-    font-size: 12px;
-    margin-top: 15px;
-  }
-
-  .error {
-    font-size: 11px;
-  }
+@media (min-width: 1000px) {
+h1{
+  margin-bottom: 15px;
+  font-size: 23px;
+}
+.update-reminder-form {
+  gap: 5px;
+}
+.form-group span {
+  margin-bottom: 2px;
+  font-size: 16px;
+  margin-top: 15px;
+}
+.btn-submit {
+  padding: 3px 8px;
+  font-size: 15px;
+  margin-top:20px;
+  margin-bottom: 8px;
+}
+.error {
+  font-size: 12px;
 }
 
-@media (min-width: 1000px) {
+}
 
-  h1{
-    margin-bottom: 10px;
-  }
-
-  .add-reminder-form {
-    gap: 0.8rem;
-  }
-
-  .form-group label {
-    margin-bottom: 0.4rem;
-    font-size: 18px;
-    margin-top: 20px;
-  }
-
-  input[type="text"] {
-    padding: 0.5rem;
-    border: 2px solid #1e1e1e;
-  }
-
-  .btn-submit {
-    padding: 0.5rem 1rem;
-    width: 100%;
-    font-size: 15px;
-    margin-top: 15px;
-  }
-
-  .error {
-    font-size: 12px;
-  }
-
+@media (max-width: 999px) {
+h1{
+  margin-bottom: 2px;
+  font-size: 18px;
+}
+.update-reminder-form {
+  gap: 3px;
+}
+.form-group span {
+  margin-bottom: 3px;
+  font-size: 12px;
+  margin-top: 15px;
+}
+.btn-submit {
+  padding: 3px 8px;
+  font-size: 15px;
+  margin-top: 20px;
+  margin-bottom: 6px;
+}
+.error {
+  font-size: 12px;
+}
 }

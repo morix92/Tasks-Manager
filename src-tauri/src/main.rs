@@ -197,6 +197,13 @@ fn main() {
 
     // ---- 6) COSTRUZIONE DELL'APP TAURI ----
     Builder::default()
+		.plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            if let Some(win) = app.get_webview_window("main") {
+                let _ = win.show();
+                let _ = win.unminimize();
+                let _ = win.set_focus();
+            }
+        }))
         // 🔔 Plugin notifiche Tauri (fallback per altri OS)
         .plugin(tauri_plugin_notification::init())
         // 🔊 Comandi invocabili dal FE

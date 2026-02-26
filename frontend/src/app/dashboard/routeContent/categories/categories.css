@@ -21,7 +21,11 @@ h1{
 
 .category-name {
   font-weight: 600;
-  margin: 0.5rem 0;
+  margin: 0px;
+  padding: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-actions {
@@ -32,13 +36,24 @@ h1{
 .card-actions button {
     background-color: #1e1e1e;
     color: white;
-    width: 45%;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
 }
 
 .card-actions button:hover{
-  scale: 1.15;
+  scale: 1.1;
   border: none;
   background-color: #696969;
+}
+
+.card-actions mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .icon-btn {
@@ -110,65 +125,65 @@ h1{
         width: 350px;
     }
     h1{
-        font-size: 25px;
+        font-size: 20px;
     }
     .categories {
-      gap: 2rem;
+      gap: 20px;
     }
     .category-card {
-      width: 180px;
-      padding: 2rem;
-      font-size: 25px;
+      width: 160px;
+      padding: 15px;
+      font-size: 20px;
     }
-
     .card-actions {
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 18px;
+      margin-top: 10px;
     }
-
+    .card-actions button {
+      padding: 0px;
+    }
+    .card-actions mat-icon {
+      font-size: 18px;
+    }
     .icon-btn {
       width: 40%;
-      height: 40px;
-      font-size: 18px;
-      gap: 1rem;
+      height: 25px;
+      font-size: 13px;
+      gap: 10px;
     }
-
     .addCategory{
-        margin-top: 30px;
-        margin-bottom: 30px;
+      margin-top: 30px;
+      margin-bottom: 30px;
     }
 }
 
 @media (min-width: 1000px) {
     .dialog {
-        width: 520px;
+      width: 520px;
     }
     h1{
-        font-size: 30px;
+      font-size: 30px;
     }
     .categories {
       gap: 2rem;
     }
     .category-card {
-      width: 180px;
-      padding: 2rem;
+      width: 200px;
+      padding: 20px;
       font-size: 25px;
     }
-
     .card-actions {
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 30px;
+      margin-top: 17px;
     }
-
     .icon-btn {
       width: 40%;
       height: 40px;
       font-size: 18px;
       gap: 1rem;
     }
-
     .addCategory{
-        margin-top: 60px;
-        margin-bottom: 30px;
+      margin-top: 60px;
+      margin-bottom: 30px;
     }
 }

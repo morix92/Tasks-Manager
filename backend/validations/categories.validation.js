@@ -13,6 +13,8 @@ exports.validateCreateCategory = ({ name, color }) => {
     throw new appError('Name must be at least 3 characters', 400);
   }
 
+  if (name.length > 25) throw new appError('name cannot be more than 25 characters', 400);
+
   if (color && typeof color !== 'string') {
     throw new appError('Color must be a string', 400);
   }
@@ -26,6 +28,8 @@ exports.validateUpdateCategory = ({ name, color }) => {
   if (name && name.length < 3) {
     throw new appError('Name must be at least 3 characters', 400);
   }
+
+  if (name.length > 25) throw new appError('name cannot be more than 25 characters', 400);
 
   if (color && typeof color !== 'string') {
     throw new appError('Color must be a string', 400);

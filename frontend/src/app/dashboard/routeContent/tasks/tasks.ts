@@ -150,7 +150,7 @@ export class Tasks {
       }
 
       const requests = tasks.map(task =>
-        this.remindersApi.getReminderByTask(task.id, true).pipe(
+        this.remindersApi.getReminderByTask(task.id, 0).pipe(
           catchError(err =>
             err.status === 404 ? of(null) : of(null)
           ),
@@ -171,7 +171,7 @@ export class Tasks {
   onReminderCreated(reminder: Reminder) {
     const taskId = reminder.task_id;
 
-    this.remindersApi.getReminderByTask(taskId, true).subscribe({
+    this.remindersApi.getReminderByTask(taskId, 0).subscribe({
       next: next => {
         const firstReminder = next?.[0] ?? null;
         this.nextReminderMap.update(map => ({
@@ -191,7 +191,7 @@ export class Tasks {
   }
 
   onReminderDeleted(taskId: number) {
-    this.remindersApi.getReminderByTask(taskId, true).subscribe({
+    this.remindersApi.getReminderByTask(taskId, 0).subscribe({
       next: next => {
         const firstReminder = next?.[0] ?? null;
         this.nextReminderMap.update(map => ({

@@ -1,34 +1,66 @@
-<div class="card" *ngIf="taskView() as t">
-    <div>
-        <span class="category-tag" [ngStyle]="{ 'background-color': t.category_color }"> {{ t.category_name }}</span>
-    </div>
-    <div class="card-header">
-        <span class="data-label">Nome Attività:</span>
-        <h3 class="task-title">{{ t.title }}</h3>
-        <hr class="hrHeader">
-        <span class="data-label">Descrizione:</span>
-        <p class="task-description">{{ t.description }}</p>
-    </div>
-    
-    <hr class="hrHeader">
+<div class="card" *ngIf="taskView() as t" [class.closed]="t.statusLabel !== 'Da Fare'">
 
-    <div class="card-body">
-        <div class="card-fields">
-            <span class="data-label">Priorità:</span>
-            <span class="data-value">{{ t.priorityLabel }}</span>
-        </div>
-        <div class="card-fields">
-            <span class="data-label">Data di Scadenza:</span>
-            <span class="data-value">{{ t.due_date }}</span>
-        </div>
+  <!-- Categoria -->
+  <span class="category-tag"
+        [ngStyle]="{ 'background-color': t.category_color }">
+        {{ t.category_name }}
+  </span>
 
-        <div class="card-fields">
-            <span class="data-label">Status:</span>
-            <span class="data-value">{{ t.statusLabel }}</span>
-        </div>
-        <div class="card-fields">
-            <span class="data-label">Completato il:</span>
-            <span class="data-value">{{ t.completed_at }}</span>
+  <!-- HEADER -->
+  <div class="card-header">
+    <h3 class="task-title status">{{ t.title }}</h3>
+    <p class="task-description">{{ t.description }}</p>
+  </div>
+
+  <!-- INFO ROW -->
+  <div class="card-info-row">
+    <div class="info-box">
+      <span class="data-label">Priorità</span>
+      <span class="data-value">{{ t.priorityLabel }}</span>
+    </div>
+
+    <div class="info-box">
+      <span class="data-label">Scadenza</span>
+      <span class="data-value">
+        {{ t.due_date | date:'dd/MM/yyyy - HH:mm' }}
+      </span>
+    </div>
+
+    <div class="info-box status">
+      <span class="data-label">Status</span>
+      <span class="data-value">{{ t.statusLabel }}</span>
+    </div>
+
+    <div class="info-box">
+      <span class="data-label">Completamento</span>
+      <span class="data-value">
+        {{ t.completed_at ? (t.completed_at | date:'dd/MM/yyyy - HH:mm') : '---' }}
+      </span>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="allReminders().length > 0">
+    <hr>
+    <p class="reminderTitle">Promemoria Attivi</p>
+    <div class="reminder-container">
+        <div class="reminder-field" *ngFor="let reminder of allReminders()">
+            <span>{{ reminder.remind_at | date:'dd/MM/yyyy - HH:mm' }}</span>
+            <button class="btn" (click)="deleteReminder(reminder.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
         </div>
     </div>
+
+  </div>
+  <div class="reminder-actions">
+      <button class="icon-btn" (click)="addReminder(t.id)">Aggiungi Notifica</button>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="activeDialog()" (click)="closeDialog()">
+  <div class="dialogReminder" (click)="$event.stopPropagation()">
+    <app-add-reminder [taskIdSignal]="selectedTaskId" (reminderCreated)="onReminderCreated($event)" (closeDialog)="closeDialog()"> </app-add-reminder>
+  </div>
 </div>

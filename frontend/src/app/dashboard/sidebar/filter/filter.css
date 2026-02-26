@@ -31,11 +31,11 @@ h3 {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0.25rem 0.4rem;
   border-radius: 999px;
   border: 1px solid rgba(211, 190, 70, 0.863);
   background: transparent;
   color: rgb(211, 190, 70, 0.863);
+  cursor: pointer;
 }
 
 .filter-orders button.active {
@@ -58,8 +58,9 @@ h3 {
   flex-direction: column;
 }
 
-.filter-fields label {
+.filter-fields span {
   margin-left: 3px;
+  color: #cecece;
 }
 
 .filter-fields input {
@@ -89,7 +90,7 @@ h3 {
   cursor: pointer;
   transition: all 0.25s ease;
   width: 60%;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .filter .reset:hover {
@@ -99,7 +100,7 @@ h3 {
 
 hr {
   width: 80%;
-  margin: 8px auto 0 auto;
+  margin: 8px auto 8px auto;
   border: 0.5px solid #555;
 }
 
@@ -111,41 +112,48 @@ hr {
         gap: 0.4rem;
     }
     .filter-orders button {
-      font-size: 0.65rem;
+      font-size: 10px;
+    }
+    .filter-orders button mat-icon {
+      margin-top: 3px;
     }
     .filter-fields {
       gap: 2px;
     }
-    .filter-fields label {
+    .filter-fields span {
       font-size: 0.65rem;
     }
     .filter-fields input {
       font-size: 0.6rem;
     }
     h3 {
-      font-size: 0.9rem;
+      font-size: 12px;
     }
     .filter .reset {
-      font-size: 0.7rem;
+      font-size: 11px;
     }
 }
 
 @media (min-width: 1000px) {
 
     .filter-orders {
-      gap: 0.9rem;
+      gap: 12px;
     }
     .filter-orders button {
-      font-size: 1rem;
+      font-size: 15px;
+      padding: 4px 7px;
+    }
+    .filter-orders button mat-icon {
+      margin-top: 6px;
     }
     .filter-orders p {
       margin-left: 5px;
     }
     .filter-fields {
-      gap: 8px;
+      gap: 10px;
     }
-    .filter-fields label {
-      font-size: 0.9rem;
+    .filter-fields span {
+      font-size: 14px;
     }
     .filter-fields input {
       gap: 15px;

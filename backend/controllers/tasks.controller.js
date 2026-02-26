@@ -1,6 +1,11 @@
 const asyncHandler = require('../utils/asyncHandler');
 const tasksService = require('../services/tasks.service');
-const { validateCreateTask, validateUpdateTask, validateCompleteTask } = require('../validations/tasks.validation');
+const {
+  validateCreateTask,
+  validateUpdateTask,
+
+} = require('../validations/tasks.validation');
+
 
 exports.getAllTasks = asyncHandler(async (req, res) => {
   const tasks = await tasksService.getAllTasks(req.query);
@@ -16,17 +21,17 @@ exports.getTaskById = asyncHandler(async (req, res) => {
 exports.getTaskByUserId = asyncHandler(async (req, res) => {
   const { user_id } = req.params;
   const { status } = req.query;
-  const task = await tasksService.getTaskByUserId(
+  const tasks = await tasksService.getTaskByUserId(
     user_id,
     status !== undefined ? Number(status) : null
   );
-  res.status(200).json(task);
+  res.status(200).json(tasks);
 });
 
 exports.createTask = asyncHandler(async (req, res) => {
   validateCreateTask(req.body);
-  const task = await tasksService.createTask(req.body);
-  res.status(201).json(task);
+  const result = await tasksService.createTask(req.body);
+  res.status(201).json(result);
 });
 
 exports.updateTask = asyncHandler(async (req, res) => {
@@ -47,3 +52,12 @@ exports.deleteTask = asyncHandler(async (req, res) => {
   await tasksService.deleteTask(id);
   res.status(204).send();
 });
+
+/* -----------------------------------------------------------
+ * (Opzionale) Endpoint per cancellare una serie intera
+ * ----------------------------------------------------------- */
+// exports.deleteTaskSeries = asyncHandler(async (req, res) => {
+//   const { series_id } = req.params;
+//   const result = await tasksService.deleteTaskSeries(series_id);
+//   res.status(200).json(result);
+// });

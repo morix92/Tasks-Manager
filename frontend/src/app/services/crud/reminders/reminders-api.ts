@@ -26,8 +26,8 @@ export class RemindersApi {
     return this.http.get<Reminder[]>(`${this.url}/user/${user_id}?is_sent=${is_sent}`)
   }
 
-  getReminderByTask(task_id: number, limit: boolean): Observable<Reminder[]>{
-    return this.http.get<Reminder[]>(`${this.url}/task/${task_id}?limit=${limit}`)
+  getReminderByTask(task_id: number, is_sent: number): Observable<Reminder[]>{
+    return this.http.get<Reminder[]>(`${this.url}/task/${task_id}?is_sent=${is_sent}`)
   }
 
   createReminder(body:CreateReminderDto): Observable<Reminder> {
