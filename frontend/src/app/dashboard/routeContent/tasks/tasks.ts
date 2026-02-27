@@ -237,7 +237,6 @@ export class Tasks {
     this.activeDialog.set('editTask');
   }
 
-
   deleteTask(id: number) {
     this.animateTaskAndExecute(id, 'remove', () => {
       this.tasksApi.deleteTask(id).subscribe(() => {

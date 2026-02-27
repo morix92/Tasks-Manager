@@ -259,9 +259,10 @@ export class CreateTask {
 
   createTask(body: CreateTaskDto) {
     this.tasksApi.createTask(body).subscribe({
-      next: (task: Task) => {
+      next: (task: Task[]) => {
+        const firstTask = task[0]
         this.alertService.sendAlert({
-            message: `Attività ${task.title} creata con successo`,
+            message: `Attività ${firstTask.title} creata con successo`,
             classAlert: 'success'
         });
         this.router.navigate(['/home']);

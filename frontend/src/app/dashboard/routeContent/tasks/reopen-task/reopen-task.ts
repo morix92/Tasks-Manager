@@ -252,11 +252,12 @@ export class ReopenTask {
 
   createTask(body: CreateTaskDto) {
     this.tasksApi.createTask(body).subscribe({
-      next: (task: Task) => {
-        this.taskCreated.emit(task);
+      next: (task: Task[]) => {
+        const firstTask = task[0]
+        this.taskCreated.emit(firstTask);
         this.closeDialog.emit();
         this.alertService.sendAlert({
-          message: `Attività ${task.title} ricreata con successo`,
+          message: `Attività ${firstTask.title} ricreata con successo`,
           classAlert: 'success'
         });
       },

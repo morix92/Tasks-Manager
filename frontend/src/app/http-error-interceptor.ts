@@ -25,7 +25,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next): Observable<H
             if (error.error.error === 'due_date cannot be in the past') {
               errorMessage = 'La Data di Scadenza non può essere nel passato';
             } else if (error.error.error === "remind_at cannot be after task due_date") {
-              errorMessage = 'La Data della Notifica non può essere successiva rispetto alla Data di Scadenza';
+              errorMessage = 'La Data della Notifica non può essere successiva alla Data di Scadenza';
             } else if (error.error.error === "remind_at cannot be in the past") {
               errorMessage = 'La Data della Notifica non può essere nel passato';
             }  else if (error.error.error === "exact_remind_at cannot be in the past") {
