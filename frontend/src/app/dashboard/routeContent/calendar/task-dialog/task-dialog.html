@@ -54,7 +54,7 @@
     </div>
 
   </div>
-  <div class="reminder-actions">
+  <div class="reminder-actions" *ngIf="t.statusLabel === 'Da Fare'">
       <button class="icon-btn" (click)="addReminder(t.id)">Aggiungi Notifica</button>
   </div>
 </div>

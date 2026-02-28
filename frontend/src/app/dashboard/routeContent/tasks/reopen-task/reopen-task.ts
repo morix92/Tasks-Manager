@@ -252,8 +252,8 @@ export class ReopenTask {
 
   createTask(body: CreateTaskDto) {
     this.tasksApi.createTask(body).subscribe({
-      next: (task: Task[]) => {
-        const firstTask = task[0]
+      next: (task: Task | Task[]) => {
+        const firstTask = Array.isArray(task) ? task[0] : task;
         this.taskCreated.emit(firstTask);
         this.closeDialog.emit();
         this.alertService.sendAlert({

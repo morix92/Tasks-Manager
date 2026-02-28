@@ -35,11 +35,11 @@
 
 <ng-template #taskListTemplate>
 
-    <div *ngIf="allTasks().length === 0">
+    <div *ngIf="filteredAndSortedTasks().length === 0">
         <h2>Nessuna Attività Presente</h2>
     </div>
 
-    <div *ngFor="let task of filteredAndSortedTasks(); trackBy: trackById" class="task-card" [class.completing]="animatedTaskId === task.id && animationType === 'complete'" [class.removing]="animatedTaskId === task.id && animationType === 'remove'">
+    <div *ngFor="let task of paginatedTasks(); trackBy: trackById" class="task-card" [class.completing]="animatedTaskId === task.id && animationType === 'complete'" [class.removing]="animatedTaskId === task.id && animationType === 'remove'">
 
         <div class="card-header">
             <div class="header-text">
@@ -116,4 +116,7 @@
         </div>
     </div>
 
+    <app-paginator [currentPage]="page()" [pageSize]="pageSize()" [totalItems]="totalItems()" (pageChange)="page.set($event)"></app-paginator>
+
 </ng-template>
+

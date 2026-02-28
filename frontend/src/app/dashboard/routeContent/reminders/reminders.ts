@@ -8,14 +8,26 @@ import { Auth } from '../../../services/auth';
 import { FilterService } from '../../../services/filter-service';
 import { Alert } from '../../../services/alert';
 import { socketService } from '../../../services/socket';
+import { Paginator } from '../../paginator/paginator';
 
 @Component({
   selector: 'app-reminders',
-  imports: [MatIconModule, CommonModule, EditReminder],
+  imports: [MatIconModule, CommonModule, EditReminder, Paginator],
   templateUrl: './reminders.html',
   styleUrl: './reminders.css',
 })
 export class Reminders {
+
+  page = signal(1);
+  pageSize = signal(6);
+  totalItems = computed(() => this.sortedReminders().length);
+
+  paginatedReminders = computed(() => {
+    const start = (this.page() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.sortedReminders().slice(start, end);
+  });
+
 
   @Input() taskIdSignal = signal<number>(0);
 

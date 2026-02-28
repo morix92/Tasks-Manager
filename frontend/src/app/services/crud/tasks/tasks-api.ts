@@ -33,7 +33,7 @@ export class TasksApi {
     return this.http.get<Task[]>(`${this.url}/user/${user_id}`, { params })
   }
 
-  createTask(body:CreateTaskDto): Observable<Task[]> {
+  createTask(body:CreateTaskDto): Observable<Task | Task[]> {
     
     const bodyForBE = {
       ...body,
@@ -41,7 +41,7 @@ export class TasksApi {
       exact_remind_at: this.formatLocalForBE(body.exact_remind_at)
     };
 
-    return this.http.post<Task[]>(`${this.url}`, bodyForBE)
+    return this.http.post<Task | Task[]>(`${this.url}`, bodyForBE)
   } 
 
   updateTask(id: number, body: UpdateTaskDto): Observable<Task> {

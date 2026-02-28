@@ -1,6 +1,6 @@
 <h1>I Miei Promemoria</h1>
 <div class="reminders">
-    <div *ngFor="let reminder of sortedReminders()" class="reminder-card" [class.removing]="animatedReminderId === reminder.id && animationType === 'remove'">
+    <div *ngFor="let reminder of paginatedReminders()" class="reminder-card" [class.removing]="animatedReminderId === reminder.id && animationType === 'remove'">
         <div class="reminder-data">
             <div class="data-field">
                 <span class="data-label">Attività</span>
@@ -22,6 +22,8 @@
             <button (click)="deleteReminder(reminder.id)"><mat-icon>delete</mat-icon></button>
         </div>
     </div>
+
+    <app-paginator [currentPage]="page()" [pageSize]="pageSize()" [totalItems]="totalItems()" (pageChange)="page.set($event)"></app-paginator>
 </div>
 
 <div class="overlay" *ngIf="showDialogEditReminder()" (click)="closeDialog($event)">

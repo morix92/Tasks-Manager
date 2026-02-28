@@ -259,8 +259,10 @@ export class CreateTask {
 
   createTask(body: CreateTaskDto) {
     this.tasksApi.createTask(body).subscribe({
-      next: (task: Task[]) => {
-        const firstTask = task[0]
+      next: (task: Task | Task[]) => {
+    
+        const firstTask = Array.isArray(task) ? task[0] : task;
+        
         this.alertService.sendAlert({
             message: `Attività ${firstTask.title} creata con successo`,
             classAlert: 'success'

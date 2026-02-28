@@ -15,17 +15,21 @@ import { ReopenTask } from './reopen-task/reopen-task';
 import { FilterService } from '../../../services/filter-service';
 import { Alert } from '../../../services/alert';
 import { socketService } from '../../../services/socket';
+import { Paginator } from '../../paginator/paginator';
 
 type Tab = 'daFare' | 'completati' | 'scaduti';
 type ActiveDialog = 'addReminder' | 'viewReminders' | 'editTask' | 'reopenTask' | null;
 
 @Component({
   selector: 'app-tasks',
-  imports: [MatTabsModule, CommonModule, MatIcon, AddReminder, EditTask, RemindersFromTask, ReopenTask],
+  imports: [MatTabsModule, CommonModule, MatIcon, AddReminder, EditTask, RemindersFromTask, ReopenTask, Paginator],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
 })
 export class Tasks {
+
+  page = signal(1);
+  pageSize = signal(6);
 
   activeDialog = signal<ActiveDialog>(null);
   activeTab = signal<Tab>('daFare');
@@ -124,8 +128,16 @@ export class Tasks {
     });
   });
 
-
   trackById = (_: number, task: Task) => task.id;
+
+  totalItems = computed(() => this.filteredAndSortedTasks().length);
+
+  paginatedTasks = computed(() => {
+    const start = (this.page() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.filteredAndSortedTasks().slice(start, end);
+  });
+
 
   constructor(private tasksApi: TasksApi, private auth: Auth, private remindersApi: RemindersApi, private filters: FilterService, private alertService: Alert, private socketService: socketService){
     this.filters.setShowOrdering(true);
@@ -164,6 +176,10 @@ export class Tasks {
         });
         this.nextReminderMap.set(map);
       });
+    });
+    effect(() => {
+      this.filteredAndSortedTasks();
+      this.page.set(1);
     });
 
   }

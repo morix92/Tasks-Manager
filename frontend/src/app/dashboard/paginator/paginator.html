@@ -1,0 +1,12 @@
+<div class="paginator" *ngIf="totalPages() > 1">
+    
+    <button (click)="prev()" [disabled]="currentPage() === 1"><mat-icon>chevron_left</mat-icon></button>
+
+      <span class="pageSection">
+        Pagina
+        <input type="number" class="page-input" [value]="currentPage()" (keydown.enter)="onManualInput($event)" (blur)="onManualInput($event)" min="1" [max]="totalPages()" /> di {{ totalPages() }}
+      </span>
+        
+    <button (click)="next()" [disabled]="currentPage() === totalPages()"><mat-icon>chevron_right</mat-icon></button>  
+
+</div>
