@@ -2,23 +2,29 @@
 <hr class="separatore">
 
 <footer class="app-footer">
-    <h2>© 2026 AM Developments</h2>
+
+    <div class="footer-brand">
+        <img src="/assets/AMlogo.png" alt="TaskManager_Logo" class="logo">
+        <h2>© 2026 AM Developments</h2>
+    </div>
+
     <div class="footer-content">
+
         <div class="footer-contact">
             <p>Contatti:</p>
             <p>email: an.morimanno@gmail.com</p>
             <p>cellulare: 3290361688</p>
         </div>
+
         <div class="footer-git">
+            <img class="gitIcon" src="/assets/gitHubIcon.png" alt="GitHub">
             <div class="copy-tooltip" *ngIf="copied()">Link Copiato!</div>
-            <button class="git-link" (click)="copyLink($event)">Visita la mia pagina GitHub</button>
-            <img class="gitIcon" src="./assets/gitHubIcon.png" alt="GitHub">
+            <button class="git-link" (click)="copyLink($event)">Visita la mia pagina GitHub</button> 
         </div>
 
         <div class="footer-links">
             <a routerLink="/FAQ" routerLinkActive="active">FAQ</a>
         </div>
+
     </div>
 </footer>
-
-

@@ -70,7 +70,7 @@ db.exec(`
 
   -- Utente di default
   INSERT INTO users (id, username, avatar_url)
-  SELECT 1, 'Utente', 'http://127.0.0.1:3000/avatar/profile.png'
+  SELECT 1, 'UtenteDemo', 'http://127.0.0.1:3000/avatar/profile.png'
   WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1)
     AND (SELECT value FROM app_config WHERE key = 'initialized') = '0';
 
